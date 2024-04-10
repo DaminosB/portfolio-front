@@ -14,6 +14,7 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 
 const fetchData = async () => {
+  // First we call the API to get the data we will need
   const pages = await axios.get(`${process.env.API_URL}/pages`, {
     headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
   });
@@ -25,6 +26,7 @@ const fetchData = async () => {
     }
   );
 
+  //   Then we prepare the object that will store our needed data
   const responses = {
     profile: {
       logo: profile.data.data.attributes.logo.data.attributes,
@@ -34,6 +36,12 @@ const fetchData = async () => {
     },
     pages: pages.data.data,
   };
+
+  //   Finaly, we clean up the pages key
+  responses.pages.forEach((page, index) => {
+    responses.pages[index] = { ...page.attributes, id: page.id };
+  });
+
   return responses;
 };
 
@@ -103,7 +111,6 @@ const Header = async () => {
             return (
               <Link key={page.id} href={`/user-pages/${page.id}`}>
                 {page.name}
-                {/* {page.attributes.name} */}
               </Link>
             );
           })}
