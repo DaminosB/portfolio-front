@@ -1,0 +1,22 @@
+.header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+}
+
+.logo {
+  width: 30px;
+}
+
+.header > div,
+.header nav {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.header > nav svg,
+.header > nav img {
+  height: 25px;
+}
