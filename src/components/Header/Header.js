@@ -29,6 +29,7 @@ const fetchData = async () => {
   //   Then we prepare the object that will store our needed data
   const responses = {
     profile: {
+      ...profile.data.data.attributes,
       logo: profile.data.data.attributes.logo.data.attributes,
       socialURLs: profile.data.data.attributes.socialURLs,
       otherURLs: profile.data.data.attributes.socialURLs.otherURLs,
@@ -70,8 +71,8 @@ const Header = async () => {
 
   //   The styles defined by the user. Will be applied in the style prop of the header tag
   const customStyles = {
-    fontFamily: profile.defaultFont
-      .substring(0, profile.defaultFont.indexOf("("))
+    fontFamily: profile.headerFont
+      .substring(0, profile.headerFont.indexOf("("))
       .trim(),
   };
 
