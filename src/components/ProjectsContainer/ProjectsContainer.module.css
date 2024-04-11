@@ -1,14 +1,6 @@
 .projectsContainer > div {
-  display: flex;
+  /* display: flex;
   flex-wrap: wrap;
-  /* justify-content: center; */
-  gap: 20px;
-}
-
-.projectCard {
-  width: calc((100% - 40px) / 3);
-}
-
-.projectCard img {
-  width: 100%;
+  gap: 20px; */
+  position: relative;
 }

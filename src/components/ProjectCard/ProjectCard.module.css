@@ -1,0 +1,9 @@
+.projectCard {
+  width: calc((100% - 40px) / 3);
+  position: absolute;
+  transition: 500ms;
+}
+
+.projectCard img {
+  width: 100%;
+}
