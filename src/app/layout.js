@@ -16,20 +16,36 @@ export async function generateMetadata({ params }) {
 }
 
 const fetchData = async () => {
-  const { data } = await axios.get(
-    `${process.env.API_URL}/profile?populate=homePageBackground`,
+  // const { data } = await axios.get(
+  //   `${process.env.API_URL}/profile?populate=homePageBackground`,
+  //   {
+  //     headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
+  //   }
+  // );
+
+  const style = await axios.get(
+    `${process.env.API_URL}/style?populate=homePageBackground`,
     {
       headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
     }
   );
-  return data.data.attributes;
+
+  const response = {
+    style: {
+      ...style.data.data.attributes,
+      homePageBackground:
+        style.data.data.attributes.homePageBackground.data.attributes,
+    },
+  };
+
+  return response;
 };
 
 export default async function RootLayout({ children }) {
-  const { homePageBackground } = await fetchData();
+  const { style } = await fetchData();
 
   const customStyles = {
-    backgroundImage: `url(${homePageBackground.data.attributes.url})`,
+    backgroundImage: `url(${style.homePageBackground.url})`,
   };
 
   return (
@@ -47,7 +63,7 @@ export default async function RootLayout({ children }) {
         />
       </head>
       <body style={customStyles}>
-        <Header />
+        <Header style={style} />
         {children}
       </body>
     </html>

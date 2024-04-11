@@ -46,7 +46,7 @@ const fetchData = async () => {
   return responses;
 };
 
-const Header = async () => {
+const Header = async ({ style }) => {
   // We call the fetchData function
   const { pages, profile } = await fetchData();
 
@@ -71,8 +71,8 @@ const Header = async () => {
 
   //   The styles defined by the user. Will be applied in the style prop of the header tag
   const customStyles = {
-    fontFamily: profile.headerFont
-      .substring(0, profile.headerFont.indexOf("("))
+    fontFamily: style.headerFont
+      .substring(0, style.headerFont.indexOf("("))
       .trim(),
   };
 
