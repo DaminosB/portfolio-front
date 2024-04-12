@@ -3,9 +3,11 @@ const calcCoordinates = (index, domElement) => {
   // domElement. The ProjectCards whose coordinates are going to be calculates
 
   // We begin by getting the CardProjects dimensions (all CardProject's have the same)
+  const referenceCard = domElement.parentNode.children[0];
+
   const cardSize = {
-    width: domElement.offsetWidth,
-    height: domElement.offsetHeight,
+    width: referenceCard.offsetWidth,
+    height: referenceCard.offsetHeight,
   };
 
   // We need to find the parent's width
