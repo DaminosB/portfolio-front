@@ -23,6 +23,13 @@ const fetchData = async () => {
     headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
   });
 
+  const logos = await axios.get(
+    `${process.env.API_URL}/logo?populate=thumbnail,cover`,
+    {
+      headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
+    }
+  );
+
   // Then we prepare the object that will contain the needed informations
   const responses = {
     profile: {
@@ -32,6 +39,11 @@ const fetchData = async () => {
     style: { ...style.data.data.attributes },
     projects: projects.data.data,
     tags: tags.data.data,
+    logos: {
+      ...logos.data.data.attributes,
+      cover: logos.data.data.attributes.cover.data.attributes,
+      thumbnail: logos.data.data.attributes.thumbnail.data.attributes,
+    },
   };
 
   // Let's clean up projects key
@@ -58,7 +70,7 @@ const fetchData = async () => {
 };
 
 export default async function Home() {
-  const { profile, projects, tags, style } = await fetchData();
+  const { profile, projects, tags, style, logos } = await fetchData();
 
   const customStyles = {
     fontFamily: style.defaultFont
@@ -71,7 +83,12 @@ export default async function Home() {
       <div className={styles.coverContainer}>
         <img src={profile.cover.url} alt={profile.cover.alternativeText} />
       </div>
-      <ProjectsContainer projects={projects} tags={tags} style={style} />
+      <ProjectsContainer
+        projects={projects}
+        tags={tags}
+        style={style}
+        logos={logos}
+      />
     </main>
   );
 }
