@@ -8,7 +8,7 @@ import calcCoordinates from "@/utils/calcCoordinates";
 import hideElement from "@/utils/hideElement";
 import showElement from "@/utils/showElement";
 
-const LogosCard = ({ data, projectsToDisplay }) => {
+const LogosCard = ({ data, projectsToDisplay, styleInputs }) => {
   const logosCard = useRef(null);
 
   const customStyles = { backgroundColor: data.thumbnailColor };
@@ -22,7 +22,7 @@ const LogosCard = ({ data, projectsToDisplay }) => {
     // We check if the card is to be displayed
     if (indexInProjectsToDisplay !== -1) {
       // We calculte its coordinates
-      calcCoordinates(indexInProjectsToDisplay, logosCard.current);
+      calcCoordinates(indexInProjectsToDisplay, logosCard.current, styleInputs);
       //   And we make sure the element is visible
       showElement(logosCard.current);
     } else hideElement(logosCard.current); // Otherwise we hide it

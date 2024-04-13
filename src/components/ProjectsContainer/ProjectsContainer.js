@@ -10,9 +10,17 @@ import ProjectCard from "../ProjectCard/ProjectCard";
 import TagsContainer from "../TagsContainer/TagsContainer";
 import LogosCard from "../LogosCard/LogosCard";
 
-const calcContainerHeight = (domElement, projectsToDisplay) => {
-  const elementWidth = domElement.offsetWidth;
+// This func calculates the height of the cards container
+const calcContainerHeight = (domElement, projectsToDisplay, styleInputs) => {
+  // domElement. The ProjectCards whose coordinates are going to be calculates
+  // projectsToDisplay: Array. The list of id's of project the viewer wants to display
+  // styleInputs: Object. Contains 2 keys that will be destructured
 
+  const { elementsPerRow, gap } = styleInputs;
+  // elementsPerRow: Number. The number of thumbnails per row the user wants to display (set up in the backoffice)
+  // gap: Number. The gap in px between thumbnails the user wants to display (set up in the backoffice)
+
+  // We begin by getting the CardProjects dimensions (all CardProject's have the same)
   const referenceCard = domElement.children[0];
 
   const cardSize = {
@@ -20,17 +28,20 @@ const calcContainerHeight = (domElement, projectsToDisplay) => {
     height: referenceCard.offsetHeight,
   };
 
-  const elementsPerRow = Math.floor(elementWidth / cardSize.width);
-
+  //   Let's see how many projects need to be displayed
   const numberOfProjects = projectsToDisplay.length;
 
+  //   And on how many rows they are displayed
   const numberOfRows = Math.ceil(numberOfProjects / elementsPerRow);
 
+  //   We get the container's height by multiplying the number of rows by the height of a card. Let's not forget to add the gap.
   const containerHeight =
-    numberOfRows * cardSize.height + (numberOfRows - 1) * 20;
+    numberOfRows * cardSize.height + (numberOfRows - 1) * gap;
 
-  const minHeight = 2 * cardSize.height + 20;
+  // We want the container to be at least the height of 2 cards
+  const minHeight = 2 * cardSize.height + gap;
 
+  //   We check if the container's size is bigger than its minimum required size, and we apply the height accordingly
   if (containerHeight < minHeight) domElement.style.height = `${minHeight}px`;
   else domElement.style.height = `${containerHeight}px`;
 };
@@ -64,6 +75,11 @@ const ProjectsContainer = ({ projects, tags, style, logos }) => {
 
   const cardsContainer = useRef(null);
 
+  const styleInputs = {
+    gap: style.gap,
+    elementsPerRow: style.thumbnailsPerRow,
+  };
+
   useEffect(() => {
     // console.log(projectsToDisplay[projects.length - 1]);
     // We change the content of the projectsToDisplay state everytime the activeFilter is modified
@@ -73,7 +89,8 @@ const ProjectsContainer = ({ projects, tags, style, logos }) => {
 
     calcContainerHeight(
       cardsContainer.current,
-      filterProjects(projects, activeFilter, logos.visible)
+      filterProjects(projects, activeFilter, logos.visible),
+      styleInputs
     );
   }, [activeFilter]);
 
@@ -94,11 +111,16 @@ const ProjectsContainer = ({ projects, tags, style, logos }) => {
               key={project.id}
               project={project}
               projectsToDisplay={projectsToDisplay}
+              styleInputs={styleInputs}
             />
           );
         })}
         {logos.visible && (
-          <LogosCard data={logos} projectsToDisplay={projectsToDisplay} />
+          <LogosCard
+            data={logos}
+            projectsToDisplay={projectsToDisplay}
+            styleInputs={styleInputs}
+          />
         )}
       </div>
     </div>
