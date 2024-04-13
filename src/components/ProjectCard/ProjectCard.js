@@ -1,24 +1,14 @@
-"use client";
-
 import styles from "./ProjectCard.module.css";
 
 // React hooks imports
 import { useEffect, useRef } from "react";
 
-// When this func is called, it calculates the coordinates of the ProjectCard in the ProjectsContainer
+// Utils imports
 import calcCoordinates from "@/utils/calcCoordinates";
+import hideElement from "@/utils/hideElement";
+import showElement from "@/utils/showElement";
 
-const showElement = (domElement) => {
-  domElement.style.visibility = "visible";
-  domElement.style.opacity = "1";
-};
-
-const hideElement = (domElement) => {
-  domElement.style.visibility = "hidden";
-  domElement.style.opacity = "0";
-};
-
-const ProjectCard = ({ project, filterArray, projectsToDisplay }) => {
+const ProjectCard = ({ project, projectsToDisplay }) => {
   const cardRef = useRef(null);
 
   useEffect(() => {
