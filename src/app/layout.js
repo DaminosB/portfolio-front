@@ -46,6 +46,9 @@ export default async function RootLayout({ children }) {
 
   const customStyles = {
     backgroundImage: `url(${style.homePageBackground.url})`,
+    fontFamily: style.defaultFont
+      .substring(0, style.defaultFont.indexOf("("))
+      .trim(),
   };
 
   return (
