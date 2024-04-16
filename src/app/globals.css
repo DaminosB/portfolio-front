@@ -160,6 +160,7 @@ section {
   height: 100%;
   overflow-y: scroll;
   scrollbar-width: none;
+  position: relative;
 }
 
 .container {

@@ -2,6 +2,8 @@ import ProjectsContainer from "@/components/ProjectsContainer/ProjectsContainer"
 import styles from "./page.module.css";
 
 import axios from "axios";
+import CoverContainer from "@/components/CoverContainer/CoverContainer";
+import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
 
 const fetchData = async () => {
   // First we make the needed requests
@@ -10,7 +12,7 @@ const fetchData = async () => {
     { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
   );
 
-  const style = await axios.get(`${process.env.API_URL}/style`, {
+  const style = await axios.get(`${process.env.API_URL}/style?populate=*`, {
     headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
   });
 
@@ -72,23 +74,15 @@ const fetchData = async () => {
 export default async function Home() {
   const { profile, projects, tags, style, logos } = await fetchData();
 
-  const customStyles = {
-    fontFamily: style.defaultFont
-      .substring(0, style.defaultFont.indexOf("("))
-      .trim(),
-  };
-
   return (
-    <main className={styles.homePage} style={customStyles}>
-      <div className={styles.coverContainer}>
-        <img src={profile.cover.url} alt={profile.cover.alternativeText} />
-      </div>
+    <ContentWrapper style={style}>
+      <CoverContainer profile={profile} />
       <ProjectsContainer
         projects={projects}
         tags={tags}
         style={style}
         logos={logos}
       />
-    </main>
+    </ContentWrapper>
   );
 }

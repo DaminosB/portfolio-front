@@ -1,6 +1,3 @@
-.projectsContainer {
-  overflow: hidden;
-}
 .projectsContainer > div {
   position: relative;
   transition: 1s;

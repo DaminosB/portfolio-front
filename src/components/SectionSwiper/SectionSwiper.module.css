@@ -1,0 +1,47 @@
+.sectionSwiper {
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  opacity: 0.5;
+  transition: 500ms;
+}
+
+.sectionSwiper:hover {
+  opacity: 1;
+}
+
+.sectionSwiper.topPos {
+  top: 15px;
+}
+
+.sectionSwiper.bottomPos {
+  bottom: 15px;
+}
+
+.swiperButton {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border-style: solid;
+  border-width: 1px;
+}
+
+.swiperButton svg {
+  height: 30px;
+}
+
+.sectionSwiper > span {
+  opacity: 0;
+  transition: 500ms;
+  user-select: none;
+  border-radius: 3px;
+  padding: 5px 10px;
+}
+
+.sectionSwiper:hover > span {
+  opacity: 1;
+}

@@ -95,7 +95,7 @@ const ProjectsContainer = ({ projects, tags, style, logos }) => {
   }, [activeFilter]);
 
   return (
-    <div className={styles.projectsContainer}>
+    <div className={styles.projectsContainer} id="projects-container">
       <div className="container">
         <TagsContainer
           tags={tags}

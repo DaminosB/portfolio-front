@@ -18,7 +18,6 @@ const ProjectCard = ({ project, projectsToDisplay, styleInputs }) => {
   };
 
   useEffect(() => {
-    console.log(customStyles);
     // To determine our actions, we need to know the index of the card on the projectsToDisplay array
     const indexInProjectsToDisplay = projectsToDisplay.findIndex(
       (projectToDisplay) => project.id === projectToDisplay

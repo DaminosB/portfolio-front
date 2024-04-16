@@ -1,0 +1,4 @@
+.sectionWrapper:not(:first-of-type) {
+  margin-top: 15px;
+  padding-top: 80px;
+}
