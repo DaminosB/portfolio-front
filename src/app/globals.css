@@ -156,7 +156,23 @@ button {
   cursor: pointer;
 }
 
+section {
+  height: 100%;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
 .container {
   margin: 0 auto;
   width: 70%;
+}
+
+.viewport {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.viewport > main {
+  flex: 1;
 }

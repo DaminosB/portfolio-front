@@ -65,7 +65,7 @@ export default async function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
-      <body style={customStyles}>
+      <body className="viewport" style={customStyles}>
         <Header style={style} />
         {children}
       </body>
