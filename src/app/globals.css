@@ -101,6 +101,7 @@ button {
   vertical-align: baseline;
   color: inherit;
   text-decoration: inherit;
+  background: none;
 }
 /* HTML5 display-role reset for older browsers */
 article,
@@ -159,8 +160,12 @@ button {
 section {
   height: 100%;
   overflow-y: scroll;
-  scrollbar-width: none;
   position: relative;
+}
+
+section:first-of-type {
+  display: flex;
+  flex-direction: column;
 }
 
 .container {
@@ -172,8 +177,4 @@ section {
   height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-.viewport > main {
-  flex: 1;
 }

@@ -1,0 +1,27 @@
+.logo {
+  position: absolute;
+  left: 5%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.logo > button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo img {
+  width: 30px;
+}
+
+.logo span {
+  border-radius: 3px;
+  padding: 5px 10px;
+  opacity: 0;
+  transition: 500ms;
+}
+
+.logo img:hover + span {
+  opacity: 1;
+}

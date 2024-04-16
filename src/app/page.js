@@ -8,7 +8,7 @@ import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
 const fetchData = async () => {
   // First we make the needed requests
   const profile = await axios.get(
-    `${process.env.API_URL}/profile?populate=cover`,
+    `${process.env.API_URL}/profile?populate=logo,cover`,
     { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
   );
 
@@ -36,6 +36,7 @@ const fetchData = async () => {
   const responses = {
     profile: {
       ...profile.data.data.attributes,
+      logo: profile.data.data.attributes.logo.data.attributes,
       cover: profile.data.data.attributes.cover.data.attributes,
     },
     style: { ...style.data.data.attributes },
@@ -75,7 +76,7 @@ export default async function Home() {
   const { profile, projects, tags, style, logos } = await fetchData();
 
   return (
-    <ContentWrapper style={style}>
+    <ContentWrapper style={style} profile={profile}>
       <CoverContainer profile={profile} />
       <ProjectsContainer
         projects={projects}

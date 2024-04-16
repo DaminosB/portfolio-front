@@ -1,18 +1,22 @@
 .header {
-  position: relative;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   justify-content: space-between;
-  padding: 15px 0;
+  overflow: hidden;
+  transition: 100ms;
+  z-index: 1;
 }
 
 .logo {
   width: 30px;
 }
 
-.header > div,
-.header nav {
+.header > nav {
   display: flex;
   align-items: center;
+  padding: 30px 0;
   gap: 30px;
 }
 

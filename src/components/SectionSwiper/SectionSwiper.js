@@ -1,20 +1,15 @@
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import styles from "./SectionSwiper.module.css";
+
+// Icons imports
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
-const SectionSwiper = ({ direction, setActiveIndex, style, text }) => {
-  const icon = direction === "up" ? faChevronUp : faChevronDown;
-  const position = direction === "up" ? styles.topPos : styles.bottomPos;
+// This component lets the visitor change active index with a click
+const SectionSwiper = ({ setActiveIndex, style }) => {
+  // setActiveIndex: Func. Updates the active index's state
+  // style: Object. The style informations got through a request to the back
 
-  //   const containerCustomStyles = {
-  //     color: style.defaultFontColor,
-  //   };
-
-  //   const buttonCustomStyles = {
-  //     backgroundColor: style.defaultBackgroundColor,
-  //     color: style.defaultFontColor,
-  // };
-
+  // We set the custom styles object
   const customStyles = {
     backgroundColor: style.defaultBackgroundColor,
     color: style.defaultFontColor,
@@ -22,21 +17,15 @@ const SectionSwiper = ({ direction, setActiveIndex, style, text }) => {
   };
 
   return (
-    <div
-      className={`${styles.sectionSwiper} ${position}`}
-      //   style={customStyles}
-      //   style={containerCustomStyles}
-    >
-      {direction === "down" && <span style={customStyles}>{text}</span>}
+    <div className={styles.sectionSwiper}>
+      <span style={customStyles}>Créations</span>
       <button
         className={styles.swiperButton}
-        onClick={setActiveIndex}
-        // style={buttonCustomStyles}
+        onClick={() => setActiveIndex(1)}
         style={customStyles}
       >
-        <FontAwesomeIcon icon={icon} />
+        <FontAwesomeIcon icon={faChevronDown} />
       </button>
-      {direction === "up" && <span style={customStyles}>{text}</span>}
     </div>
   );
 };
