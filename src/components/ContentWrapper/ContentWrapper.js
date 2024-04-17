@@ -25,6 +25,9 @@ const ContentWrapper = ({ children, style, profile }) => {
   // This ref will be used to translate the content through a display window
   const sliderRef = useRef(null);
 
+  // This ref stores the way the cover is displayed
+  const coverIsShown = useRef(true);
+
   // This func translates the content at every activeIndex change
   useEffect(() => {
     const element = sliderRef.current;
@@ -39,30 +42,49 @@ const ContentWrapper = ({ children, style, profile }) => {
     // Index 0 has a special treatment
     const coverComponent = element.children[0];
 
-    if (activeIndex === 0) {
-      // If active child is the cover, it's displayed normally
-      coverComponent.style.scale = 1;
-      coverComponent.style.height = "100%";
-      showElement(coverComponent);
+    switch (activeIndex) {
+      case 0:
+        // If activeChild is the cover, we need to check if it's displayed normaly. If so, nothing happens.
+        if (!coverIsShown.current) {
+          // If not, we set the standard display parameters
+          coverComponent.style.scale = 1;
+          coverComponent.style.height = "100%";
+          showElement(coverComponent);
 
-      // We also slide to the cover component
-      element.style.transform = `translateY(${-activeSectionTopPosition}px)`;
+          // And show the header
+          showElement(headerNode);
 
-      // And show the header
-      showElement(headerNode);
-    } else if (activeIndex === 1) {
-      // But we do not slide to to the second child, the cover size is reduced to 0
-      coverComponent.style.scale = 0.8;
-      coverComponent.style.height = "0%";
+          // We also slide to the cover component
+          element.style.transform = `translateY(${-activeSectionTopPosition}px)`;
 
-      // We also apply a fading effect
-      hideElement(coverComponent);
+          // Then we indicate the cover is normaly displayed
+          coverIsShown.current = true;
+        }
+        break;
 
-      // The header also disappears
-      hideElement(headerNode);
-    } else {
-      // Otherwise we slide normaly
-      element.style.transform = `translateY(${-activeSectionTopPosition}px)`;
+      case 1:
+        // If we are on the 2nd child, we also need to check if the cover is displayed normaly
+        if (coverIsShown.current) {
+          // If so, we reduce its size and opacity
+          coverComponent.style.scale = 0.8;
+          coverComponent.style.height = "0%";
+          hideElement(coverComponent);
+
+          // The header also disappears
+          hideElement(headerNode);
+
+          // Then we indicate the cover is not shown anymore
+          coverIsShown.current = false;
+        } else {
+          // If not, we just slide the active child
+          element.style.transform = `translateY(${-activeSectionTopPosition}px)`;
+        }
+        break;
+
+      default:
+        // All other scenarios, we slide normaly
+        element.style.transform = `translateY(${-activeSectionTopPosition}px)`;
+        break;
     }
   }, [activeIndex]);
 
