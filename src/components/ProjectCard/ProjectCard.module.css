@@ -1,9 +1,7 @@
 .projectCard {
   position: absolute;
+  aspect-ratio: 4/5;
   transition: 500ms;
-  /* border: 3px transparent solid; */
-  /* aspect-ratio: 4/5; */
-  /* box-sizing: content-box; */
 }
 
 .projectCard img {

@@ -3,6 +3,8 @@ import styles from "./ProjectCard.module.css";
 // React hooks imports
 import { useEffect, useRef } from "react";
 
+import Link from "next/link";
+
 // Utils imports
 import calcCoordinates from "@/utils/calcCoordinates";
 import hideElement from "@/utils/hideElement";
@@ -41,17 +43,18 @@ const ProjectCard = ({
 
   return (
     <div
-      key={project.id}
       ref={cardRef}
       className={styles.projectCard}
       style={customStyles}
       onMouseEnter={() => handleOnMouseEnter(index)}
       onMouseLeave={handleMonMouseLeave}
     >
-      <img
-        src={project.thumbnail.url}
-        alt={project.thumbnail.alternativeText}
-      />
+      <Link href={`/projects/${project.id}`}>
+        <img
+          src={project.thumbnail.url}
+          alt={project.thumbnail.alternativeText}
+        />
+      </Link>
     </div>
   );
 };

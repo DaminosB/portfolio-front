@@ -99,11 +99,11 @@ const ProjectsContainer = ({ projects, tags, style, logos }) => {
 
     // We set a low opacity on all the inactive cards
     inactiveCards.map((card) => {
-      card.style.opacity = 0.05;
+      card.style.opacity = 0.2;
     });
 
     // We also lower the active card's opacity but not that much
-    activeCard.style.opacity = 0.9;
+    // activeCard.style.opacity = 0.9;
 
     // The last card is the logos card, so the cover image is found at a different adresse
     if (index === projects.length && logos.visible)
@@ -146,7 +146,7 @@ const ProjectsContainer = ({ projects, tags, style, logos }) => {
   return (
     <div className={styles.projectsContainer} id="projects-container">
       {/* The PreviewDisplayer shows the cover of the project whose card is being hovered */}
-      <PreviewDisplayer image={coverImage} />
+      {/* <PreviewDisplayer image={coverImage} /> */}
       <TagsContainer
         tags={tags}
         activeFilter={activeFilter}
