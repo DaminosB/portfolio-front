@@ -9,6 +9,7 @@ import { useState, useEffect, useRef } from "react";
 import ProjectCard from "../ProjectCard/ProjectCard";
 import TagsContainer from "../TagsContainer/TagsContainer";
 import LogosCard from "../LogosCard/LogosCard";
+import PreviewDisplayer from "../PreviewDisplayer/PreviewDisplayer";
 
 // This func calculates the height of the cards container
 const calcContainerHeight = (domElement, projectsToDisplay, styleInputs) => {
@@ -67,28 +68,80 @@ const ProjectsContainer = ({ projects, tags, style, logos }) => {
   const [activeFilter, setActiveFilter] = useState(null);
   // When filled in, we only show projects that are paired with said tag
 
+  // This state stores the tags of the project whose card is being hovered. It will be highlghted with the handles below
+  const [filtersToHighlight, setFiltersToHighlight] = useState([]);
+
   // This state stores the id's of the projects we must display according to the activeFilter parameter
   const [projectsToDisplay, setProjectsToDisplay] = useState(() =>
     filterProjects(projects, activeFilter, logos.visible)
   );
   // It will be used by the ProjectCrd component to calculate its coordinates
 
-  const cardsContainer = useRef(null);
+  // This state stores the url of the preview image to display with the PreviewDisplayer
+  const [coverImage, setCoverImage] = useState("");
+  // It will be shown thanks to the handles below when a project card is hovered
 
+  const cardsContainerRef = useRef(null);
+
+  // We set the custom styles object
   const styleInputs = {
     gap: style.gap,
     elementsPerRow: style.thumbnailsPerRow,
   };
 
+  // This func is called when a project card is hovered. It fades the unhovered card and displays the cover of the hovered project
+  const handleOnMouseEnter = (index) => {
+    // index : Number. It's the position of the card in its parent
+
+    // We start by creating an array of all the cards container inactive children
+    const inactiveCards = Array.from(cardsContainerRef.current.children).filter(
+      (card, i) => i !== index
+    );
+
+    // Consequently, the active card is the one corresponding to the given index
+    const activeCard = cardsContainerRef.current.children[index];
+
+    // We set a low opacity on all the inactive cards
+    inactiveCards.map((card) => {
+      card.style.opacity = 0.05;
+    });
+
+    // We also lower the active card's opacity but not that much
+    activeCard.style.opacity = 0.9;
+
+    // The last card is the logos card, so the cover image is found at a different adresse
+    if (index === projects.length && logos.visible)
+      setCoverImage(logos.cover.url);
+    else {
+      // Otherwise it's a project card
+      setCoverImage(projects[index].cover.url);
+
+      // And we can can highlight the tags that are paired with the project
+      const activeCardTagsIdsList = projects[index].tags.map((tag) => tag.id);
+
+      setFiltersToHighlight(activeCardTagsIdsList);
+    }
+  };
+
+  // When the card is not being hovered anymore, we go back to normal
+  const handleMonMouseLeave = () => {
+    const cards = Array.from(cardsContainerRef.current.children);
+
+    cards.map((card) => {
+      card.style.opacity = 1;
+    });
+    setCoverImage("");
+    setFiltersToHighlight([]);
+  };
+
   useEffect(() => {
-    // console.log(projectsToDisplay[projects.length - 1]);
     // We change the content of the projectsToDisplay state everytime the activeFilter is modified
     setProjectsToDisplay(() =>
       filterProjects(projects, activeFilter, logos.visible)
     );
 
     calcContainerHeight(
-      cardsContainer.current,
+      cardsContainerRef.current,
       filterProjects(projects, activeFilter, logos.visible),
       styleInputs
     );
@@ -96,15 +149,19 @@ const ProjectsContainer = ({ projects, tags, style, logos }) => {
 
   return (
     <div className={styles.projectsContainer} id="projects-container">
-      <div className="container">
-        <TagsContainer
-          tags={tags}
-          activeFilter={activeFilter}
-          setActiveFilter={setActiveFilter}
-          style={style}
-        />
-      </div>
-      <div className="container" ref={cardsContainer}>
+      {/* The PreviewDisplayer shows the cover of the project whose card is being hovered */}
+      <PreviewDisplayer image={coverImage} />
+      <TagsContainer
+        tags={tags}
+        activeFilter={activeFilter}
+        setActiveFilter={setActiveFilter}
+        style={style}
+        filtersToHighlight={filtersToHighlight}
+      />
+      <div
+        className={`${styles.cardsContainer} container`}
+        ref={cardsContainerRef}
+      >
         {projects.map((project, index) => {
           return (
             <ProjectCard
@@ -112,6 +169,9 @@ const ProjectsContainer = ({ projects, tags, style, logos }) => {
               project={project}
               projectsToDisplay={projectsToDisplay}
               styleInputs={styleInputs}
+              handleOnMouseEnter={handleOnMouseEnter}
+              handleMonMouseLeave={handleMonMouseLeave}
+              index={index}
             />
           );
         })}
@@ -120,6 +180,9 @@ const ProjectsContainer = ({ projects, tags, style, logos }) => {
             data={logos}
             projectsToDisplay={projectsToDisplay}
             styleInputs={styleInputs}
+            handleOnMouseEnter={handleOnMouseEnter}
+            handleMonMouseLeave={handleMonMouseLeave}
+            indexInParent={projects.length}
           />
         )}
       </div>

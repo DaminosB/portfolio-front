@@ -90,7 +90,7 @@ const ContentWrapper = ({ children, style, profile }) => {
 
   return (
     // This wrapper acts as a window to display the content. It should not overflow the client's screen
-    <main className={styles.contentWrapper}>
+    <main className={styles.contentWrapper} id="content-wrapper">
       {/* The logo is used as a link to slide the content to the 1st child */}
       <Logo
         logo={profile.logo}

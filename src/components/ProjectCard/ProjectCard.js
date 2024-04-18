@@ -8,7 +8,14 @@ import calcCoordinates from "@/utils/calcCoordinates";
 import hideElement from "@/utils/hideElement";
 import showElement from "@/utils/showElement";
 
-const ProjectCard = ({ project, projectsToDisplay, styleInputs }) => {
+const ProjectCard = ({
+  project,
+  projectsToDisplay,
+  styleInputs,
+  handleOnMouseEnter,
+  handleMonMouseLeave,
+  index,
+}) => {
   const cardRef = useRef(null);
 
   const customStyles = {
@@ -38,6 +45,8 @@ const ProjectCard = ({ project, projectsToDisplay, styleInputs }) => {
       ref={cardRef}
       className={styles.projectCard}
       style={customStyles}
+      onMouseEnter={() => handleOnMouseEnter(index)}
+      onMouseLeave={handleMonMouseLeave}
     >
       <img
         src={project.thumbnail.url}

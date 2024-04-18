@@ -128,36 +128,31 @@ const SectionWrapper = ({
 
   // We set the event listeners
   useEffect(() => {
-    if (sectionRef.current) {
+    const element = sectionRef.current;
+    if (element) {
       // The wheel events is for mouse compatible devices
-      sectionRef.current.addEventListener(
-        "wheel",
-        (event) => handleWheel(event),
-        { passive: true }
-      );
+      element.addEventListener("wheel", (event) => handleWheel(event), {
+        passive: true,
+      });
 
       // Touch events are for tactile devices
-      sectionRef.current.addEventListener(
+      element.addEventListener(
         "touchstart",
         (event) => handleTouchEvents(event),
         { passive: true }
       );
 
-      sectionRef.current.addEventListener("touchend", (event) =>
-        handleTouchEvents(event)
-      );
+      element.addEventListener("touchend", (event) => handleTouchEvents(event));
 
       // Remove event listeners
       return () => {
-        sectionRef.current.removeEventListener("wheel", (event) =>
-          handleWheel(event)
-        );
+        element.removeEventListener("wheel", (event) => handleWheel(event));
 
-        sectionRef.current.removeEventListener("touchstart", (event) =>
+        element.removeEventListener("touchstart", (event) =>
           handleTouchEvents(event)
         );
 
-        sectionRef.current.removeEventListener("touchend", (event) =>
+        element.removeEventListener("touchend", (event) =>
           handleTouchEvents(event)
         );
       };

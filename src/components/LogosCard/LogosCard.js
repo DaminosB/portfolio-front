@@ -8,7 +8,14 @@ import calcCoordinates from "@/utils/calcCoordinates";
 import hideElement from "@/utils/hideElement";
 import showElement from "@/utils/showElement";
 
-const LogosCard = ({ data, projectsToDisplay, styleInputs }) => {
+const LogosCard = ({
+  data,
+  projectsToDisplay,
+  styleInputs,
+  handleOnMouseEnter,
+  handleMonMouseLeave,
+  indexInParent,
+}) => {
   const logosCard = useRef(null);
 
   const customStyles = { backgroundColor: data.thumbnailColor };
@@ -29,7 +36,13 @@ const LogosCard = ({ data, projectsToDisplay, styleInputs }) => {
   }, [projectsToDisplay]);
 
   return (
-    <div ref={logosCard} className={styles.logosCard} style={customStyles}>
+    <div
+      ref={logosCard}
+      className={styles.logosCard}
+      style={customStyles}
+      onMouseEnter={() => handleOnMouseEnter(indexInParent)}
+      onMouseLeave={handleMonMouseLeave}
+    >
       <img src={data.thumbnail.url} alt={data.thumbnail.alternativeText} />
     </div>
   );

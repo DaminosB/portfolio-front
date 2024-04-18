@@ -2,12 +2,20 @@
 
 import styles from "./TagsContainer.module.css";
 
-const TagsContainer = ({ tags, activeFilter, setActiveFilter, style }) => {
+const TagsContainer = ({
+  tags,
+  activeFilter,
+  setActiveFilter,
+  style,
+  filtersToHighlight,
+}) => {
   const toggleFilter = (id) => {
     const isActiveFilter = activeFilter === id;
 
     if (isActiveFilter) setActiveFilter(null);
     else setActiveFilter(id);
+
+    console.log(isActiveFilter);
   };
 
   const customStyles = {
@@ -16,9 +24,11 @@ const TagsContainer = ({ tags, activeFilter, setActiveFilter, style }) => {
   };
 
   return (
-    <div className={styles.tagsContainer}>
+    <div className={`${styles.tagsContainer} container`}>
       {tags.map((tag) => {
-        const isActiveFilter = activeFilter === tag.id;
+        const isActiveFilter =
+          activeFilter === tag.id ||
+          filtersToHighlight.some((filter) => tag.id === filter);
         return (
           <button
             key={tag.id}
