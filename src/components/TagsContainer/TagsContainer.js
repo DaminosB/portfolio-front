@@ -14,8 +14,6 @@ const TagsContainer = ({
 
     if (isActiveFilter) setActiveFilter(null);
     else setActiveFilter(id);
-
-    console.log(isActiveFilter);
   };
 
   const customStyles = {
