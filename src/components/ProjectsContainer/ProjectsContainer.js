@@ -39,12 +39,8 @@ const calcContainerHeight = (domElement, projectsToDisplay, styleInputs) => {
   const containerHeight =
     numberOfRows * cardSize.height + (numberOfRows - 1) * gap;
 
-  // We want the container to be at least the height of 2 cards
-  const minHeight = 2 * cardSize.height + gap;
-
-  //   We check if the container's size is bigger than its minimum required size, and we apply the height accordingly
-  if (containerHeight < minHeight) domElement.style.height = `${minHeight}px`;
-  else domElement.style.height = `${containerHeight}px`;
+  // And we apply it
+  domElement.style.height = `${containerHeight}px`;
 };
 
 // This func returns the new content of the projectsToDisplay array
