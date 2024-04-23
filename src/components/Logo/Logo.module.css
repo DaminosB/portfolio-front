@@ -1,8 +1,11 @@
 .logo {
   position: absolute;
   left: 5%;
-  transform: translateY(-50%);
   z-index: 10;
+
+  /* This makes the logo appear from above the window */
+  transform: translateY(-100%);
+  transition: 500ms;
 }
 
 .logo > button {

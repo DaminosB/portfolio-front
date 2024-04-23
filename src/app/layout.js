@@ -18,13 +18,6 @@ export async function generateMetadata({ params }) {
 }
 
 const fetchData = async () => {
-  // const { data } = await axios.get(
-  //   `${process.env.API_URL}/profile?populate=homePageBackground`,
-  //   {
-  //     headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
-  //   }
-  // );
-
   const style = await axios.get(
     `${process.env.API_URL}/style?populate=homePageBackground`,
     {
@@ -79,15 +72,8 @@ export default async function RootLayout({ children }) {
       </head>
       <body className="viewport" style={customStyles}>
         <Header style={style} />
-        {/* <Logo
-          logo={profile.logo}
-          style={style}
-          activeIndex={activeIndex}
-          setActiveIndex={setActiveIndex}
-        /> */}
-        <ContentWrapper style={style} profile={profile}>
-          {children}
-        </ContentWrapper>
+        <Logo logo={profile.logo} />
+        <ContentWrapper>{children}</ContentWrapper>
       </body>
     </html>
   );

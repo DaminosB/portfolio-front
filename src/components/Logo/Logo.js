@@ -1,30 +1,39 @@
+"use client";
+
 import styles from "./Logo.module.css";
 
+// React hooks imports
+import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+
 // This component displays a logo that sends the visitor back to the homepage's cover
-const Logo = ({ logo, style, activeIndex, setActiveIndex }) => {
+const Logo = ({ logo }) => {
   // logo: Object. The logo's infos to display it. Got through a request to the back
-  // style: Object. The style infos to display it. Got through a request to the back
-  // activeIndex: Number. The index of the child we want to display
-  // setActiveIndex: Func. Updates activeIndex's state
 
-  // We set an objet to give to the style prop on the container
-  const containerStyles = {
-    top: style.headerHeight / 2,
+  const router = useRouter();
+
+  const logoDivRef = useRef(null);
+
+  // We send the visitor back to the cover with a query
+  const handleOnClick = () => {
+    router.replace("/?section=cover-container");
   };
 
-  // The span needs its own style
-  const customStyles = {
-    backgroundColor: style.defaultBackgroundColor,
-    color: style.defaultFontColor,
-  };
+  // This useEffect gives the logo div its final top position
+  useEffect(() => {
+    const element = logoDivRef.current;
+
+    // The logo must be placed in the middle of the header
+    const headerHeight = document.getElementById("header").offsetHeight;
+    element.style.top = `${headerHeight / 2}px`;
+    element.style.transform = "translateY(-50%)";
+  });
 
   return (
-    <div className={styles.logo} style={containerStyles}>
+    <div className={styles.logo} ref={logoDivRef}>
       {/* On click, we are sent back to the cover */}
-      <button onClick={() => setActiveIndex(0)}>
+      <button onClick={handleOnClick}>
         <img src={logo.url} alt="" />
-        {/* When not on the cover, we display a text when the button is hovered */}
-        {activeIndex > 0 && <span style={customStyles}>Menu</span>}
       </button>
     </div>
   );

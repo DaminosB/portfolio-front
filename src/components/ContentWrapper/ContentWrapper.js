@@ -5,18 +5,20 @@ import styles from "./ContentWrapper.module.css";
 // React hooks imports
 import { useState, useEffect } from "react";
 
+import { useSearchParams, useRouter } from "next/navigation";
+
 // Utils imports
 import changeActiveIndex from "@/utils/changeActiveIndex";
 import calcSliderTranslation from "@/utils/calcSliderTranslation";
 
-// Components imports
-import Logo from "../Logo/Logo";
-
 // This wrapper sets its children to be displayed by a slider div that will translate to show the active part
-const ContentWrapper = ({ children, style, profile }) => {
+const ContentWrapper = ({ children }) => {
   // Children are displayed one at a time with a full page effect
   // style: Object. The style informations got through a request to the back
   // profile: Object. The profile informations got through a request to the back
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   // This state tells which children needs to be displayed
   const [activeIndex, setActiveIndex] = useState(0);
@@ -112,6 +114,23 @@ const ContentWrapper = ({ children, style, profile }) => {
     // Let's start by declaring the slider element
     const sliderElement = document.getElementById("slider");
 
+    // If the URL contains a query, we check if the slider should slide to it
+    // First we get the query
+    const queriedSection = searchParams.get("section");
+
+    // Then we search its index in the slider children array
+    const queriedSectionIndex = Array.from(sliderElement.children).findIndex(
+      (section) => section.id === queriedSection
+    );
+
+    // If it's there, we set the new active index
+    if (queriedSectionIndex !== -1) {
+      setActiveIndex(queriedSectionIndex);
+
+      // Don't forget to reset the query
+      router.replace("/");
+    }
+
     // The active section is nth child of the sliderElement
     const activeSection = sliderElement.children[activeIndex];
 
@@ -124,18 +143,11 @@ const ContentWrapper = ({ children, style, profile }) => {
 
     // And we remove them
     return cleanUp(activeSection);
-  }, [activeIndex]);
+  }, [activeIndex, searchParams]);
 
   return (
     // This wrapper acts as a window to display the content. It should not overflow the client's screen
     <main className={styles.contentWrapper} id="content-wrapper">
-      {/* The logo is used as a link to slide the content to the 1st child */}
-      <Logo
-        logo={profile.logo}
-        style={style}
-        activeIndex={activeIndex}
-        setActiveIndex={setActiveIndex}
-      />
       {children}
     </main>
   );

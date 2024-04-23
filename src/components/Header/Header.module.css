@@ -6,10 +6,6 @@
   max-height: 100%;
 }
 
-.logo {
-  width: 30px;
-}
-
 .header > nav {
   display: flex;
   align-items: center;
