@@ -1,12 +1,9 @@
 .header {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
   justify-content: space-between;
   overflow: hidden;
-  transition: 100ms;
-  z-index: 1;
+  transition: 750ms;
+  max-height: 100%;
 }
 
 .logo {

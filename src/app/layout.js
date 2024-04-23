@@ -2,6 +2,8 @@ import Header from "@/components/Header/Header";
 import "./globals.css";
 
 import axios from "axios";
+import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
+import Logo from "@/components/Logo/Logo";
 
 export async function generateMetadata({ params }) {
   const { data } = await axios.get(`${process.env.API_URL}/site-parameter`, {
@@ -30,11 +32,21 @@ const fetchData = async () => {
     }
   );
 
+  const profile = await axios.get(
+    `${process.env.API_URL}/profile?populate=logo,cover`,
+    { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
+  );
+
   const response = {
     style: {
       ...style.data.data.attributes,
       homePageBackground:
         style.data.data.attributes.homePageBackground.data.attributes,
+    },
+    profile: {
+      ...profile.data.data.attributes,
+      logo: profile.data.data.attributes.logo.data.attributes,
+      cover: profile.data.data.attributes.cover.data.attributes,
     },
   };
 
@@ -42,7 +54,7 @@ const fetchData = async () => {
 };
 
 export default async function RootLayout({ children }) {
-  const { style } = await fetchData();
+  const { style, profile } = await fetchData();
 
   const customStyles = {
     backgroundImage: `url(${style.homePageBackground.url})`,
@@ -67,7 +79,15 @@ export default async function RootLayout({ children }) {
       </head>
       <body className="viewport" style={customStyles}>
         <Header style={style} />
-        {children}
+        {/* <Logo
+          logo={profile.logo}
+          style={style}
+          activeIndex={activeIndex}
+          setActiveIndex={setActiveIndex}
+        /> */}
+        <ContentWrapper style={style} profile={profile}>
+          {children}
+        </ContentWrapper>
       </body>
     </html>
   );

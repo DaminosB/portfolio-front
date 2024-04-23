@@ -7,8 +7,6 @@ import Link from "next/link";
 
 // Utils imports
 import calcCoordinates from "@/utils/calcCoordinates";
-import hideElement from "@/utils/hideElement";
-import showElement from "@/utils/showElement";
 
 const ProjectCard = ({
   project,
@@ -37,8 +35,8 @@ const ProjectCard = ({
       // We calculte its coordinates
       calcCoordinates(indexInProjectsToDisplay, cardRef.current, styleInputs);
       //   And we make sure the element is visible
-      showElement(cardRef.current);
-    } else hideElement(cardRef.current); // Otherwise we hide it
+      cardRef.current.classList.remove("hidden");
+    } else cardRef.current.classList.add("hidden"); // Otherwise we hide it
   }, [projectsToDisplay]);
 
   return (

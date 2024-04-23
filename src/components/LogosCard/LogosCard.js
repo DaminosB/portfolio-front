@@ -5,8 +5,6 @@ import { useRef, useEffect } from "react";
 
 // Utils imports
 import calcCoordinates from "@/utils/calcCoordinates";
-import hideElement from "@/utils/hideElement";
-import showElement from "@/utils/showElement";
 
 const LogosCard = ({
   data,
@@ -31,8 +29,8 @@ const LogosCard = ({
       // We calculte its coordinates
       calcCoordinates(indexInProjectsToDisplay, logosCard.current, styleInputs);
       //   And we make sure the element is visible
-      showElement(logosCard.current);
-    } else hideElement(logosCard.current); // Otherwise we hide it
+      logosCard.current.classList.remove("hidden");
+    } else logosCard.current.classList.add("hidden"); // Otherwise we hide it
   }, [projectsToDisplay]);
 
   return (

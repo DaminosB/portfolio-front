@@ -1,7 +1,5 @@
 .coverContainer {
-  flex: 1;
-  position: sticky;
-  top: 0px;
+  /* flex: 1; */
   transition: 500ms;
   overflow: hidden;
 }

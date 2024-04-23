@@ -73,10 +73,6 @@ const ProjectsContainer = ({ projects, tags, style, logos }) => {
   );
   // It will be used by the ProjectCrd component to calculate its coordinates
 
-  // This state stores the url of the preview image to display with the PreviewDisplayer
-  const [coverImage, setCoverImage] = useState("");
-  // It will be shown thanks to the handles below when a project card is hovered
-
   const cardsContainerRef = useRef(null);
 
   // We set the custom styles object
@@ -94,24 +90,12 @@ const ProjectsContainer = ({ projects, tags, style, logos }) => {
       (card, i) => i !== index
     );
 
-    // Consequently, the active card is the one corresponding to the given index
-    const activeCard = cardsContainerRef.current.children[index];
-
-    // We set a low opacity on all the inactive cards
     inactiveCards.map((card) => {
-      card.style.opacity = 0.2;
+      card.classList.add("inactive");
     });
 
-    // We also lower the active card's opacity but not that much
-    // activeCard.style.opacity = 0.9;
-
     // The last card is the logos card, so the cover image is found at a different adresse
-    if (index === projects.length && logos.visible)
-      setCoverImage(logos.cover.url);
-    else {
-      // Otherwise it's a project card
-      setCoverImage(projects[index].cover.url);
-
+    if (index !== projects.length) {
       // And we can can highlight the tags that are paired with the project
       const activeCardTagsIdsList = projects[index].tags.map((tag) => tag.id);
 
@@ -124,9 +108,9 @@ const ProjectsContainer = ({ projects, tags, style, logos }) => {
     const cards = Array.from(cardsContainerRef.current.children);
 
     cards.map((card) => {
-      card.style.opacity = 1;
+      card.classList.remove("inactive");
     });
-    setCoverImage("");
+
     setFiltersToHighlight([]);
   };
 
@@ -144,7 +128,7 @@ const ProjectsContainer = ({ projects, tags, style, logos }) => {
   }, [activeFilter]);
 
   return (
-    <div className={styles.projectsContainer} id="projects-container">
+    <section className={styles.projectsContainer} id="projects-container">
       {/* The PreviewDisplayer shows the cover of the project whose card is being hovered */}
       {/* <PreviewDisplayer image={coverImage} /> */}
       <TagsContainer
@@ -182,7 +166,7 @@ const ProjectsContainer = ({ projects, tags, style, logos }) => {
           />
         )}
       </div>
-    </div>
+    </section>
   );
 };
 

@@ -177,8 +177,31 @@ section:first-of-type {
   width: 70%;
 }
 
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.inactive {
+  opacity: 0.2;
+}
+
+.scaled-down {
+  scale: 0.5;
+  height: 0%;
+}
+
+/* The element needs to have a default max-height value in order to be animated properly */
+.zero-height {
+  max-height: 0%;
+}
+
 .viewport {
   height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+.viewport > main {
+  flex: 1;
 }

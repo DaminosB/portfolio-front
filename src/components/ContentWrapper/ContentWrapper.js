@@ -3,15 +3,14 @@
 import styles from "./ContentWrapper.module.css";
 
 // React hooks imports
-import { Children, useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 // Utils imports
-import showElement from "@/utils/showElement";
-import hideElement from "@/utils/hideElement";
+import changeActiveIndex from "@/utils/changeActiveIndex";
+import calcSliderTranslation from "@/utils/calcSliderTranslation";
 
 // Components imports
 import Logo from "../Logo/Logo";
-import SectionWrapper from "../SectionWrapper/SectionWrapper";
 
 // This wrapper sets its children to be displayed by a slider div that will translate to show the active part
 const ContentWrapper = ({ children, style, profile }) => {
@@ -22,70 +21,109 @@ const ContentWrapper = ({ children, style, profile }) => {
   // This state tells which children needs to be displayed
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // This ref will be used to translate the content through a display window
-  const sliderRef = useRef(null);
+  // This variable stores the touchstart Y position of the touch. It will be compared to the touchend value later on to determine the direction of the scroll
+  let touchstartYPos;
 
-  // This ref stores the way the cover is displayed
-  const coverIsShown = useRef(true);
+  // We don't want the wheel event to trigger our function too much so we set a debounce
+  // At first, debounce is true, the rest is detailed lower
+  let scrollDebounce = true;
 
-  // This func translates the content at every activeIndex change
-  useEffect(() => {
-    const element = sliderRef.current;
+  // This func is called by the wheel event listener. It's for visitors who view the website on a desktop with a mouse
+  const handleWheel = (event) => {
+    // The func is active only when debounce is true
+    if (scrollDebounce) {
+      // We prevent untimely calls of the func
+      scrollDebounce = false;
 
-    // Header is not shown when not on 1st child (cover)
-    const headerNode = Array.from(element.parentNode.parentNode.children).find(
-      (child) => child.tagName === "HEADER"
-    );
+      // This key gives us the direction of the wheel event
+      const scrollDirection = event.deltaY > 0 ? "down" : "up";
 
-    const activeSectionTopPosition = element.children[activeIndex].offsetTop;
+      // We call the function that will check if the active index needs to be changed
+      const newActiveIndex = changeActiveIndex(scrollDirection, activeIndex);
 
-    // Index 0 has a special treatment
-    const coverComponent = element.children[0];
+      if (newActiveIndex !== undefined) setActiveIndex(newActiveIndex);
 
-    switch (activeIndex) {
-      case 0:
-        // If activeChild is the cover, we need to check if it's displayed normaly. If so, nothing happens.
-        if (!coverIsShown.current) {
-          // If not, we set the standard display parameters
-          coverComponent.style.scale = 1;
-          coverComponent.style.height = "100%";
-          showElement(coverComponent);
+      // After 1s, the scrollDebounce is put on true again. It lets us call the function again, without any intempestive calls for that second
+      setTimeout(() => {
+        scrollDebounce = true;
+      }, 1000);
+    }
+  };
 
-          // And show the header
-          showElement(headerNode);
-
-          // We also slide to the cover component
-          element.style.transform = `translateY(${-activeSectionTopPosition}px)`;
-
-          // Then we indicate the cover is normaly displayed
-          coverIsShown.current = true;
-        }
+  // This func is called by the touch events listeners. It's for visitors who view the website on a tactile device
+  const handleTouchEvents = (event) => {
+    // The same func is called by the touchstart and touchend listeners
+    switch (event.type) {
+      case "touchstart":
+        // If touchstart, we store the coordinates of the touch event in this variable
+        touchstartYPos = event.changedTouches[0].pageY;
         break;
 
-      case 1:
-        // If we are on the 2nd child, we also need to check if the cover is displayed normaly
-        if (coverIsShown.current) {
-          // If so, we reduce its size and opacity
-          coverComponent.style.scale = 0.8;
-          coverComponent.style.height = "0%";
-          hideElement(coverComponent);
+      case "touchend":
+        // If touchend, we compare the touchstart position with the current event's position
+        const touchendYPos = event.changedTouches[0].pageY;
 
-          // The header also disappears
-          hideElement(headerNode);
+        let scrollDirection;
+        if (touchstartYPos < touchendYPos) scrollDirection = "up";
+        else if (touchstartYPos > touchendYPos) scrollDirection = "down";
 
-          // Then we indicate the cover is not shown anymore
-          coverIsShown.current = false;
-        } else {
-          // If not, we just slide the active child
-          element.style.transform = `translateY(${-activeSectionTopPosition}px)`;
-        }
+        const newActiveIndex = changeActiveIndex(scrollDirection, activeIndex);
+
+        if (newActiveIndex !== undefined) setActiveIndex(newActiveIndex);
         break;
 
       default:
-        // All other scenarios, we slide normaly
-        element.style.transform = `translateY(${-activeSectionTopPosition}px)`;
         break;
     }
+  };
+
+  const eventHandlers = (activeSection) => {
+    // The wheel events is for mouse compatible devices
+    activeSection.addEventListener("wheel", (event) => handleWheel(event), {
+      passive: true,
+    });
+
+    // Touch events are for tactile devices
+    activeSection.addEventListener(
+      "touchstart",
+      (event) => handleTouchEvents(event),
+      { passive: true }
+    );
+
+    activeSection.addEventListener("touchend", (event) =>
+      handleTouchEvents(event)
+    );
+  };
+
+  const cleanUp = (activeSection) => {
+    activeSection.removeEventListener("wheel", (event) => handleWheel(event));
+
+    activeSection.removeEventListener("touchstart", (event) =>
+      handleTouchEvents(event)
+    );
+
+    activeSection.removeEventListener("touchend", (event) =>
+      handleTouchEvents(event)
+    );
+  };
+
+  // This func translates the content at every activeIndex change
+  useEffect(() => {
+    // Let's start by declaring the slider element
+    const sliderElement = document.getElementById("slider");
+
+    // The active section is nth child of the sliderElement
+    const activeSection = sliderElement.children[activeIndex];
+
+    // We'll calculate its new position with the new activeIndex
+    calcSliderTranslation(activeIndex);
+    // calcSliderPosition(sliderElement);
+
+    // We put event listeners on the active section
+    eventHandlers(activeSection);
+
+    // And we remove them
+    return cleanUp(activeSection);
   }, [activeIndex]);
 
   return (
@@ -98,22 +136,7 @@ const ContentWrapper = ({ children, style, profile }) => {
         activeIndex={activeIndex}
         setActiveIndex={setActiveIndex}
       />
-      {/* The slider wraps all the children and is translated to show the active child through the ContentWrapper display window */}
-      <div className={styles.slider} ref={sliderRef}>
-        {/* We make a .map func in order to wrap each section in a component that will handle activeIndex changes */}
-        {Children.map(children, (child, index) => {
-          return (
-            <SectionWrapper
-              setActiveIndex={setActiveIndex}
-              numberOfSiblings={children.length}
-              index={index}
-              style={style}
-            >
-              {child}
-            </SectionWrapper>
-          );
-        })}
-      </div>
+      {children}
     </main>
   );
 };

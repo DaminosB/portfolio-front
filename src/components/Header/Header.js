@@ -229,6 +229,7 @@ const Header = async ({ style }) => {
     fontFamily: style.headerFont
       .substring(0, style.headerFont.indexOf("("))
       .trim(),
+    // height: `${style.headerHeight}px`,
   };
 
   const getSocialIconAndTitle = (name) => {
