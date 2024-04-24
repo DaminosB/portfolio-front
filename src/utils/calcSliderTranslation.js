@@ -1,17 +1,17 @@
-const calcSliderTranslation = (activeIndex) => {
+const calcSliderTranslation = (targetIndex) => {
   const [headerNode] = document.getElementsByTagName("HEADER");
 
   const sliderElement = document.getElementById("slider");
 
   const activeSectionTopPosition =
-    sliderElement.children[activeIndex].offsetTop;
+    sliderElement.children[targetIndex].offsetTop;
 
-  // Index 0 has a special treatment
+  // Index 0 is the cover component and has a special treatment
   const coverComponent = sliderElement.children[0];
 
-  switch (activeIndex) {
+  switch (targetIndex) {
     case 0:
-      // If the activeIndex is 0, we are on the cover, and we should remove classes hidden and removed
+      // If the targetIndex is 0, we are on the cover, and we should remove classes hidden and removed
       coverComponent.classList.remove("hidden");
       coverComponent.classList.remove("scaled-down");
       headerNode.classList.remove("zero-height");

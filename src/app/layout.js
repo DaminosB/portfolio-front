@@ -1,7 +1,10 @@
 import Header from "@/components/Header/Header";
 import "./globals.css";
 
+import { Suspense } from "react";
+
 import axios from "axios";
+
 import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
 import Logo from "@/components/Logo/Logo";
 
@@ -73,7 +76,9 @@ export default async function RootLayout({ children }) {
       <body className="viewport" style={customStyles}>
         <Header style={style} />
         <Logo logo={profile.logo} />
-        <ContentWrapper>{children}</ContentWrapper>
+        <Suspense>
+          <ContentWrapper>{children}</ContentWrapper>
+        </Suspense>
       </body>
     </html>
   );
