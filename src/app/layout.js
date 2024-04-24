@@ -21,32 +21,36 @@ export async function generateMetadata({ params }) {
 }
 
 const fetchData = async () => {
-  const style = await axios.get(
-    `${process.env.API_URL}/style?populate=homePageBackground`,
-    {
-      headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
-    }
-  );
+  try {
+    const style = await axios.get(
+      `${process.env.API_URL}/style?populate=homePageBackground`,
+      {
+        headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
+      }
+    );
 
-  const profile = await axios.get(
-    `${process.env.API_URL}/profile?populate=logo,cover`,
-    { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
-  );
+    const profile = await axios.get(
+      `${process.env.API_URL}/profile?populate=logo,cover`,
+      { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
+    );
 
-  const response = {
-    style: {
-      ...style.data.data.attributes,
-      homePageBackground:
-        style.data.data.attributes.homePageBackground.data.attributes,
-    },
-    profile: {
-      ...profile.data.data.attributes,
-      logo: profile.data.data.attributes.logo.data.attributes,
-      cover: profile.data.data.attributes.cover.data.attributes,
-    },
-  };
+    const response = {
+      style: {
+        ...style.data.data.attributes,
+        homePageBackground:
+          style.data.data.attributes.homePageBackground.data.attributes,
+      },
+      profile: {
+        ...profile.data.data.attributes,
+        logo: profile.data.data.attributes.logo.data.attributes,
+        cover: profile.data.data.attributes.cover.data.attributes,
+      },
+    };
 
-  return response;
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export default async function RootLayout({ children }) {

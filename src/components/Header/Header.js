@@ -14,35 +14,39 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 
 const fetchData = async () => {
-  // First we call the API to get the data we will need
-  const pages = await axios.get(`${process.env.API_URL}/pages`, {
-    headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
-  });
-
-  const profile = await axios.get(
-    `${process.env.API_URL}/profile?populate=socialURLs.otherURLs.logo`,
-    {
+  try {
+    // First we call the API to get the data we will need
+    const pages = await axios.get(`${process.env.API_URL}/pages`, {
       headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
-    }
-  );
+    });
 
-  //   Then we prepare the object that will store our needed data
-  const responses = {
-    profile: {
-      ...profile.data.data.attributes,
-      socialURLs: profile.data.data.attributes.socialURLs,
-      otherURLs: profile.data.data.attributes.socialURLs.otherURLs,
-      defaultFont: profile.data.data.attributes.defaultFont,
-    },
-    pages: pages.data.data,
-  };
+    const profile = await axios.get(
+      `${process.env.API_URL}/profile?populate=socialURLs.otherURLs.logo`,
+      {
+        headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
+      }
+    );
 
-  //   Finaly, we clean up the pages key
-  responses.pages.forEach((page, index) => {
-    responses.pages[index] = { ...page.attributes, id: page.id };
-  });
+    //   Then we prepare the object that will store our needed data
+    const responses = {
+      profile: {
+        ...profile.data.data.attributes,
+        socialURLs: profile.data.data.attributes.socialURLs,
+        otherURLs: profile.data.data.attributes.socialURLs.otherURLs,
+        defaultFont: profile.data.data.attributes.defaultFont,
+      },
+      pages: pages.data.data,
+    };
 
-  return responses;
+    //   Finaly, we clean up the pages key
+    responses.pages.forEach((page, index) => {
+      responses.pages[index] = { ...page.attributes, id: page.id };
+    });
+
+    return responses;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const Header = async ({ style }) => {
