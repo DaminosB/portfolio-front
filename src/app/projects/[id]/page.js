@@ -2,7 +2,6 @@ import Logo from "@/components/Logo/Logo";
 import styles from "./page.module.css";
 
 import axios from "axios";
-import Slider from "@/components/Slider/Slider";
 
 const fetchData = async (projectId) => {
   const response = await axios.get(
@@ -17,9 +16,7 @@ const fetchData = async (projectId) => {
 export default async function ProjectsIdPage({ params }) {
   const { data } = await fetchData(params.id);
 
-  return (
-    <Slider>
-      <section></section>
-    </Slider>
-  );
+  console.log(data);
+
+  return <div>PAGE</div>;
 }

@@ -1,9 +1,10 @@
+import ProjectsContainer from "@/components/ProjectsContainer/ProjectsContainer";
 import styles from "./page.module.css";
 
 import axios from "axios";
-
-import ProjectsContainer from "@/components/ProjectsContainer/ProjectsContainer";
 import CoverContainer from "@/components/CoverContainer/CoverContainer";
+import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
+import Slider from "@/components/Slider/Slider";
 
 const fetchData = async () => {
   // First we make the needed requests
@@ -76,7 +77,8 @@ export default async function Home() {
   const { profile, projects, tags, style, logos } = await fetchData();
 
   return (
-    <>
+    // <ContentWrapper style={style} profile={profile}>
+    <Slider>
       <CoverContainer profile={profile} />
       <ProjectsContainer
         projects={projects}
@@ -84,6 +86,7 @@ export default async function Home() {
         style={style}
         logos={logos}
       />
-    </>
+    </Slider>
+    // </ContentWrapper>
   );
 }
