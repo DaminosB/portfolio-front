@@ -1,22 +1,41 @@
-import Logo from "@/components/Logo/Logo";
+import CoverContainer from "@/components/CoverContainer/CoverContainer";
 import styles from "./page.module.css";
 
 import axios from "axios";
 
 const fetchData = async (projectId) => {
-  const response = await axios.get(
-    // `${process.env.API_URL}/projects/${projectId}?populate[modules][populate]=*`,
-    `${process.env.API_URL}/projects/${projectId}?populate=cover,modules`,
-    { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
-  );
+  try {
+    const project = await axios.get(
+      // `${process.env.API_URL}/projects/${projectId}?populate[modules][populate]=*`,
+      `${process.env.API_URL}/projects/${projectId}?populate=cover,modules`,
+      { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
+    );
 
-  return response.data;
+    const response = {
+      project: {
+        ...project.data.data.attributes,
+        cover: project.data.data.attributes.cover.data.attributes,
+        // modules: project.data.data.attributes.modules.data.attributes,
+      },
+    };
+
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export default async function ProjectsIdPage({ params }) {
-  const { data } = await fetchData(params.id);
+  const { project } = await fetchData(params.id);
 
-  console.log(data);
+  console.log(project);
 
-  return <div>PAGE</div>;
+  return (
+    <>
+      <CoverContainer
+        coverUrl={project.cover.url}
+        coverAltTxt={project.cover.alternativeText}
+      />
+    </>
+  );
 }

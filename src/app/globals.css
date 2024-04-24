@@ -193,7 +193,7 @@ section:first-of-type {
 
 /* The element needs to have a default max-height value in order to be animated properly */
 .zero-height {
-  max-height: 0%;
+  max-height: 0% !important;
 }
 
 .viewport {

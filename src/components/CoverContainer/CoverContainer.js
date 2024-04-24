@@ -1,9 +1,9 @@
 import styles from "./CoverContainer.module.css";
 
-const CoverContainer = ({ profile }) => {
+const CoverContainer = ({ coverUrl, coverAltTxt }) => {
   return (
     <section className={styles.coverContainer} id="cover-container">
-      <img src={profile.cover.url} alt={profile.cover.alternativeText} />
+      <img src={coverUrl} alt={coverAltTxt} />
     </section>
   );
 };
