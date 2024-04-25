@@ -84,21 +84,19 @@ export default async function Home() {
   const { profile, projects, tags, style, logos } = await fetchData();
 
   return (
-    <>
-      <Suspense>
-        <ContentWrapper>
-          <CoverContainer
-            coverUrl={profile.cover.url}
-            coverAltTxt={profile.cover.alternativeText}
-          />
-          <ProjectsContainer
-            projects={projects}
-            tags={tags}
-            style={style}
-            logos={logos}
-          />
-        </ContentWrapper>
-      </Suspense>
-    </>
+    <Suspense>
+      <ContentWrapper>
+        <CoverContainer
+          coverUrl={profile.cover.url}
+          coverAltTxt={profile.cover.alternativeText}
+        />
+        <ProjectsContainer
+          projects={projects}
+          tags={tags}
+          style={style}
+          logos={logos}
+        />
+      </ContentWrapper>
+    </Suspense>
   );
 }

@@ -34,16 +34,14 @@ export default async function ProjectsIdPage({ params }) {
   console.log(project);
 
   return (
-    <>
-      <Suspense>
-        <ContentWrapper>
-          <CoverContainer
-            coverUrl={project.cover.url}
-            coverAltTxt={project.cover.alternativeText}
-          />
-          <Module_Fullpage />
-        </ContentWrapper>
-      </Suspense>
-    </>
+    <Suspense>
+      <ContentWrapper>
+        <CoverContainer
+          coverUrl={project.cover.url}
+          coverAltTxt={project.cover.alternativeText}
+        />
+        <Module_Fullpage />
+      </ContentWrapper>
+    </Suspense>
   );
 }
