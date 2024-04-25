@@ -1,9 +1,10 @@
-import CoverContainer from "@/components/CoverContainer/CoverContainer";
 import styles from "./page.module.css";
 
-import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
-import { Suspense } from "react";
 import axios from "axios";
+import { Suspense } from "react";
+
+import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
+import CoverContainer from "@/components/CoverContainer/CoverContainer";
 import Module_Fullpage from "@/components/Module_Fullpage/Module_Fullpage";
 
 const fetchData = async (projectId) => {
