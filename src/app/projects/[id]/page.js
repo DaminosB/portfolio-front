@@ -1,7 +1,10 @@
 import CoverContainer from "@/components/CoverContainer/CoverContainer";
 import styles from "./page.module.css";
 
+import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
+import { Suspense } from "react";
 import axios from "axios";
+import Module_Fullpage from "@/components/Module_Fullpage/Module_Fullpage";
 
 const fetchData = async (projectId) => {
   try {
@@ -32,10 +35,15 @@ export default async function ProjectsIdPage({ params }) {
 
   return (
     <>
-      <CoverContainer
-        coverUrl={project.cover.url}
-        coverAltTxt={project.cover.alternativeText}
-      />
+      <Suspense>
+        <ContentWrapper>
+          <CoverContainer
+            coverUrl={project.cover.url}
+            coverAltTxt={project.cover.alternativeText}
+          />
+          <Module_Fullpage />
+        </ContentWrapper>
+      </Suspense>
     </>
   );
 }

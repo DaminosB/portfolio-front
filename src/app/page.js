@@ -1,7 +1,13 @@
 import styles from "./page.module.css";
 
+// Packages imports
 import axios from "axios";
 
+// React components imports
+import { Suspense } from "react";
+
+// Components import
+import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
 import ProjectsContainer from "@/components/ProjectsContainer/ProjectsContainer";
 import CoverContainer from "@/components/CoverContainer/CoverContainer";
 
@@ -18,7 +24,7 @@ const fetchData = async () => {
     });
 
     const projects = await axios.get(
-      `${process.env.API_URL}/projects?populate=thumbnail,cover,tags`,
+      `${process.env.API_URL}/projects?populate=thumbnail,tags`,
       { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
     );
 
@@ -27,7 +33,7 @@ const fetchData = async () => {
     });
 
     const logos = await axios.get(
-      `${process.env.API_URL}/logo?populate=thumbnail,cover`,
+      `${process.env.API_URL}/logo?populate=thumbnail`,
       {
         headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
       }
@@ -45,7 +51,6 @@ const fetchData = async () => {
       tags: tags.data.data,
       logos: {
         ...logos.data.data.attributes,
-        cover: logos.data.data.attributes.cover.data.attributes,
         thumbnail: logos.data.data.attributes.thumbnail.data.attributes,
       },
     };
@@ -56,7 +61,6 @@ const fetchData = async () => {
         ...project.attributes,
         id: project.id,
         thumbnail: project.attributes.thumbnail.data.attributes,
-        cover: project.attributes.cover.data.attributes,
         tags: project.attributes.tags.data,
       };
       // Finally, let's clean up the tags key inside each entry of the project
@@ -81,16 +85,20 @@ export default async function Home() {
 
   return (
     <>
-      <CoverContainer
-        coverUrl={profile.cover.url}
-        coverAltTxt={profile.cover.alternativeText}
-      />
-      <ProjectsContainer
-        projects={projects}
-        tags={tags}
-        style={style}
-        logos={logos}
-      />
+      <Suspense>
+        <ContentWrapper>
+          <CoverContainer
+            coverUrl={profile.cover.url}
+            coverAltTxt={profile.cover.alternativeText}
+          />
+          <ProjectsContainer
+            projects={projects}
+            tags={tags}
+            style={style}
+            logos={logos}
+          />
+        </ContentWrapper>
+      </Suspense>
     </>
   );
 }

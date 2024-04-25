@@ -4,35 +4,29 @@ import styles from "./Logo.module.css";
 
 // React hooks imports
 import { useEffect, useRef, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 // This component displays a logo that sends the visitor back to the homepage's cover
-const Logo = ({ logo }) => {
+const Logo = ({ logo, style }) => {
   // logo: Object. The logo's infos to display it. Got through a request to the back
 
-  const router = useRouter();
   const pathname = usePathname();
 
   const [shortcutURL, setShortcutURL] = useState("");
+  const [displayText, setDisplayText] = useState("");
 
   const logoDivRef = useRef(null);
 
   // We store the headerHeight so the position is not untimely recalculed
   const headerHeight = useRef(0);
 
-  // We send the visitor back to the cover with a query
-  const handleOnClick = () => {
-    let request;
-    if (pathname === "/") {
-      router.replace("/?section=cover-container");
-    } else if (pathname.includes("projects")) {
-      router.replace("/?section=projects-container");
-    }
+  const customStyles = {
+    backgroundColor: style.defaultBackgroundColor,
+    color: style.defaultFontColor,
   };
-  // const url = useRef("");
 
-  // This useEffect gives the logo div its final top position
+  // This useEffect gives the logo div its final top position and sets the Redirection URL
   useEffect(() => {
     if (!headerHeight.current) {
       const element = logoDivRef.current;
@@ -45,21 +39,19 @@ const Logo = ({ logo }) => {
 
     if (pathname === "/") {
       setShortcutURL("/?section=cover-container");
+      setDisplayText("Menu");
     } else if (pathname.includes("projects")) {
-      setShortcutURL("/?section=projects-container");
+      setShortcutURL("/?section=projects-container&delay=true");
+      setDisplayText("Créations");
     }
   });
 
   return (
     <div className={styles.logo} ref={logoDivRef}>
-      {/* On click, we are sent back to the cover */}
-      <button
-      // onClick={handleOnClick}
-      >
-        <Link href={shortcutURL}>
-          <img src={logo.url} alt="" />
-        </Link>
-      </button>
+      <Link href={shortcutURL}>
+        <img src={logo.url} alt="" />
+      </Link>
+      <span style={customStyles}>{displayText}</span>
     </div>
   );
 };

@@ -20,11 +20,8 @@ const ContentWrapper = ({ children }) => {
   // This state tells which children needs to be displayed. The slide effect is activated at any change.
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // This ref will store the previous activeIndex so the useEffect does not untimely call the sliding func
+  // This ref will store the previous activeIndex so the useEffect does not call the sliding func unecessarily
   const cachedActiveIndex = useRef(null);
-
-  // This ref will store the previous pathname
-  const cachedPathname = useRef(pathname);
 
   // This func translates the content at every activeIndex change
   useEffect(() => {
@@ -50,16 +47,15 @@ const ContentWrapper = ({ children }) => {
       if (queriedSectionIndex !== -1) {
         targetIndex = queriedSectionIndex;
 
-        // If we come from another page, we will stay a fraction of sec on the cover before sliding to requested section
-        timer = cachedPathname.current !== pathname ? 750 : 0;
+        // We check if a delay is needed for the slider to move into final position
+        const delay = searchParams.get("delay") === "true";
+        // The query gives us a string, so we compare it to another string to get a boolean
+
+        if (delay) timer = 750;
         // Otherwise we want the sliding effect to be immediate
       }
       // Don't forget to reset the query
       router.replace(pathname);
-    } else if (activeIndex >= sliderElement.children.length) {
-      // At a page change, the activeIndex may be higher than the number of child of the slider div
-      // To prevent any error we activate the first index
-      targetIndex = 0;
     } else {
       // Otherwise we  keep the value of activeIndex
       targetIndex = activeIndex;
@@ -72,9 +68,6 @@ const ContentWrapper = ({ children }) => {
         cachedActiveIndex.current = targetIndex;
       }, timer);
     }
-
-    // Finaly we store the current pathname in its ref
-    cachedPathname.current = pathname;
   }, [activeIndex, searchParams, pathname, router]);
 
   return (

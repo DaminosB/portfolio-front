@@ -3,15 +3,13 @@
   left: 5%;
   z-index: 10;
 
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
   /* This makes the logo appear from above the window */
   transform: translateY(-100%);
   transition: 500ms;
-}
-
-.logo > button {
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
 .logo img {
@@ -22,7 +20,12 @@
   border-radius: 3px;
   padding: 5px 10px;
   opacity: 0;
+  user-select: none;
   transition: 500ms;
+}
+
+.logo > a:hover + span {
+  opacity: 1;
 }
 
 .logo img:hover + span {

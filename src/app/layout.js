@@ -1,23 +1,24 @@
-import Header from "@/components/Header/Header";
 import "./globals.css";
-
-import { Suspense } from "react";
 
 import axios from "axios";
 
-import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
 import Logo from "@/components/Logo/Logo";
+import Header from "@/components/Header/Header";
 
 export async function generateMetadata({ params }) {
-  const { data } = await axios.get(`${process.env.API_URL}/site-parameter`, {
-    headers: { authorization: `Bearer ${process.env.API_TOKEN}` },
-  });
+  try {
+    const { data } = await axios.get(`${process.env.API_URL}/site-parameter`, {
+      headers: { authorization: `Bearer ${process.env.API_TOKEN}` },
+    });
 
-  const { pageTitle, pageDescription } = data.data.attributes;
-  return {
-    title: pageTitle,
-    description: pageDescription,
-  };
+    const { pageTitle, pageDescription } = data.data.attributes;
+    return {
+      title: pageTitle,
+      description: pageDescription,
+    };
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 const fetchData = async () => {
@@ -79,10 +80,8 @@ export default async function RootLayout({ children }) {
       </head>
       <body className="viewport" style={customStyles}>
         <Header style={style} />
-        <Logo logo={profile.logo} />
-        <Suspense>
-          <ContentWrapper>{children}</ContentWrapper>
-        </Suspense>
+        <Logo logo={profile.logo} style={style} />
+        {children}
       </body>
     </html>
   );

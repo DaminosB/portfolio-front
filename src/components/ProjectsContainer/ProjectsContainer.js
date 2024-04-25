@@ -9,7 +9,6 @@ import { useState, useEffect, useRef } from "react";
 import ProjectCard from "../ProjectCard/ProjectCard";
 import TagsContainer from "../TagsContainer/TagsContainer";
 import LogosCard from "../LogosCard/LogosCard";
-import PreviewDisplayer from "../PreviewDisplayer/PreviewDisplayer";
 
 // This func calculates the height of the cards container
 const calcContainerHeight = (domElement, projectsToDisplay, styleInputs) => {
@@ -129,8 +128,6 @@ const ProjectsContainer = ({ projects, tags, style, logos }) => {
 
   return (
     <section className={styles.projectsContainer} id="projects-container">
-      {/* The PreviewDisplayer shows the cover of the project whose card is being hovered */}
-      {/* <PreviewDisplayer image={coverImage} /> */}
       <TagsContainer
         tags={tags}
         activeFilter={activeFilter}
