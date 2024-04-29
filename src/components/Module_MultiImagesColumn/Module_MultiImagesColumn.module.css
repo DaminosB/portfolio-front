@@ -1,24 +1,19 @@
-.fullpage {
+.multiImagesColumn {
   display: flex;
   justify-content: center;
 }
 
-.fullpage > div {
-  max-width: 100%;
-  display: flex;
-  overflow-x: hidden;
-  flex: 1;
-}
-
-.mediasContainer {
+.multiImagesColumn > div {
+  flex-shrink: 0;
   height: 100%;
+  width: 100%;
   position: relative;
+  overflow: hidden;
   display: flex;
   justify-content: center;
-  overflow: hidden;
 }
 
-.fullpage img {
+.multiImagesColumn img {
   height: 100%;
   transform: translateX(0px);
   transition: 250ms;

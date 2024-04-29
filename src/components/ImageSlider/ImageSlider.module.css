@@ -1,0 +1,28 @@
+.imageSlider {
+  position: absolute;
+  z-index: 1;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: 500ms;
+  width: 100px;
+}
+
+.imageSlider > button {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.xAxis {
+  width: 100%;
+  height: 1px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: -1;
+}

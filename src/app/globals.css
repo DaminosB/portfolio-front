@@ -157,14 +157,16 @@ body {
   scrollbar-gutter: stable;
 }
 
-button {
+button:not(.grabbable, .grabbed) {
   cursor: pointer;
 }
 
 section {
   height: 100%;
   overflow-y: scroll;
+  overflow-x: hidden;
   position: relative;
+  scrollbar-gutter: stable;
 }
 
 section:first-of-type {
@@ -175,6 +177,14 @@ section:first-of-type {
 .container {
   margin: 0 auto;
   width: 70%;
+}
+
+.grabbable {
+  cursor: grab;
+}
+
+.grabbed {
+  cursor: grabbing;
 }
 
 .hidden {
