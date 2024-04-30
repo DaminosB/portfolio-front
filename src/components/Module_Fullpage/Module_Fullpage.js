@@ -28,7 +28,7 @@ const Module_Fullpage = ({ module }) => {
               />
               <ImageSlider
                 stylingObject={sliderStyle}
-                imageId={`media-content-${media.id}`}
+                imagesIdsArray={[`media-content-${media.id}`]}
               />
             </div>
           );

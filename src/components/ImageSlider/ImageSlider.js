@@ -15,7 +15,7 @@ import {
 } from "@/utils/imageSliderUtils";
 
 // This component displays a sliding button that can be used to translate an image and let the viewer see it fully
-const ImageSlider = ({ stylingObject, imageId }) => {
+const ImageSlider = ({ stylingObject, imagesIdsArray }) => {
   // This stats marks if the button is being clicked or pressed
   const [isDragging, setIsDragging] = useState(false);
 
@@ -31,6 +31,33 @@ const ImageSlider = ({ stylingObject, imageId }) => {
   // This is a value we will update to throttle iur ResizeObserver function
   let resizeTimeout;
 
+  const toggleDisplay = (domElement, image) => {
+    // This is its parent
+    const imageContainer = image.parentNode;
+
+    // We check if the image is wider than its parent
+    const isImageTooWide = image.scrollWidth > imageContainer.offsetWidth;
+
+    if (isImageTooWide) {
+      // If so, we display the component
+      domElement.style.display = "unset";
+      requestAnimationFrame(() => domElement.classList.remove("hidden"));
+
+      // We check if the function was triggered by a change on the dimensions
+      const sizeHasChanged = image.scrollWidth !== imageWidth.current;
+      if (sizeHasChanged) {
+        // If so we have two funcs to call
+        calcSliderMov([image], buttonPosition);
+        applyButtonPos(domElement, buttonPosition);
+        imageWidth.current = image.scrollWidth;
+      }
+    } else {
+      // If the image is not wider, no need to displauy this component
+      domElement.style.display = "none";
+      requestAnimationFrame(() => domElement.classList.add("hidden"));
+    }
+  };
+
   //   This func is called anytime the image changes dimensions
   const resizeObserver = new ResizeObserver((entries) => {
     // It's triggered at evry pixel change so we need to put this security
@@ -39,35 +66,10 @@ const ImageSlider = ({ stylingObject, imageId }) => {
 
     if (imageSliderRef.current) {
       const element = imageSliderRef.current;
-      resizeTimeout = setTimeout(() => {
-        // This is the image we are monitoring
-        const image = entries[0].target;
-
-        // This is its parent
-        const imageContainer = image.parentNode;
-
-        // We check if the image is wider than its parent
-        const isImageTooWide = image.scrollWidth > imageContainer.offsetWidth;
-
-        if (isImageTooWide) {
-          // If so, we display the component
-          element.style.display = "unset";
-          requestAnimationFrame(() => element.classList.remove("hidden"));
-
-          //   We check if the function was triggered by a change on the dimensions
-          const sizeHasChanged = image.scrollWidth !== imageWidth.current;
-          if (sizeHasChanged) {
-            // If so we have two funcs to call
-            calcSliderMov([image], buttonPosition);
-            applyButtonPos(element, buttonPosition);
-            imageWidth.current = image.scrollWidth;
-          }
-        } else {
-          // If the image is not wider, no need to displauy this component
-          element.style.display = "none";
-          requestAnimationFrame(() => element.classList.add("hidden"));
-        }
-      }, 750);
+      // This is the image we are monitoring
+      const image = entries[0].target;
+      toggleDisplay(element, image);
+      resizeTimeout = setTimeout(() => {}, 750);
     }
   });
 
@@ -76,18 +78,24 @@ const ImageSlider = ({ stylingObject, imageId }) => {
   const resetCursor = () => setButtonPosition(50);
 
   useEffect(() => {
-    const image = document.getElementById(imageId);
-    resizeObserver.observe(image);
+    const imagesArray = imagesIdsArray.map((imageId) =>
+      document.getElementById(imageId)
+    );
 
-    const imageContainer = image.parentNode;
-    const isImageTooWide = image.scrollWidth > imageContainer.offsetWidth;
+    const referenceImage = imagesArray[0];
+
+    resizeObserver.observe(referenceImage);
+
+    const imageContainer = referenceImage.parentNode;
+    const isImageTooWide =
+      referenceImage.scrollWidth > imageContainer.offsetWidth;
     if (isImageTooWide) {
       applyButtonPos(imageSliderRef.current, buttonPosition);
-      calcSliderMov([image], buttonPosition);
+      calcSliderMov(imagesArray, buttonPosition);
     }
 
     return () => {
-      resizeObserver.unobserve(image);
+      resizeObserver.unobserve(referenceImage);
     };
   }, [buttonPosition]);
 
