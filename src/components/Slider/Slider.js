@@ -85,11 +85,15 @@ const Slider = ({ children, activeIndex, setActiveIndex }) => {
           // Texts being scrollable, we want to make sure we don't jump to another section when the visitor is just scrolling it
           let isScrollAllowed = true;
 
-          if (event.target.tagName === "P")
+          if (event.target.tagName === "P") {
             // So we check with a handler if the scroll is allowed
             isScrollAllowed = textTargetHandler(event.target, scrollDirection);
-
+          } else if (event.target.tagName === "BUTTON") {
+            // If the viewer touches a button, they don't want the slider to move
+            isScrollAllowed = false;
+          }
           // Default is true
+
           if (isScrollAllowed) {
             const newActiveIndex = changeActiveIndex(
               scrollDirection,
