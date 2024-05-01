@@ -17,7 +17,6 @@ const Slider = ({ children, activeIndex, setActiveIndex }) => {
 
   // We don't want the wheel event to trigger our function too much so we set a debouncer
   // At first, debounce is true, it will then be on false so the function won't be triggered
-  // let scrollDebounce = true;
   const scrollDebounce = useRef(true);
 
   // This func is called by the wheel event listener. It's for visitors who view the website on a desktop with a mouse
