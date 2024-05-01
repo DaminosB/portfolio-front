@@ -25,9 +25,6 @@ const ImageSlider = ({ stylingObject, imagesIdsArray }) => {
   // These refs will be associated with the button annd the div used as an axis
   const imageSliderRef = useRef(null);
 
-  // We store the current width of the image so we act only when it has changed
-  const imageWidth = useRef(null);
-
   // This is a value we will update to throttle iur ResizeObserver function
   let resizeTimeout;
 
@@ -35,22 +32,39 @@ const ImageSlider = ({ stylingObject, imagesIdsArray }) => {
     // This is its parent
     const imageContainer = image.parentNode;
 
+    // We put a condition on whether or not the slider must be displayed
+    let displayImageSlider = false;
+
     // We check if the image is wider than its parent
     const isImageTooWide = image.scrollWidth > imageContainer.offsetWidth;
 
-    if (isImageTooWide) {
+    // First scenario : if the imageSlider has multiple images to slide
+    if (imagesIdsArray.length > 1) {
+      // In that case, the image slider is put through a portal and is a child of <main>
+      // So the image slider may appear even on the cover
+      const headerNode = document.getElementsByTagName("HEADER")[0];
+
+      // So we check if we currently are on the cover. The indicator is the presence of "hidden" class on the header
+      const headerIsHidden = Array.from(headerNode.classList).includes(
+        "hidden"
+      );
+
+      // If the image is too wide, and we are not on the cover, the slider may appear
+      displayImageSlider = headerIsHidden && isImageTooWide;
+    } else if (imagesIdsArray.length === 1) {
+      // Second scenario : if the imageSlider has one image to slide
+
+      // We just check if the image is too wide. if so, the slider may appear
+      displayImageSlider = isImageTooWide;
+    }
+
+    if (displayImageSlider) {
       // If so, we display the component
       domElement.style.display = "unset";
       requestAnimationFrame(() => domElement.classList.remove("hidden"));
 
-      // We check if the function was triggered by a change on the dimensions
-      const sizeHasChanged = image.scrollWidth !== imageWidth.current;
-      if (sizeHasChanged) {
-        // If so we have two funcs to call
-        calcSliderMov([image], buttonPosition);
-        applyButtonPos(domElement, buttonPosition);
-        imageWidth.current = image.scrollWidth;
-      }
+      calcSliderMov([image], buttonPosition);
+      applyButtonPos(domElement, buttonPosition);
     } else {
       // If the image is not wider, no need to displauy this component
       domElement.style.display = "none";
@@ -65,11 +79,12 @@ const ImageSlider = ({ stylingObject, imagesIdsArray }) => {
     clearTimeout(resizeTimeout);
 
     if (imageSliderRef.current) {
-      const element = imageSliderRef.current;
-      // This is the image we are monitoring
-      const image = entries[0].target;
-      toggleDisplay(element, image);
-      resizeTimeout = setTimeout(() => {}, 750);
+      resizeTimeout = setTimeout(() => {
+        const element = imageSliderRef.current;
+        // This is the image we are monitoring
+        const image = entries[0].target;
+        toggleDisplay(element, image);
+      }, 750);
     }
   });
 
