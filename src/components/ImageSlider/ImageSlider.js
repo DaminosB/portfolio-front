@@ -12,6 +12,7 @@ import {
   applyButtonPos,
   moveButton,
   calcSliderMov,
+  toggleDisplay,
 } from "@/utils/imageSliderUtils";
 
 // This component displays a sliding button that can be used to translate an image and let the viewer see it fully
@@ -27,50 +28,6 @@ const ImageSlider = ({ stylingObject, imagesIdsArray }) => {
 
   // This is a value we will update to throttle iur ResizeObserver function
   let resizeTimeout;
-
-  const toggleDisplay = (domElement, image) => {
-    // This is its parent
-    const imageContainer = image.parentNode;
-
-    // We put a condition on whether or not the slider must be displayed
-    let displayImageSlider = false;
-
-    // We check if the image is wider than its parent
-    const isImageTooWide = image.scrollWidth > imageContainer.offsetWidth;
-
-    // First scenario : if the imageSlider has multiple images to slide
-    if (imagesIdsArray.length > 1) {
-      // In that case, the image slider is put through a portal and is a child of <main>
-      // So the image slider may appear even on the cover
-      const headerNode = document.getElementsByTagName("HEADER")[0];
-
-      // So we check if we currently are on the cover. The indicator is the presence of "hidden" class on the header
-      const headerIsHidden = Array.from(headerNode.classList).includes(
-        "hidden"
-      );
-
-      // If the image is too wide, and we are not on the cover, the slider may appear
-      displayImageSlider = headerIsHidden && isImageTooWide;
-    } else if (imagesIdsArray.length === 1) {
-      // Second scenario : if the imageSlider has one image to slide
-
-      // We just check if the image is too wide. if so, the slider may appear
-      displayImageSlider = isImageTooWide;
-    }
-
-    if (displayImageSlider) {
-      // If so, we display the component
-      domElement.style.display = "unset";
-      requestAnimationFrame(() => domElement.classList.remove("hidden"));
-
-      calcSliderMov([image], buttonPosition);
-      applyButtonPos(domElement, buttonPosition);
-    } else {
-      // If the image is not wider, no need to displauy this component
-      domElement.style.display = "none";
-      requestAnimationFrame(() => domElement.classList.add("hidden"));
-    }
-  };
 
   //   This func is called anytime the image changes dimensions
   const resizeObserver = new ResizeObserver((entries) => {
@@ -101,13 +58,8 @@ const ImageSlider = ({ stylingObject, imagesIdsArray }) => {
 
     resizeObserver.observe(referenceImage);
 
-    const imageContainer = referenceImage.parentNode;
-    const isImageTooWide =
-      referenceImage.scrollWidth > imageContainer.offsetWidth;
-    if (isImageTooWide) {
-      applyButtonPos(imageSliderRef.current, buttonPosition);
-      calcSliderMov(imagesArray, buttonPosition);
-    }
+    applyButtonPos(imageSliderRef.current, buttonPosition);
+    calcSliderMov(imagesArray, buttonPosition);
 
     return () => {
       resizeObserver.unobserve(referenceImage);
@@ -115,8 +67,10 @@ const ImageSlider = ({ stylingObject, imagesIdsArray }) => {
   }, [buttonPosition]);
 
   const handleMoveButton = (e) => {
-    if (isDragging)
-      setButtonPosition(() => moveButton(e, imageSliderRef.current));
+    if (isDragging) {
+      const value = moveButton(e, imageSliderRef.current);
+      setButtonPosition(value);
+    }
   };
 
   return (
@@ -141,5 +95,23 @@ const ImageSlider = ({ stylingObject, imagesIdsArray }) => {
     </div>
   );
 };
+
+// const toggleDisplay = (domElement, image) => {
+//   // This is its parent
+//   const imageContainer = image.parentNode;
+
+//   // We check if the image is wider than its parent
+//   const isImageTooWide = image.scrollWidth > imageContainer.offsetWidth;
+
+//   if (isImageTooWide) {
+//     // If so, we display the component
+//     domElement.style.display = "unset";
+//     requestAnimationFrame(() => domElement.classList.remove("hidden"));
+//   } else {
+//     // If the image is not wider, no need to displauy this component
+//     domElement.style.display = "none";
+//     requestAnimationFrame(() => domElement.classList.add("hidden"));
+//   }
+// };
 
 export default ImageSlider;

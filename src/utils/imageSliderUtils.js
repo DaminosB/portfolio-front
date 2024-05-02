@@ -31,6 +31,7 @@ const applyButtonPos = (domElement, buttonPosition) => {
   // From left af the axis to left of the button, the axis is colored
   // Between the left and right of the button, the axis is transparent
   // From the right of the button to the right of the axis, the axis is colored
+  console.log("salut");
   xAxisElement.style.background = `linear-gradient(to right, ${xAxisColor} ${finalPosition}px, transparent ${finalPosition}px, transparent ${buttonRightPos}px, ${xAxisColor} ${buttonRightPos}px)`;
 };
 
@@ -89,4 +90,22 @@ const calcSliderMov = (imagesArray, buttonPosition) => {
   );
 };
 
-export { applyButtonPos, moveButton, calcSliderMov };
+const toggleDisplay = (domElement, image) => {
+  // This is its parent
+  const imageContainer = image.parentNode;
+
+  // We check if the image is wider than its parent
+  const isImageTooWide = image.scrollWidth > imageContainer.offsetWidth;
+
+  if (isImageTooWide) {
+    // If so, we display the component
+    domElement.style.display = "unset";
+    requestAnimationFrame(() => domElement.classList.remove("hidden"));
+  } else {
+    // If the image is not wider, no need to displauy this component
+    domElement.style.display = "none";
+    requestAnimationFrame(() => domElement.classList.add("hidden"));
+  }
+};
+
+export { applyButtonPos, moveButton, calcSliderMov, toggleDisplay };
