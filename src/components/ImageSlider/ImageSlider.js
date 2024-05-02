@@ -96,22 +96,4 @@ const ImageSlider = ({ stylingObject, imagesIdsArray }) => {
   );
 };
 
-// const toggleDisplay = (domElement, image) => {
-//   // This is its parent
-//   const imageContainer = image.parentNode;
-
-//   // We check if the image is wider than its parent
-//   const isImageTooWide = image.scrollWidth > imageContainer.offsetWidth;
-
-//   if (isImageTooWide) {
-//     // If so, we display the component
-//     domElement.style.display = "unset";
-//     requestAnimationFrame(() => domElement.classList.remove("hidden"));
-//   } else {
-//     // If the image is not wider, no need to displauy this component
-//     domElement.style.display = "none";
-//     requestAnimationFrame(() => domElement.classList.add("hidden"));
-//   }
-// };
-
 export default ImageSlider;

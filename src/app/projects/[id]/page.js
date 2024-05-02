@@ -7,6 +7,7 @@ import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
 import CoverContainer from "@/components/CoverContainer/CoverContainer";
 import Module_Fullpage from "@/components/Module_Fullpage/Module_Fullpage";
 import Module_MultiImagesColumn from "@/components/Module_MultiImagesColumn/Module_MultiImagesColumn";
+import Module_Container from "@/components/Module_Container/Module_Container";
 
 const fetchData = async (projectId) => {
   try {
@@ -58,10 +59,14 @@ export default async function ProjectsIdPage({ params }) {
           switch (module.__component) {
             case "module.pleine-page":
               return <Module_Fullpage key={module.id} module={module} />;
+
             case "module.colonne-multi-images":
               return (
                 <Module_MultiImagesColumn key={module.id} module={module} />
               );
+
+            case "module.container":
+              return <Module_Container key={module.id} module={module} />;
 
             default:
               break;

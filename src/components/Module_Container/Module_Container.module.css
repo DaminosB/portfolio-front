@@ -1,0 +1,19 @@
+.containerModule > div {
+  padding: 50px 0px;
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.containerModule > div > div {
+  flex: 1;
+}
+
+.containerModule img {
+  width: 100%;
+}
+
+.mediasContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
