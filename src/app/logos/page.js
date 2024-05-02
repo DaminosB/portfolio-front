@@ -9,41 +9,6 @@ import Module_Fullpage from "@/components/Module_Fullpage/Module_Fullpage";
 import Module_MultiImagesColumn from "@/components/Module_MultiImagesColumn/Module_MultiImagesColumn";
 import Module_Container from "@/components/Module_Container/Module_Container";
 
-export async function generateMetadata({ params }) {
-  try {
-    const project = await axios.get(
-      `${process.env.API_URL}/projects/${params.id}?populate=tags`,
-      { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
-    );
-
-    const siteParameters = await axios.get(
-      `${process.env.API_URL}/site-parameter`,
-      {
-        headers: { authorization: `Bearer ${process.env.API_TOKEN}` },
-      }
-    );
-
-    const defaultTitle = siteParameters.data.data.attributes.pageTitle;
-    const projectTitle = project.data.data.attributes.title;
-    const titleStr = `${defaultTitle} || ${projectTitle}`;
-
-    const tagsArray = project.data.data.attributes.tags.data;
-    const tagsStr = tagsArray.map((tag) => tag.attributes.name).join(" | ");
-    const projectDescription = project.data.data.attributes.description;
-
-    const desciptionStr = projectDescription
-      ? `${projectDescription}\n${tagsStr}`
-      : tagsStr;
-
-    return {
-      title: titleStr,
-      description: desciptionStr,
-    };
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 const fetchData = async (projectId) => {
   try {
     const project = await axios.get(
