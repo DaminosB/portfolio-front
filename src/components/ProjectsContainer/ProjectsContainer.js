@@ -68,7 +68,7 @@ const ProjectsContainer = ({ projects, tags, style, logos }) => {
 
   // This state stores the id's of the projects we must display according to the activeFilter parameter
   const [projectsToDisplay, setProjectsToDisplay] = useState(() =>
-    filterProjects(projects, activeFilter, logos.visible)
+    filterProjects(projects, activeFilter, logos.isVisible)
   );
   // It will be used by the ProjectCrd component to calculate its coordinates
 
@@ -116,12 +116,12 @@ const ProjectsContainer = ({ projects, tags, style, logos }) => {
   useEffect(() => {
     // We change the content of the projectsToDisplay state everytime the activeFilter is modified
     setProjectsToDisplay(() =>
-      filterProjects(projects, activeFilter, logos.visible)
+      filterProjects(projects, activeFilter, logos.isVisible)
     );
 
     calcContainerHeight(
       cardsContainerRef.current,
-      filterProjects(projects, activeFilter, logos.visible),
+      filterProjects(projects, activeFilter, logos.isVisible),
       styleInputs
     );
   }, [activeFilter]);
@@ -152,7 +152,7 @@ const ProjectsContainer = ({ projects, tags, style, logos }) => {
             />
           );
         })}
-        {logos.visible && (
+        {logos.isVisible && (
           <LogosCard
             data={logos}
             projectsToDisplay={projectsToDisplay}
