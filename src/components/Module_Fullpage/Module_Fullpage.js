@@ -8,12 +8,21 @@ import parseRequestToCSS from "@/utils/parseRequestToCSS";
 const Module_Fullpage = ({ module }) => {
   const { medias, text } = module;
 
-  const { sectionStyle, containerStyle, mediasStyle, sliderStyle, textStyle } =
-    parseRequestToCSS(module);
+  const {
+    backgroundStyle,
+    contentStyle,
+    mediasContainerStyle,
+    mediasStyle,
+    sliderStyle,
+    textStyle,
+  } = parseRequestToCSS(module);
 
   return (
-    <section className={styles.fullpage} style={sectionStyle}>
-      <div style={containerStyle}>
+    <section
+      className={styles.fullpage}
+      style={{ ...contentStyle, ...backgroundStyle }}
+    >
+      <div style={mediasContainerStyle}>
         {medias.map((media) => {
           return (
             <div

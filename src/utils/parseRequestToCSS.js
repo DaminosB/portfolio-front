@@ -7,35 +7,37 @@ const parseRequestToCSS = (module) => {
     backgroundColor,
     medias,
     imageSliderColor,
+    imagesPerRow,
     text,
   } = module;
 
   // Then we prepare the object we will return
   const response = {
-    sectionStyle: {},
-    containerStyle: {},
+    backgroundStyle: {},
+    contentStyle: {},
+    mediasContainerStyle: {},
     mediasStyle: {},
     sliderStyle: {},
     textStyle: {},
   };
 
   // Background properties
-  if (backgroundColor) response.sectionStyle.backgroundColor = backgroundColor;
+  if (backgroundColor)
+    response.backgroundStyle.backgroundColor = backgroundColor;
 
   if (backgroundImage)
-    response.sectionStyle.backgroundImage = `url(${backgroundImage.url})`;
+    response.backgroundStyle.backgroundImage = `url(${backgroundImage.url})`;
 
   // Medias container width
   if (medias.length > 1) {
-    response.containerStyle.gap = `${gap}px`;
+    response.mediasContainerStyle.gap = `${gap}px`;
+    const imagesPerLine = imagesPerRow || medias.length;
     response.mediasStyle.width = `calc((100% - ${
-      (medias.length - 1) * gap
-    }px) / ${medias.length})`;
+      (imagesPerLine - 1) * gap
+    }px) / ${imagesPerLine})`;
   } else if (medias.length === 1) {
     response.mediasStyle.width = "100%";
   }
-
-  //   console.log(">>>>>>>>>>>>>>", module);
 
   response.sliderStyle.borderColor = imageSliderColor;
 
@@ -44,11 +46,11 @@ const parseRequestToCSS = (module) => {
     // The text is on the left or right
     switch (text.textPosition) {
       case "Gauche":
-        response.sectionStyle.flexDirection = "row-reverse";
+        response.contentStyle.flexDirection = "row-reverse";
         break;
 
       case "Droite":
-        response.sectionStyle.flexDirection = "row";
+        response.contentStyle.flexDirection = "row";
         break;
 
       default:
@@ -59,19 +61,18 @@ const parseRequestToCSS = (module) => {
     switch (text.alignment) {
       case "Gauche":
         response.textStyle.textAlign = "left";
-
         break;
+
       case "Droite":
         response.textStyle.textAlign = "right";
-
         break;
+
       case "Centré":
         response.textStyle.textAlign = "center";
-
         break;
+
       case "Justifié":
         response.textStyle.textAlign = "justify";
-
         break;
 
       default:
@@ -82,15 +83,20 @@ const parseRequestToCSS = (module) => {
     switch (text.fontSize) {
       case "xLarge":
         response.textStyle.fontSize = "80px";
+        break;
+
       case "Large":
         response.textStyle.fontSize = "60px";
         break;
+
       case "Medium":
         response.textStyle.fontSize = "40px";
         break;
+
       case "Small":
         response.textStyle.fontSize = "20px";
         break;
+
       case "xSmall":
         response.textStyle.fontSize = "10px";
         break;
@@ -110,7 +116,7 @@ const parseRequestToCSS = (module) => {
       response.textStyle.backgroundColor = text.backgroundColor;
 
     // Gap between text and medias
-    response.sectionStyle.gap = `${text.gap}px`;
+    response.contentStyle.gap = `${text.gap}px`;
   }
   return response;
 };
