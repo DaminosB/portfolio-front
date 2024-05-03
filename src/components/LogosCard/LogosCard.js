@@ -3,6 +3,8 @@ import styles from "./LogosCard.module.css";
 // React hooks imports
 import { useRef, useEffect } from "react";
 
+import Link from "next/link";
+
 // Utils imports
 import calcCoordinates from "@/utils/calcCoordinates";
 
@@ -41,7 +43,9 @@ const LogosCard = ({
       onMouseEnter={() => handleOnMouseEnter(indexInParent)}
       onMouseLeave={handleMonMouseLeave}
     >
-      <img src={data.thumbnail.url} alt={data.thumbnail.alternativeText} />
+      <Link href={"/logos"}>
+        <img src={data.thumbnail.url} alt={data.thumbnail.alternativeText} />
+      </Link>
     </div>
   );
 };

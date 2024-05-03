@@ -1,5 +1,3 @@
-import styles from "./page.module.css";
-
 import axios from "axios";
 import { Suspense } from "react";
 
@@ -11,28 +9,22 @@ import Module_Container from "@/components/Module_Container/Module_Container";
 
 const fetchData = async (projectId) => {
   try {
-    const project = await axios.get(
-      `${process.env.API_URL}/projects/${projectId}?populate=cover,modules.medias,modules.backgroundImage,modules.text`,
+    const logos = await axios.get(
+      `${process.env.API_URL}/logo?populate=thumbnail,moduleSelection.medias`,
       { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
     );
 
     const response = {
-      project: {
-        ...project.data.data.attributes,
-        cover: project.data.data.attributes.cover.data.attributes,
+      logos: {
+        ...logos.data.data.attributes,
       },
     };
 
-    response.project.modules.forEach((module, i) => {
-      response.project.modules[i].backgroundImage = module.backgroundImage
-        ?.data && {
-        ...module.backgroundImage.data.attributes,
-        id: module.backgroundImage.data.id,
-      };
-      response.project.modules[i].medias = [...module.medias.data];
-
-      response.project.modules[i].medias.forEach((media, j) => {
-        response.project.modules[i].medias[j] = {
+    response.logos.moduleSelection.forEach((module, i) => {
+      response.logos.moduleSelection[i] = { ...module };
+      response.logos.moduleSelection[i].medias = [...module.medias.data];
+      response.logos.moduleSelection[i].medias.forEach((media, j) => {
+        response.logos.moduleSelection[i].medias[j] = {
           ...media.attributes,
           id: media.id,
         };
@@ -45,17 +37,15 @@ const fetchData = async (projectId) => {
   }
 };
 
-export default async function ProjectsIdPage({ params }) {
-  const { project } = await fetchData(params.id);
+export default async function ProjectsIdPage() {
+  const { logos } = await fetchData();
+
+  console.log(logos.moduleSelection[0]);
 
   return (
     <Suspense>
       <ContentWrapper>
-        <CoverContainer
-          coverUrl={project.cover.url}
-          coverAltTxt={project.cover.alternativeText}
-        />
-        {project.modules.map((module, index) => {
+        {logos.moduleSelection.map((module, index) => {
           switch (module.__component) {
             case "module.pleine-page":
               return <Module_Fullpage key={module.id} module={module} />;
