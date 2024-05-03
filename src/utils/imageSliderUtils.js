@@ -31,7 +31,6 @@ const applyButtonPos = (domElement, buttonPosition) => {
   // From left af the axis to left of the button, the axis is colored
   // Between the left and right of the button, the axis is transparent
   // From the right of the button to the right of the axis, the axis is colored
-  console.log("salut");
   xAxisElement.style.background = `linear-gradient(to right, ${xAxisColor} ${finalPosition}px, transparent ${finalPosition}px, transparent ${buttonRightPos}px, ${xAxisColor} ${buttonRightPos}px)`;
 };
 

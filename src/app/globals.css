@@ -206,6 +206,10 @@ section:first-of-type {
   max-height: 0% !important;
 }
 
+.zero-width {
+  width: 0px !important;
+}
+
 .viewport {
   height: 100vh;
   display: flex;

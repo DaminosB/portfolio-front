@@ -23,6 +23,7 @@ export async function generateMetadata({ params }) {
 
 const fetchData = async () => {
   try {
+    // First we call the API to get the data we will need
     const style = await axios.get(
       `${process.env.API_URL}/style?populate=homePageBackground`,
       {
@@ -31,9 +32,13 @@ const fetchData = async () => {
     );
 
     const profile = await axios.get(
-      `${process.env.API_URL}/profile?populate=logo,cover`,
+      `${process.env.API_URL}/profile?populate=logo,cover,socialURLs.otherURLs.logo`,
       { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
     );
+
+    const pages = await axios.get(`${process.env.API_URL}/pages`, {
+      headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
+    });
 
     const response = {
       style: {
@@ -45,8 +50,17 @@ const fetchData = async () => {
         ...profile.data.data.attributes,
         logo: profile.data.data.attributes.logo.data.attributes,
         cover: profile.data.data.attributes.cover.data.attributes,
+        socialURLs: profile.data.data.attributes.socialURLs,
+        otherURLs: profile.data.data.attributes.socialURLs.otherURLs,
+        defaultFont: profile.data.data.attributes.defaultFont,
       },
+      pages: pages.data.data,
     };
+
+    //   Finaly, we clean up the pages key
+    response.pages.forEach((page, index) => {
+      response.pages[index] = { ...page.attributes, id: page.id };
+    });
 
     return response;
   } catch (error) {
@@ -55,7 +69,7 @@ const fetchData = async () => {
 };
 
 export default async function RootLayout({ children }) {
-  const { style, profile } = await fetchData();
+  const { style, profile, pages } = await fetchData();
 
   const customStyles = {
     backgroundImage: `url(${style.homePageBackground.url})`,
@@ -79,8 +93,8 @@ export default async function RootLayout({ children }) {
         />
       </head>
       <body className="viewport" style={customStyles}>
-        <Header style={style} />
-        <Logo logo={profile.logo} style={style} />
+        <Header style={style} pages={pages} profile={profile} />
+        <Logo profile={profile} pages={pages} style={style} />
         {children}
       </body>
     </html>

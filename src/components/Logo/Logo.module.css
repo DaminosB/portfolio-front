@@ -4,7 +4,7 @@
   z-index: 10;
 
   display: flex;
-  align-items: center;
+  /* align-items: flex-start; */
   gap: 15px;
 
   /* This makes the logo appear from above the window */
@@ -12,8 +12,55 @@
   transition: 500ms;
 }
 
-.logo img {
+.logo.flexStart {
+  align-items: flex-start;
+}
+
+.logo.centered {
+  align-items: center;
+}
+
+.logo > button > img {
   width: 30px;
+}
+
+.navContainer {
+  max-height: 1000px;
+  overflow: hidden;
+  transition: 500ms;
+  width: 100%;
+}
+
+.navContainer > div {
+  background-color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 20px;
+  padding: 15px;
+  border-radius: 3px;
+}
+
+.navContainer > div > a {
+  white-space: nowrap;
+}
+
+.navContainer nav {
+  display: flex;
+  gap: 15px;
+}
+
+.navContainer nav:first-of-type {
+  flex-direction: column;
+}
+
+.navContainer nav:nth-child(2) {
+  align-items: flex-end;
+}
+
+.navContainer svg,
+.navContainer img {
+  height: 20px;
 }
 
 .logo span {
@@ -22,12 +69,9 @@
   opacity: 0;
   user-select: none;
   transition: 500ms;
+  height: 100%;
 }
 
-.logo > a:hover + span {
-  opacity: 1;
-}
-
-.logo img:hover + span {
+.logo > button:hover + span {
   opacity: 1;
 }

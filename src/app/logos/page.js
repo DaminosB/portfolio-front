@@ -2,12 +2,11 @@ import axios from "axios";
 import { Suspense } from "react";
 
 import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
-import CoverContainer from "@/components/CoverContainer/CoverContainer";
 import Module_Fullpage from "@/components/Module_Fullpage/Module_Fullpage";
 import Module_MultiImagesColumn from "@/components/Module_MultiImagesColumn/Module_MultiImagesColumn";
 import Module_Container from "@/components/Module_Container/Module_Container";
 
-const fetchData = async (projectId) => {
+const fetchData = async () => {
   try {
     const logos = await axios.get(
       `${process.env.API_URL}/logo?populate=thumbnail,moduleSelection.medias`,
@@ -39,8 +38,6 @@ const fetchData = async (projectId) => {
 
 export default async function ProjectsIdPage() {
   const { logos } = await fetchData();
-
-  console.log(logos.moduleSelection[0]);
 
   return (
     <Suspense>
