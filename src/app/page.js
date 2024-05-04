@@ -19,7 +19,7 @@ const fetchData = async () => {
       { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
     );
 
-    const style = await axios.get(`${process.env.API_URL}/style?populate=*`, {
+    const style = await axios.get(`${process.env.API_URL}/stle?populate=*`, {
       headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
     });
 
