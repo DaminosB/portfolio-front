@@ -1,13 +1,12 @@
 "use client";
 
+import ErrorComponent from "@/components/ErrorComponent/ErrorComponent";
+
 export default function GlobalError({ error, reset }) {
   return (
     <html>
       <body>
-        <div className="error-component">
-          <h2>Something went wrong!</h2>
-          <button onClick={() => reset()}>Try again</button>
-        </div>
+        <ErrorComponent error={error} reset={reset} />
       </body>
     </html>
   );
