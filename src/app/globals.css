@@ -187,7 +187,8 @@ section:first-of-type {
   font-size: 50px;
 }
 
-.error-component > button {
+.error-component > button,
+.error-component > a {
   font-size: 30px;
   border: 1px black solid;
   padding: 10px;
@@ -195,7 +196,8 @@ section:first-of-type {
   background-color: rgba(255, 255, 255, 0.5);
 }
 
-.error-component > button:hover > svg {
+.error-component > button:hover > svg,
+.error-component > a:hover > svg {
   transform: rotate(-360deg);
   transition: 500ms;
 }
@@ -222,18 +224,13 @@ section:first-of-type {
   opacity: 0.2;
 }
 
+.medium {
+  font-size: 30px;
+}
+
 .scaled-down {
   scale: 0.5;
   height: 0%;
-}
-
-/* The element needs to have a default max-height value in order to be animated properly */
-.zero-height {
-  max-height: 0% !important;
-}
-
-.zero-width {
-  width: 0px !important;
 }
 
 .viewport {
@@ -244,4 +241,17 @@ section:first-of-type {
 
 .viewport > main {
   flex: 1;
+}
+
+.xLarge {
+  font-size: 100px;
+}
+
+/* The element needs to have a default max-height value in order to be animated properly */
+.zero-height {
+  max-height: 0% !important;
+}
+
+.zero-width {
+  width: 0px !important;
 }
