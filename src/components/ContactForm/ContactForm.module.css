@@ -1,0 +1,102 @@
+.modaleContainer {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: 250ms;
+  z-index: 10;
+}
+
+.contactForm {
+  position: relative;
+  background-color: white;
+  padding: 30px 0px;
+  gap: 15px;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  padding: 30px;
+  border-radius: 3px;
+}
+
+.contactForm > .closeBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.contactForm h2 {
+  font-size: 25px;
+}
+
+.contactForm > div {
+  display: flex;
+  gap: 10px;
+}
+
+.contactForm > div label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.contactForm input,
+.contactForm textarea,
+.contactForm button {
+  border-radius: 3px;
+  font-size: 16px;
+  transition: 500ms;
+  border: 1px transparent solid;
+  padding: 2px;
+}
+
+.contactForm input {
+  width: 100%;
+}
+
+.contactForm textarea {
+  width: 100%;
+  aspect-ratio: 5;
+}
+
+.contactForm button {
+  width: fit-content;
+  transition: 500ms;
+}
+
+.contactForm button.disabled {
+  cursor: not-allowed;
+}
+
+.contactForm p.formMessage {
+  margin-top: 0;
+  height: 18px;
+}
+
+@media (max-width: 1024px) {
+  .contactContainer > div {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .contactForm {
+    width: 100%;
+  }
+
+  .contactForm label {
+    width: 100%;
+  }
+}
+
+@media (max-width: 425px) {
+  .contactForm input {
+    width: 100%;
+  }
+}
