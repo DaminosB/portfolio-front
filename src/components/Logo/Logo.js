@@ -118,7 +118,7 @@ const Logo = ({ profile, style, pages }) => {
                 Retour aux créations
               </Link>
             )}
-            <NavPages pages={pages} />
+            <NavPages profile={profile} pages={pages} style={style} />
             <NavSocials profile={profile} />
           </div>
         </div>

@@ -18,7 +18,7 @@ const Header = async ({ style, pages, profile }) => {
       style={customStyles}
     >
       {/* The pages navigation displays the pages created by the user and the default ones */}
-      <NavPages pages={pages} />
+      <NavPages profile={profile} pages={pages} style={style} />
       {/* The 2nd navigation menu contains the social media and other websites links */}
       <NavSocials profile={profile} />
     </header>

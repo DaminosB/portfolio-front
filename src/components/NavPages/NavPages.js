@@ -2,8 +2,9 @@
 
 // Next components
 import Link from "next/link";
+import ContactModale from "../ContactModale/ContactModale";
 
-const NavPages = ({ pages }) => {
+const NavPages = ({ profile, pages, style }) => {
   return (
     <nav>
       {/* The pages created by the user are displayed through a .map function */}
@@ -16,7 +17,8 @@ const NavPages = ({ pages }) => {
       })}
 
       {/* The Contact page is created by default */}
-      <Link href="/contact">Contact</Link>
+      {/* <Link href="/contact">Contact</Link> */}
+      <ContactModale profile={profile} style={style} />
     </nav>
   );
 };
