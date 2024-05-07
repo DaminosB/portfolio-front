@@ -259,3 +259,9 @@ section:first-of-type {
 .zero-width {
   width: 0px !important;
 }
+
+@media (max-width: 1024px) {
+  .container {
+    width: 95%;
+  }
+}

@@ -33,9 +33,6 @@ const Logo = ({ profile, style, pages }) => {
     color: style.defaultFontColor,
   };
 
-  // At first, debounce is true, it will then be on false so the function won't be triggered
-  const heightChangeDebounce = useRef(true);
-
   // This is a value we will update to throttle iur ResizeObserver function
   let resizeTimeout;
 
@@ -62,9 +59,15 @@ const Logo = ({ profile, style, pages }) => {
   // This useEffect gives the logo div its final top position and sets the Redirection URL
   useEffect(() => {
     const headerNode = document.getElementById("header");
-    if (!headerHeight.current) {
-      const element = logoDivRef.current;
 
+    const clientWindowWidth = window.innerWidth;
+    const element = logoDivRef.current;
+
+    if (clientWindowWidth < 1024) {
+      element.style.top = "10px";
+      element.style.left = "10px";
+      element.style.transform = "translateY(0px)";
+    } else if (!headerHeight.current) {
       // The logo must be placed in the middle of the header
       headerHeight.current = headerNode.offsetHeight;
       const logoHeight = document.getElementById("logo").offsetHeight;

@@ -37,7 +37,7 @@ const ProjectCard = ({
       //   And we make sure the element is visible
       cardRef.current.classList.remove("hidden");
     } else cardRef.current.classList.add("hidden"); // Otherwise we hide it
-  }, [projectsToDisplay]);
+  }, [projectsToDisplay, styleInputs]);
 
   return (
     <div

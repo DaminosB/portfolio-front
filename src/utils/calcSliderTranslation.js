@@ -74,7 +74,11 @@ const calcSliderTranslation = (targetIndex) => {
 
   const clientWindowWidth = window.innerWidth;
 
-  if (clientWindowWidth < 1024) {
+  const isBigScreen = clientWindowWidth > 1024;
+
+  if (!isBigScreen) {
+    headerNode.classList.add("zero-height");
+    headerNode.classList.add("hidden");
   }
   // Index 0 is the cover component and has a special treatment
   if (sliderHasCover) {
@@ -85,8 +89,8 @@ const calcSliderTranslation = (targetIndex) => {
         // If the targetIndex is 0, we are on the cover, and we should remove classes hidden and removed
         coverComponent.classList.remove("hidden");
         coverComponent.classList.remove("scaled-down");
-        headerNode.classList.remove("zero-height");
-        headerNode.classList.remove("hidden");
+        isBigScreen && headerNode.classList.remove("zero-height");
+        isBigScreen && headerNode.classList.remove("hidden");
 
         // We also slide to the cover component
         sliderElement.style.transform = `translateY(${-activeSectionTopPosition}px)`;
@@ -104,8 +108,8 @@ const calcSliderTranslation = (targetIndex) => {
           // If so, we reduce its size and opacity
           coverComponent.classList.add("hidden");
           coverComponent.classList.add("scaled-down");
-          headerNode.classList.add("zero-height");
-          headerNode.classList.add("hidden");
+          isBigScreen && headerNode.classList.add("zero-height");
+          isBigScreen && headerNode.classList.add("hidden");
         } else {
           // If not, we just slide the active child
           sliderElement.style.transform = `translateY(${-activeSectionTopPosition}px)`;
@@ -121,7 +125,7 @@ const calcSliderTranslation = (targetIndex) => {
     // We check if the header has a hidden class
     const headerIsHidden = Array.from(headerNode.classList).includes("hidden");
     // If not, it means the header is shown
-    if (headerIsHidden) {
+    if (headerIsHidden && isBigScreen) {
       headerNode.classList.remove("zero-height");
       headerNode.classList.remove("hidden");
     }
