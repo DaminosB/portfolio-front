@@ -13,7 +13,7 @@ import NavSocials from "../NavSocials/NavSocials";
 
 // This component displays a logo that sends the visitor back to the homepage's cover
 const Logo = ({ profile, style, pages }) => {
-  // logo: Object. The logo's infos to display it. Got through a request to the back
+  // All props are given from the fetchData function
 
   const pathname = usePathname();
   const router = useRouter();
@@ -36,12 +36,16 @@ const Logo = ({ profile, style, pages }) => {
   // At first, debounce is true, it will then be on false so the function won't be triggered
   const heightChangeDebounce = useRef(true);
 
+  // This is a value we will update to throttle iur ResizeObserver function
+  let resizeTimeout;
+
   //   This func is called anytime the image changes dimensions
   const resizeObserver = new ResizeObserver((entries) => {
     // It's triggered at evry pixel change so we need to put this security
 
-    if (heightChangeDebounce.current) {
-      heightChangeDebounce.current = false;
+    clearTimeout(resizeTimeout);
+
+    resizeTimeout = setTimeout(() => {
       const headerNode = entries[0].target;
       const isHeaderHidden = Array.from(headerNode.classList).includes(
         "hidden"
@@ -52,11 +56,7 @@ const Logo = ({ profile, style, pages }) => {
         setIsNavActive(false);
         setShowMenu(false);
       }
-
-      setTimeout(() => {
-        heightChangeDebounce.current = true;
-      }, 1000);
-    }
+    }, 750);
   });
 
   // This useEffect gives the logo div its final top position and sets the Redirection URL
@@ -75,6 +75,7 @@ const Logo = ({ profile, style, pages }) => {
     if (pathname !== "/") setShowProjectsShortcut(true);
     else setShowProjectsShortcut(false);
 
+    // We want to reset these 2 values at every pathname change
     setIsNavActive(false);
     setShowMenu(false);
 
