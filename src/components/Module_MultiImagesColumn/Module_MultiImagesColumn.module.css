@@ -14,7 +14,6 @@
 }
 
 .multiImagesColumn img {
-  height: 100%;
-  transform: translateX(0px);
+  min-height: 100%;
   transition: 250ms;
 }
