@@ -11,10 +11,6 @@ import calcSliderTranslation from "@/utils/calcSliderTranslation";
 
 // This is the conntainer of the sections we are going to display one at a time. It slides at every activeIndex change
 const Slider = ({ children, activeIndex, setActiveIndex }) => {
-  // For touch evennts. This variable stores the touchstart Y position of the touch. It will be compared to the touchend value later on to determine the direction of the scroll
-  let touchstartYPos;
-  let touchstartXPos;
-
   // We don't want the wheel event to trigger our function too much so we set a debouncer
   // At first, debounce is true, it will then be on false so the function won't be triggered
   const scrollDebounce = useRef(true);
@@ -55,9 +51,13 @@ const Slider = ({ children, activeIndex, setActiveIndex }) => {
     }
   };
 
+  // For touch evennts. This variable stores the touchstart Y position of the touch. It will be compared to the touchend value later on to determine the direction of the scroll
+  let touchstartYPos;
+  let touchstartXPos;
+
   // This func is called by the touch events listeners. It's for visitors who view the website on a tactile device
-  const handleTouchEvents = (event) => {
-    // The same func is called by the touchstart and touchend listeners
+  // The same func is called by the touchstart and touchend listeners
+  const handleTouchEvents = (event, log) => {
     switch (event.type) {
       case "touchstart":
         // If touchstart, we store the coordinates of the touch event in this variable
@@ -140,41 +140,270 @@ const Slider = ({ children, activeIndex, setActiveIndex }) => {
     // Let's start by declaring the slider element
     const sliderElement = document.getElementById("slider");
     // The active section is nth child of the sliderElement or 0 if undefinned
-    const targetSection = sliderElement.children[activeIndex || 0];
+    const targetSection = sliderElement.children[activeIndex];
 
     // We give the activeIndex or 0 to this funnc to calculate the sliding movemennt
-    calcSliderTranslation(activeIndex || 0);
-    // We put event listeners on the active section
-    // The wheel events is for mouse compatible devices
-    targetSection.addEventListener("wheel", (event) => handleWheel(event), {
-      passive: true,
-    });
+    calcSliderTranslation(activeIndex);
 
-    // Touch events are for tactile devices
-    targetSection.addEventListener(
-      "touchstart",
-      (event) => handleTouchEvents(event),
-      { passive: true }
-    );
+    eventHandler(sliderElement, activeIndex);
 
-    targetSection.addEventListener("touchend", (event) =>
-      handleTouchEvents(event)
-    );
+    // const isSmallScreen = window.innerWidth <= 768;
+    // if (isSmallScreen) {
+    //   const sliderChildren = Array.from(sliderElement.children);
+    //   let secondaryIndex;
 
-    // And we remove the event handlers
-    return () => {
-      targetSection.removeEventListener("wheel", (event) => handleWheel(event));
+    //   if (activeIndex < sliderChildren.length - 1) {
+    //     secondaryIndex = activeIndex + 1;
+    //   }
 
-      targetSection.removeEventListener("touchstart", (event) =>
-        handleTouchEvents(event)
-      );
+    //   // We put event listeners on the active section
+    //   // The wheel events is for mouse compatible devices
+    //   targetSection.addEventListener("wheel", (event) => handleWheel(event), {
+    //     passive: true,
+    //   });
 
-      targetSection.removeEventListener("touchend", (event) =>
-        handleTouchEvents(event)
-      );
-    };
+    //   // Touch events are for tactile devices
+    //   targetSection.addEventListener(
+    //     "touchstart",
+    //     (event) => handleTouchEvents(event),
+    //     { passive: true }
+    //   );
+
+    //   targetSection.addEventListener("touchend", (event) =>
+    //     handleTouchEvents(event)
+    //   );
+
+    //   if (secondaryIndex) {
+    //     const secondTarget = sliderElement.children[secondaryIndex];
+
+    //     // We put event listeners on the active section
+    //     // The wheel events is for mouse compatible devices
+    //     secondTarget.addEventListener(
+    //       "wheel",
+    //       (event) => handleWheel(event, "second"),
+    //       {
+    //         passive: true,
+    //       }
+    //     );
+
+    //     // Touch events are for tactile devices
+    //     secondTarget.addEventListener(
+    //       "touchstart",
+    //       (event) => handleTouchEvents(event, "second"),
+    //       { passive: true }
+    //     );
+
+    //     secondTarget.addEventListener("touchend", (event) =>
+    //       handleTouchEvents(event, "second")
+    //     );
+    //   }
+
+    //   // And we remove the event handlers
+    //   return () => {
+    //     targetSection.addEventListener("wheel", (event) => handleWheel(event), {
+    //       passive: true,
+    //     });
+
+    //     // Touch events are for tactile devices
+    //     targetSection.addEventListener(
+    //       "touchstart",
+    //       (event) => handleTouchEvents(event),
+    //       { passive: true }
+    //     );
+
+    //     targetSection.addEventListener("touchend", (event) =>
+    //       handleTouchEvents(event)
+    //     );
+
+    //     if (secondaryIndex) {
+    //       const secondTarget = sliderElement.children[secondaryIndex];
+
+    //       // We put event listeners on the active section
+    //       // The wheel events is for mouse compatible devices
+    //       secondTarget.addEventListener(
+    //         "wheel",
+    //         (event) => handleWheel(event, "second"),
+    //         {
+    //           passive: true,
+    //         }
+    //       );
+
+    //       // Touch events are for tactile devices
+    //       secondTarget.addEventListener(
+    //         "touchstart",
+    //         (event) => handleTouchEvents(event, "second"),
+    //         { passive: true }
+    //       );
+
+    //       secondTarget.addEventListener("touchend", (event) =>
+    //         handleTouchEvents(event, "second")
+    //       );
+    //     }
+    //   };
+    // } else {
+    //   // We put event listeners on the active section
+    //   // The wheel events is for mouse compatible devices
+    //   targetSection.addEventListener("wheel", (event) => handleWheel(event), {
+    //     passive: true,
+    //   });
+
+    //   // Touch events are for tactile devices
+    //   targetSection.addEventListener(
+    //     "touchstart",
+    //     (event) => handleTouchEvents(event),
+    //     { passive: true }
+    //   );
+
+    //   targetSection.addEventListener("touchend", (event) =>
+    //     handleTouchEvents(event)
+    //   );
+
+    //   // And we remove the event handlers
+    //   return () => {
+    //     targetSection.removeEventListener("wheel", (event) =>
+    //       handleWheel(event)
+    //     );
+
+    //     targetSection.removeEventListener("touchstart", (event) =>
+    //       handleTouchEvents(event)
+    //     );
+
+    //     targetSection.removeEventListener("touchend", (event) =>
+    //       handleTouchEvents(event)
+    //     );
+    //   };
+    // }
   }, [activeIndex]);
 
+  const eventHandler = (sliderElement, activeIndex) => {
+    const targetSection = sliderElement.children[activeIndex];
+    const isSmallScreen = window.innerWidth <= 768;
+    if (isSmallScreen) {
+      const sliderChildren = Array.from(sliderElement.children);
+      let secondaryIndex;
+
+      if (activeIndex < sliderChildren.length - 1) {
+        secondaryIndex = activeIndex + 1;
+      }
+
+      // We put event listeners on the active section
+      // The wheel events is for mouse compatible devices
+      targetSection.addEventListener("wheel", (event) => handleWheel(event), {
+        passive: true,
+      });
+
+      // Touch events are for tactile devices
+      targetSection.addEventListener(
+        "touchstart",
+        (event) => handleTouchEvents(event),
+        { passive: true }
+      );
+
+      targetSection.addEventListener("touchend", (event) =>
+        handleTouchEvents(event)
+      );
+
+      if (secondaryIndex) {
+        const secondTarget = sliderElement.children[secondaryIndex];
+
+        // We put event listeners on the active section
+        // The wheel events is for mouse compatible devices
+        secondTarget.addEventListener(
+          "wheel",
+          (event) => handleWheel(event, "second"),
+          {
+            passive: true,
+          }
+        );
+
+        // Touch events are for tactile devices
+        secondTarget.addEventListener(
+          "touchstart",
+          (event) => handleTouchEvents(event, "second"),
+          { passive: true }
+        );
+
+        secondTarget.addEventListener("touchend", (event) =>
+          handleTouchEvents(event, "second")
+        );
+      }
+
+      // And we remove the event handlers
+      return () => {
+        targetSection.addEventListener("wheel", (event) => handleWheel(event), {
+          passive: true,
+        });
+
+        // Touch events are for tactile devices
+        targetSection.addEventListener(
+          "touchstart",
+          (event) => handleTouchEvents(event),
+          { passive: true }
+        );
+
+        targetSection.addEventListener("touchend", (event) =>
+          handleTouchEvents(event)
+        );
+
+        if (secondaryIndex) {
+          const secondTarget = sliderElement.children[secondaryIndex];
+
+          // We put event listeners on the active section
+          // The wheel events is for mouse compatible devices
+          secondTarget.addEventListener(
+            "wheel",
+            (event) => handleWheel(event, "second"),
+            {
+              passive: true,
+            }
+          );
+
+          // Touch events are for tactile devices
+          secondTarget.addEventListener(
+            "touchstart",
+            (event) => handleTouchEvents(event, "second"),
+            { passive: true }
+          );
+
+          secondTarget.addEventListener("touchend", (event) =>
+            handleTouchEvents(event, "second")
+          );
+        }
+      };
+    } else {
+      // We put event listeners on the active section
+      // The wheel events is for mouse compatible devices
+      targetSection.addEventListener("wheel", (event) => handleWheel(event), {
+        passive: true,
+      });
+
+      // Touch events are for tactile devices
+      targetSection.addEventListener(
+        "touchstart",
+        (event) => handleTouchEvents(event),
+        { passive: true }
+      );
+
+      targetSection.addEventListener("touchend", (event) =>
+        handleTouchEvents(event)
+      );
+
+      // And we remove the event handlers
+      return () => {
+        targetSection.removeEventListener("wheel", (event) =>
+          handleWheel(event)
+        );
+
+        targetSection.removeEventListener("touchstart", (event) =>
+          handleTouchEvents(event)
+        );
+
+        targetSection.removeEventListener("touchend", (event) =>
+          handleTouchEvents(event)
+        );
+      };
+    }
+  };
   return (
     <div id="slider" className={styles.slider}>
       {children}

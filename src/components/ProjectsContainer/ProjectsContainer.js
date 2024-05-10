@@ -3,7 +3,8 @@
 import styles from "./ProjectsContainer.module.css";
 
 // React hooks imports
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
+import { WrapperContext } from "../ContentWrapper/ContentWrapper";
 
 // Components imports
 import ProjectCard from "../ProjectCard/ProjectCard";
@@ -59,6 +60,7 @@ const filterProjects = (projects, activeFilter, showLogos) => {
 };
 
 const ProjectsContainer = ({ projects, tags, style, logos }) => {
+  const { activeIndex } = useContext(WrapperContext);
   // The active filter is the tag on which the viewer has clicked
   const [activeFilter, setActiveFilter] = useState(null);
   // When filled in, we only show projects that are paired with said tag
@@ -124,7 +126,14 @@ const ProjectsContainer = ({ projects, tags, style, logos }) => {
       filterProjects(projects, activeFilter, logos.isVisible),
       styleInputs
     );
-  }, [activeFilter]);
+
+    const projectsContainer = document.getElementById("projects-container");
+    if (activeIndex !== 1) {
+      projectsContainer.style.height = "50%";
+    } else {
+      projectsContainer.style.height = "100%";
+    }
+  }, [activeFilter, activeIndex]);
 
   return (
     <section className={styles.projectsContainer} id="projects-container">

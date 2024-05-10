@@ -261,6 +261,10 @@ section:first-of-type {
 }
 
 @media (max-width: 1024px) {
+  section {
+    height: 50%;
+    transition: 500ms;
+  }
   .container {
     width: 95%;
   }

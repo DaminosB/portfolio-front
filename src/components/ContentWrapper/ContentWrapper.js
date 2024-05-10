@@ -23,7 +23,7 @@ const ContentWrapper = ({ children }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeSectionId, setactiveSectionId] = useState();
 
-  const contextValues = { activeSectionId };
+  const contextValues = { activeSectionId, activeIndex };
 
   // This ref will store the previous activeIndex so the useEffect does not call the sliding func unecessarily
   const cachedActiveIndex = useRef(null);

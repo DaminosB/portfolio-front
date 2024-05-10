@@ -5,4 +5,5 @@
 .cardsContainer {
   position: relative;
   transition: 1s;
+  overflow: hidden;
 }
