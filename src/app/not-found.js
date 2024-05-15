@@ -10,9 +10,12 @@ export default function NotFound() {
         erreur
         <span className="xLarge">404</span>
       </span>
-      <h2>Cette page n'existe pas ou a été supprimée.</h2>
+      <h2>
+        Cette page n&apos;existe pas ou a &eacute;t&eacute; supprim&eacute;e.
+      </h2>
       <Link href="/">
-        Retour à la page d'accueil <FontAwesomeIcon icon={faArrowRotateBack} />
+        Retour &agrave; la page d&apos;accueil{" "}
+        <FontAwesomeIcon icon={faArrowRotateBack} />
       </Link>
     </div>
   );
