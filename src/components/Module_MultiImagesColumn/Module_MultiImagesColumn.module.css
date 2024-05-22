@@ -3,12 +3,9 @@
   justify-content: center;
 }
 
-.multiImagesColumn > div:first-of-type {
+/* .multiImagesColumn > div {
   flex-shrink: 0;
   height: 100%;
-  width: 100%;
-  position: relative;
-  overflow: hidden;
   display: flex;
   justify-content: center;
 }
@@ -16,4 +13,4 @@
 .multiImagesColumn img {
   min-height: 100%;
   transition: 250ms;
-}
+} */

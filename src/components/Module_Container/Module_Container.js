@@ -3,6 +3,7 @@ import styles from "./Module_Container.module.css";
 import parseRequestToCSS from "@/utils/parseRequestToCSS";
 
 import Module_Text from "../Module_Text/Module_Text";
+import MediasWrapper from "../MediasWrapper/MediasWrapper";
 
 const Module_Container = ({ module }) => {
   const { medias, text } = module;
@@ -18,11 +19,12 @@ const Module_Container = ({ module }) => {
   return (
     <section className={styles.containerModule} style={backgroundStyle}>
       <div className="container" style={contentStyle}>
-        <div className={styles.mediasContainer} style={mediasContainerStyle}>
+        <MediasWrapper module={module} id={module.id}>
           {medias.map((media) => {
             return (
-              <div key={media.id} style={mediasStyle}>
+              <div key={media.id}>
                 <img
+                  draggable={false}
                   src={media.url}
                   alt={media.alternativeText}
                   id={`media-content-${media.id}`}
@@ -30,7 +32,7 @@ const Module_Container = ({ module }) => {
               </div>
             );
           })}
-        </div>
+        </MediasWrapper>
         {text && <Module_Text stylingObject={textStyle} text={text.text} />}
       </div>
     </section>

@@ -1,9 +1,9 @@
 import styles from "./Module_Fullpage.module.css";
 
-import ImageSlider from "../ImageSlider/ImageSlider";
 import Module_Text from "../Module_Text/Module_Text";
 
 import parseRequestToCSS from "@/utils/parseRequestToCSS";
+import MediasWrapper from "../MediasWrapper/MediasWrapper";
 
 const Module_Fullpage = ({ module }) => {
   const { medias, text } = module;
@@ -22,27 +22,20 @@ const Module_Fullpage = ({ module }) => {
       className={styles.fullpage}
       style={{ ...contentStyle, ...backgroundStyle }}
     >
-      <div style={mediasContainerStyle}>
+      <MediasWrapper module={module} id={module.id}>
         {medias.map((media) => {
           return (
-            <div
-              key={media.id}
-              style={mediasStyle}
-              className={styles.mediasContainer}
-            >
+            <div key={media.id}>
               <img
+                draggable={false}
                 src={media.url}
                 alt={media.alternativeText}
                 id={`media-content-${media.id}`}
               />
-              <ImageSlider
-                stylingObject={sliderStyle}
-                imagesIdsArray={[`media-content-${media.id}`]}
-              />
             </div>
           );
         })}
-      </div>
+      </MediasWrapper>
       {text && <Module_Text stylingObject={textStyle} text={text.text} />}
     </section>
   );

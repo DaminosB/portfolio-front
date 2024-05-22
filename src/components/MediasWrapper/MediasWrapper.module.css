@@ -1,0 +1,80 @@
+/* These are the default properties of the wrapper */
+.mediasWrapper {
+  display: flex;
+  justify-content: center;
+  overflow-x: visible;
+  flex: 1;
+}
+
+/* These are the default properties of the media cards */
+.mediasWrapper > div {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+}
+
+/* Below are the properties that are different according to which module is displayed */
+
+/* Styling the fullpage module */
+.fullpageMode {
+  height: 100%;
+  width: 100%;
+}
+
+/* The media cards in the fullpage module */
+.fullpageMode > div {
+  height: 100%;
+  overflow: hidden;
+  flex: 1;
+}
+
+/* The images in the fullpage module */
+.fullpageMode img {
+  min-height: 100%;
+}
+
+/* Styling the containe rmodule */
+.containerMode {
+  flex-wrap: wrap;
+}
+
+/* The images in the container module */
+.containerMode img {
+  width: 100%;
+  max-width: 80vw;
+}
+
+/* Styling the multi-images-column module */
+.multiImagesMode {
+  flex-shrink: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.multiImagesMode img {
+  min-height: 100%;
+}
+
+/* On smaller screens, the wrapper may be wider than its parent  */
+@media (max-width: 1023px) {
+  .containerMode {
+    flex-wrap: nowrap;
+  }
+
+  .containerMode img {
+    width: auto;
+  }
+
+  .fullpageMode {
+    width: auto;
+  }
+
+  .fullpageMode > div {
+    flex: content;
+  }
+  .multiImagesMode {
+    width: auto;
+  }
+}

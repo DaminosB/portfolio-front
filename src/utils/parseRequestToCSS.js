@@ -29,15 +29,15 @@ const parseRequestToCSS = (module) => {
     response.backgroundStyle.backgroundImage = `url(${backgroundImage.url})`;
 
   // Medias container width
-  if (medias.length > 1) {
-    response.mediasContainerStyle.gap = `${gap}px`;
-    const imagesPerLine = imagesPerRow || medias.length;
-    response.mediasStyle.width = `calc((100% - ${
-      (imagesPerLine - 1) * gap
-    }px) / ${imagesPerLine})`;
-  } else if (medias.length === 1) {
-    response.mediasStyle.width = "100%";
-  }
+  // if (medias.length > 1) {
+  //   response.mediasContainerStyle.gap = `${gap}px`;
+  //   const imagesPerLine = imagesPerRow || medias.length;
+  //   // response.mediasStyle.width = `calc((100% - ${
+  //   //   (imagesPerLine - 1) * gap
+  //   // }px) / ${imagesPerLine})`;
+  // } else if (medias.length === 1) {
+  //   // response.mediasStyle.width = "100%";
+  // }
 
   response.sliderStyle.borderColor = imageSliderColor;
 

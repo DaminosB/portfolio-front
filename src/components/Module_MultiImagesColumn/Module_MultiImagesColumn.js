@@ -1,7 +1,6 @@
 import styles from "./Module_MultiImagesColumn.module.css";
 
-import ImageSlider from "../ImageSlider/ImageSlider";
-import ImageSliderPortal from "../ImageSliderPortal/ImageSliderPortal";
+import MediasWrapper from "../MediasWrapper/MediasWrapper";
 
 const Module_MultiImagesColumn = ({ module }) => {
   const imagesIdsArray = module.medias.map(
@@ -17,22 +16,17 @@ const Module_MultiImagesColumn = ({ module }) => {
             className={styles.multiImagesColumn}
             id={`section-${media.id}`}
           >
-            <div>
+            <MediasWrapper module={module} id={media.id}>
               <img
+                draggable={false}
                 src={media.url}
                 alt={media.alternativeText}
                 id={imagesIdsArray[index]}
               />
-            </div>
+            </MediasWrapper>
           </section>
         );
       })}
-      <ImageSliderPortal imagesIdsArray={imagesIdsArray}>
-        <ImageSlider
-          stylingObject={{ borderColor: "#000000" }}
-          imagesIdsArray={imagesIdsArray}
-        />
-      </ImageSliderPortal>
     </>
   );
 };
