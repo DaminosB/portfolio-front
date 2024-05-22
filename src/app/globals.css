@@ -171,7 +171,6 @@ section {
 
 section:first-of-type {
   display: flex;
-  flex-direction: column;
 }
 
 .error-component {
@@ -261,10 +260,6 @@ section:first-of-type {
 }
 
 @media (max-width: 1024px) {
-  section {
-    height: 50%;
-    transition: 500ms;
-  }
   .container {
     width: 95%;
   }
