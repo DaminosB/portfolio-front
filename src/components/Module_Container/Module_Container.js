@@ -22,7 +22,7 @@ const Module_Container = ({ module }) => {
         <MediasWrapper module={module} id={module.id}>
           {medias.map((media) => {
             return (
-              <div key={media.id}>
+              <div key={media.id} className={styles.mediasCard}>
                 <img
                   draggable={false}
                   src={media.url}

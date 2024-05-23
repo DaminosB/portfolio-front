@@ -2,3 +2,28 @@
   display: flex;
   justify-content: center;
 }
+
+.fullpage > div {
+  height: 100%;
+  width: 100%;
+}
+
+.mediasCard {
+  height: 100%;
+  overflow: hidden;
+  flex: 1;
+}
+
+.mediasCard > img {
+  min-height: 100%;
+}
+
+@media (max-width: 1023px) {
+  .fullpage > div {
+    width: auto;
+  }
+
+  .mediasCard {
+    flex: content;
+  }
+}

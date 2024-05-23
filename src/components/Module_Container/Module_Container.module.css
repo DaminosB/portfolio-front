@@ -7,13 +7,21 @@
   overflow: hidden;
 }
 
-/* .containerModule {
-  display: flex;
-  justify-content: center;
-} */
+.containerModule > div > div {
+  flex-wrap: wrap;
+}
 
-/* @media (max-width: 768px) {
-  .containerModule > div {
-    max-height: 100%;
+.mediasCard > img {
+  width: 100%;
+  max-width: 80vw;
+}
+
+@media (max-width: 1023px) {
+  .containerModule > div > div {
+    flex-wrap: nowrap;
   }
-} */
+
+  .mediasCard > img {
+    width: auto;
+  }
+}

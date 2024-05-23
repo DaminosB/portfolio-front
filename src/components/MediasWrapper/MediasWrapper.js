@@ -26,10 +26,6 @@ const MediasWrapper = ({ children, module, id }) => {
   const previousClickPosition = useRef(0);
   const previousDeltaX = useRef(0);
 
-  // These constants call functions that return css classes. They will be applied to the wrapper's dom element.
-  const moduleClass = defineMediasWrapperMode(module.__component);
-  const grabbingClass = defineGrabbingClass(isBigScreen, isDragging);
-
   // This will be used by the multi-images-column module in order to move every sibling at the same time.
   const relatedSiblings = useRef([]);
 
@@ -46,9 +42,11 @@ const MediasWrapper = ({ children, module, id }) => {
 
       // On big screens, images are wider than their parents and are grabbable.
       // So we set their grabbing class
-      toggleGrabbingClass(mediasWrapperRef.current, "ungrab");
+      const imgArray = selectChildrenByTagName(mediasWrapperRef.current, "img");
+      imgArray.forEach((img) => toggleGrabbingClass(img, "drop"));
     } else {
       setIsBigScreen(false);
+      toggleGrabbingClass(mediasWrapperRef.current, "drop");
     }
 
     // If the wrapper displays the multi-images-column module, we must populate the relatedSiblings array.
@@ -80,10 +78,12 @@ const MediasWrapper = ({ children, module, id }) => {
       activeElement = e.target;
 
       // We change all the images grabbing classes accordingly
-      toggleGrabbingClass(mediasWrapperRef.current, "grab");
+      const imgArray = selectChildrenByTagName(mediasWrapperRef.current, "img");
+      imgArray.forEach((img) => toggleGrabbingClass(img, "drag"));
     } else {
       // On small screens, the wrapper is the element we slide
       activeElement = mediasWrapperRef.current;
+      toggleGrabbingClass(activeElement, "drag");
     }
 
     // To check if the active element overflows its parent, we must store the parent's width
@@ -160,13 +160,20 @@ const MediasWrapper = ({ children, module, id }) => {
       let elementToMove;
 
       if (isBigScreen) {
-        elementToMove = elementToMove = e.target.tagName === "IMG" && e.target;
+        elementToMove = e.target.tagName === "IMG" && e.target;
 
-        // The new grabbing classes must be set on all the wrapper's images
-        toggleGrabbingClass(mediasWrapperRef.current, "ungrab");
+        const imgArray = selectChildrenByTagName(
+          mediasWrapperRef.current,
+          "img"
+        );
+
+        imgArray.forEach((img) => toggleGrabbingClass(img, "drop"));
       } else {
         elementToMove = mediasWrapperRef.current;
+        toggleGrabbingClass(elementToMove, "drop");
       }
+
+      let animationFrame;
 
       if (elementToMove) {
         // This func will be called mutiple times to smooth the ending of the sliding effect
@@ -184,14 +191,14 @@ const MediasWrapper = ({ children, module, id }) => {
             previousDeltaX.current = 0;
           }
         };
-        let animationFrame = requestAnimationFrame(step);
+        animationFrame = requestAnimationFrame(step);
       }
     }
   };
 
   return (
     <div
-      className={`${styles.mediasWrapper} ${moduleClass} ${grabbingClass}`}
+      className={styles.mediasWrapper}
       id={`medias-wrapper-${id}`}
       ref={mediasWrapperRef}
       onMouseDown={grabCursor}
@@ -207,50 +214,33 @@ const MediasWrapper = ({ children, module, id }) => {
   );
 };
 
-// This func returns the grabbing css classes of the wrapper
-const defineGrabbingClass = (isBigScreen, isDragging) => {
-  if (!isBigScreen) return isDragging ? "grabbed" : "grabbable";
-  else return "";
-};
-
-// This func returns the wrapper's class according to the type of module it's displaying
-const defineMediasWrapperMode = (component) => {
-  if (component === "module.container") {
-    return styles.containerMode;
-  } else if (component === "module.pleine-page") {
-    return styles.fullpageMode;
-  } else if (component === "module.colonne-multi-images") {
-    return styles.multiImagesMode;
-  }
+// This func returns all the children with a given tag of a domElement
+const selectChildrenByTagName = (domElement, tagName) => {
+  return Array.from(domElement.querySelectorAll(tagName));
 };
 
 // This func toggles the grabbing css classes of the images
-const toggleGrabbingClass = (mediasWrapper, action) => {
-  // We want to change the class of every sibling image all at once
-  const imgArray = Array.from(mediasWrapper.querySelectorAll("img"));
+const toggleGrabbingClass = (domElement, toggleType) => {
+  const parentWidth = domElement.parentNode.offsetWidth;
+  if (domElement.offsetWidth > parentWidth) {
+    // If the image is not wider than its parent, it is not draggable
+    switch (toggleType) {
+      case "drag":
+        domElement.classList.remove("grabbable");
+        domElement.classList.add("grabbed");
 
-  imgArray.forEach((img) => {
-    const parentWidth = img.parentNode.offsetWidth;
-    if (img.offsetWidth > parentWidth) {
-      // If the image is not wider than ots parent, it is not draggable
-      switch (action) {
-        case "grab":
-          img.classList.remove("grabbable");
-          img.classList.add("grabbed");
+        break;
 
-          break;
+      case "drop":
+        domElement.classList.remove("grabbed");
+        domElement.classList.add("grabbable");
 
-        case "ungrab":
-          img.classList.remove("grabbed");
-          img.classList.add("grabbable");
+        break;
 
-          break;
-
-        default:
-          break;
-      }
+      default:
+        break;
     }
-  });
+  }
 };
 
 // This func moves a given element in its parent on its x axis
