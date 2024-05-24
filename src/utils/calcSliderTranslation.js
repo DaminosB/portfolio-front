@@ -10,7 +10,7 @@ const calcSliderTranslation = (targetIndex) => {
 
   const clientWindowWidth = window.innerWidth;
 
-  const isBigScreen = clientWindowWidth > 1024;
+  const isBigScreen = clientWindowWidth >= 1024;
 
   if (!isBigScreen) {
     headerNode.classList.add("zero-height");
