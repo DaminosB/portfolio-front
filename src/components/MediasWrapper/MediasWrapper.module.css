@@ -3,7 +3,7 @@
   display: flex;
   justify-content: center;
   overflow-x: visible;
-  flex: 1;
+  scrollbar-width: none;
 }
 
 /* These are the default properties of the media cards */

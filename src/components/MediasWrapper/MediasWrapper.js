@@ -9,7 +9,7 @@ import { useEffect, useState, useRef } from "react";
 import MediasNavigation from "../MediasNavigation/MediasNavigation";
 
 // This component wraps the medias of each displayed module. It is rendered client side to let the user interact with the content
-const MediasWrapper = ({ children, module, id }) => {
+const MediasWrapper = ({ children, module, id, mediasWrapperStyle }) => {
   // We check if the content is viewed on a big screen. Otherwise elements will be displayed differently
   const [isBigScreen, setIsBigScreen] = useState(true);
   // On big screens, the wrapper is the same width than the section, so images are slidable in their parent to be viewed whole.
@@ -34,7 +34,7 @@ const MediasWrapper = ({ children, module, id }) => {
     // Some styling parameters from the server request are different according to the screen size. We apply them in the useEffect in order to check the screen size.
     const clientWidth = window.innerWidth;
 
-    moduleStyling(module, mediasWrapperRef.current);
+    // mediasStyling(module, mediasWrapperRef.current);
 
     // Let's set the big screen state
     if (clientWidth >= 1024) {
@@ -47,6 +47,11 @@ const MediasWrapper = ({ children, module, id }) => {
     } else {
       setIsBigScreen(false);
       toggleGrabbingClass(mediasWrapperRef.current, "drop");
+    }
+
+    // If the wrapper displays the container module, we may want to customize the mediaCards width
+    if (module.__component == "module.container") {
+      applyMediaCardsWidth(module, mediasWrapperRef.current);
     }
 
     // If the wrapper displays the multi-images-column module, we must populate the relatedSiblings array.
@@ -199,6 +204,7 @@ const MediasWrapper = ({ children, module, id }) => {
   return (
     <div
       className={styles.mediasWrapper}
+      style={mediasWrapperStyle}
       id={`medias-wrapper-${id}`}
       ref={mediasWrapperRef}
       onMouseDown={grabCursor}
@@ -283,35 +289,22 @@ const moveElementInParent = (deltaX, elementToMove, relatedSiblings) => {
 };
 
 // This func gives its customized styles to the wrapper
-const moduleStyling = (module, mediasWrapper) => {
-  const {
-    gap,
-    backgroundImage,
-    backgroundColor,
-    medias,
-    imageSliderColor,
-    imagesPerRow,
-    text,
-  } = module;
-
+const applyMediaCardsWidth = (module, mediasWrapper) => {
   const isBigScreen = window.innerWidth >= 1024;
 
-  if (medias.length > 1) {
-    // If multiple medias must be displayed, we apply the gap value the user has stored
-    mediasWrapper.style.gap = `${gap}px`;
-  }
+  if (isBigScreen) {
+    const { gap, imagesPerRow } = module;
 
-  if (isBigScreen && module.__component === "module.container") {
+    const totalGapWidth = (imagesPerRow - 1) * gap;
+    const mediaCardWidth = `calc((100% - ${totalGapWidth}px) / ${imagesPerRow})`;
+
     // The mediaCards are the children of the wrapper. They are the direct parent of each image
     const mediaCardsArray = Array.from(mediasWrapper.children);
 
     // The container module lets the user display a series of thumbnails that can be on multiple lines.
     // So each media card must a corresponding width.
-    mediaCardsArray.map((mediaCard, index) => {
-      const imagesPerLine = imagesPerRow;
-      mediaCard.style.width = `calc((100% - ${
-        (imagesPerLine - 1) * gap
-      }px) / ${imagesPerLine})`;
+    mediaCardsArray.forEach((mediaCard) => {
+      mediaCard.style.width = mediaCardWidth;
     });
   }
 };

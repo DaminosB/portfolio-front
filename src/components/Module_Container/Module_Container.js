@@ -1,25 +1,27 @@
 import styles from "./Module_Container.module.css";
 
-import parseRequestToCSS from "@/utils/parseRequestToCSS";
-
-import Module_Text from "../Module_Text/Module_Text";
+import TextContainer from "../TextContainer/TextContainer";
 import MediasWrapper from "../MediasWrapper/MediasWrapper";
+
+import generateCssClasses from "@/utils/generateCssClasses";
+import generateInlineStyle from "@/utils/generateInlineStyle";
 
 const Module_Container = ({ module }) => {
   const { medias, text } = module;
 
-  const {
-    backgroundStyle,
-    contentStyle,
-    mediasContainerStyle,
-    mediasStyle,
-    textStyle,
-  } = parseRequestToCSS(module);
+  const contentDivClasses = generateCssClasses(module);
+
+  const { sectionStyle, contentDivStyle, mediasWrapperStyle } =
+    generateInlineStyle(module);
 
   return (
-    <section className={styles.containerModule} style={backgroundStyle}>
-      <div className="container" style={contentStyle}>
-        <MediasWrapper module={module} id={module.id}>
+    <section className={styles.containerModule} style={sectionStyle}>
+      <div className={`container ${contentDivClasses}`} style={contentDivStyle}>
+        <MediasWrapper
+          module={module}
+          id={module.id}
+          mediasWrapperStyle={mediasWrapperStyle}
+        >
           {medias.map((media) => {
             return (
               <div key={media.id} className={styles.mediasCard}>
@@ -33,7 +35,7 @@ const Module_Container = ({ module }) => {
             );
           })}
         </MediasWrapper>
-        {text && <Module_Text stylingObject={textStyle} text={text.text} />}
+        {text && <TextContainer text={text.text} />}
       </div>
     </section>
   );
