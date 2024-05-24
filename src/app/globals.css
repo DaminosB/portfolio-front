@@ -173,6 +173,11 @@ section:first-of-type {
   display: flex;
 }
 
+.container {
+  margin: 0 auto;
+  width: 70%;
+}
+
 .error-component {
   display: flex;
   justify-content: center;
@@ -201,9 +206,12 @@ section:first-of-type {
   transition: 500ms;
 }
 
-.container {
-  margin: 0 auto;
-  width: 70%;
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-row-reverse {
+  flex-direction: row-reverse;
 }
 
 .grabbable {
@@ -236,6 +244,42 @@ section:first-of-type {
   font-size: 15px;
 }
 
+.text-align-center {
+  text-align: center;
+}
+
+.text-align-justify {
+  text-align: justify;
+}
+
+.text-align-left {
+  text-align: left;
+}
+
+.text-align-right {
+  text-align: right;
+}
+
+.text-size-x-small {
+  font-size: 10px;
+}
+
+.text-size-small {
+  font-size: 20px;
+}
+
+.text-size-medium {
+  font-size: 40px;
+}
+
+.text-size-large {
+  font-size: 60px;
+}
+
+.text-size-x-large {
+  font-size: 80px;
+}
+
 .viewport {
   height: 100vh;
   display: flex;
@@ -259,8 +303,34 @@ section:first-of-type {
   width: 0px !important;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   .container {
     width: 95%;
+  }
+}
+
+@media (max-width: 768px) {
+  .flex-row {
+    flex-direction: column;
+  }
+
+  .flex-row-reverse {
+    flex-direction: column-reverse;
+  }
+
+  .text-size-small {
+    font-size: 15px;
+  }
+
+  .text-size-medium {
+    font-size: 30px;
+  }
+
+  .text-size-large {
+    font-size: 45px;
+  }
+
+  .text-size-x-large {
+    font-size: 60px;
   }
 }
