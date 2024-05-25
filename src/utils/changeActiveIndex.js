@@ -15,9 +15,11 @@ const changeActiveIndex = (scrollDirection, activeIndex) => {
   // Then 2 scenarios according to the scroll direction
   switch (scrollDirection) {
     case "down":
+      const visibleSectionHeight = sectionTotalHeight - distanceFromTop;
       // If down we check if we are at the bottom of the displayed child
+      const marginOfError = 1;
       const isAtBottom =
-        sectionTotalHeight - distanceFromTop === sectionClientHeight;
+        Math.abs(visibleSectionHeight - sectionClientHeight) <= marginOfError;
 
       // We check if we are not on the last parent's child
       const isLastChild = activeIndex === sliderElement.children.length - 1;
