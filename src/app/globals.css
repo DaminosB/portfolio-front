@@ -227,10 +227,6 @@ section:first-of-type {
   opacity: 0;
 }
 
-.inactive {
-  opacity: 0.2;
-}
-
 .medium {
   font-size: 30px;
 }
