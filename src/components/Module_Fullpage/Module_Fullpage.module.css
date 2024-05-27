@@ -3,6 +3,7 @@
   justify-content: center;
   align-items: center;
   height: 100%;
+  width: 100%;
 }
 
 .fullpage > div > div {
@@ -12,7 +13,6 @@
 
 /* MediasWrapper and TextWrapper (only if there is a TextWrapper) */
 .fullpage > div:has(> div:nth-of-type(2)) > div {
-  /* overflow-y: hidden; */
   width: 50%;
   flex: 1;
 }
@@ -35,7 +35,6 @@
   .fullpage > div:has(> div:nth-of-type(2)) > div {
     width: auto;
     min-height: 50%;
-    /* overflow-y: visible; */
   }
 
   .mediasCard {
