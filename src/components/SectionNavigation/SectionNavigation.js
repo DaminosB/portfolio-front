@@ -11,16 +11,20 @@ import { WrapperContext } from "../ContentWrapper/ContentWrapper";
 
 // Packages imports
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircle, faPanorama } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircle,
+  faEllipsis,
+  faPanorama,
+} from "@fortawesome/free-solid-svg-icons";
 
 // This component displays a vertical menu on the right of the page to jump from section to section
-const SectionNavigation = ({ project }) => {
+const SectionNavigation = ({ content }) => {
   const [domTarget, setDomTarget] = useState(null);
 
   const { activeIndex, setActiveIndex } = useContext(WrapperContext);
 
   // This array will be displayed with a .map function
-  const navigationArray = populateNavigationArray(project);
+  const navigationArray = populateNavigationArray(content);
 
   useEffect(() => {
     // We create a portal so this comp will be a child of <body>
@@ -37,7 +41,7 @@ const SectionNavigation = ({ project }) => {
       <nav className={styles.sectionNavigation}>
         {navigationArray.map((entry, index) => {
           const buttonClass =
-            activeIndex === index ? styles.activeButton : "inactive";
+            activeIndex === index ? styles.activeButton : styles.inactiveButton;
           return (
             <button
               key={entry.id}
@@ -54,15 +58,15 @@ const SectionNavigation = ({ project }) => {
   );
 };
 
-// This func takes the project prop and returns an array that we will display with a .map function
-const populateNavigationArray = (project) => {
+// This func takes the content prop and returns an array that we will display with a .map function
+const populateNavigationArray = (content) => {
   const response = [];
 
-  if (project.cover) {
-    response.push({ id: project.cover.id, icon: faPanorama });
+  if (content.cover) {
+    response.push({ id: content.cover.id, icon: faPanorama });
   }
 
-  project.modules.forEach((module) => {
+  content.modules.forEach((module) => {
     if (module.__component === "module.colonne-multi-images") {
       module.medias.forEach((media) => {
         response.push({ id: media.id, icon: faCircle });
@@ -71,6 +75,10 @@ const populateNavigationArray = (project) => {
       response.push({ id: module.id, icon: faCircle });
     }
   });
+
+  if (content.tags) {
+    response.push({ id: "related-projects", icon: faEllipsis });
+  }
 
   return response;
 };

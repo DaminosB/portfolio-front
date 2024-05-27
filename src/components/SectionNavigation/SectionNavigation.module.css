@@ -22,10 +22,14 @@
 }
 
 .sectionNavigation > button:not(.activeButton):hover {
-  opacity: 0.75;
+  opacity: 0.9;
 }
 
 .activeButton > svg {
   height: 25px;
   width: 25px;
+}
+
+.inactiveButton {
+  opacity: 0.5;
 }

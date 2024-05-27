@@ -1,6 +1,5 @@
 .projectCard {
   position: absolute;
-  aspect-ratio: 4/5;
   transition: 500ms;
 }
 

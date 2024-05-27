@@ -10,6 +10,7 @@ import Module_Fullpage from "@/components/Module_Fullpage/Module_Fullpage";
 import Module_MultiImagesColumn from "@/components/Module_MultiImagesColumn/Module_MultiImagesColumn";
 import Module_Container from "@/components/Module_Container/Module_Container";
 import SectionNavigation from "@/components/SectionNavigation/SectionNavigation";
+import RelatedProjects from "@/components/RelatedProjects/RelatedProjects";
 
 export default async function ProjectsIdPage({ params }) {
   const { project } = await fetchData(params.id);
@@ -38,12 +39,12 @@ export default async function ProjectsIdPage({ params }) {
               break;
           }
         })}
-        <SectionNavigation project={project} />
+        <RelatedProjects />
+        <SectionNavigation content={project} />
       </ContentWrapper>
     </Suspense>
   );
 }
-
 export async function generateMetadata({ params }) {
   try {
     const project = await axios.get(
@@ -82,7 +83,7 @@ export async function generateMetadata({ params }) {
 const fetchData = async (projectId) => {
   try {
     const project = await axios.get(
-      `${process.env.API_URL}/projects/${projectId}?populate=cover,modules.medias,modules.backgroundImage,modules.text`,
+      `${process.env.API_URL}/projects/${projectId}?populate=cover,modules.medias,modules.backgroundImage,modules.text,tags`,
       { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
     );
 
@@ -93,6 +94,7 @@ const fetchData = async (projectId) => {
           ...project.data.data.attributes.cover.data.attributes,
           id: project.data.data.attributes.cover.data.id,
         },
+        tags: [...project.data.data.attributes.tags.data],
       },
     };
 
@@ -110,6 +112,10 @@ const fetchData = async (projectId) => {
           id: media.id,
         };
       });
+    });
+
+    response.project.tags.forEach((tag, index) => {
+      response.project.tags[index] = { ...tag.attributes, id: tag.id };
     });
 
     return response;

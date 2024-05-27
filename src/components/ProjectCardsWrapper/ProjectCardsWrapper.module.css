@@ -1,0 +1,7 @@
+.cardsContainer {
+  position: relative;
+}
+
+.inactiveCard {
+  opacity: 0.33;
+}

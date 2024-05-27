@@ -12,8 +12,13 @@ const TagsContainer = ({
   const toggleFilter = (id) => {
     const isActiveFilter = activeFilter === id;
 
-    if (isActiveFilter) setActiveFilter(null);
-    else setActiveFilter(id);
+    if (isActiveFilter) {
+      setActiveFilter(null);
+    } else {
+      const thumbnailsWrapper = document.getElementById("thumbnails-wrapper");
+      thumbnailsWrapper.scrollIntoView({ behavior: "smooth" });
+      setActiveFilter(id);
+    }
   };
 
   const customStyles = {

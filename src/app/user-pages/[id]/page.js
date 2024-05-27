@@ -8,6 +8,7 @@ import CoverContainer from "@/components/CoverContainer/CoverContainer";
 import Module_Fullpage from "@/components/Module_Fullpage/Module_Fullpage";
 import Module_MultiImagesColumn from "@/components/Module_MultiImagesColumn/Module_MultiImagesColumn";
 import Module_Container from "@/components/Module_Container/Module_Container";
+import SectionNavigation from "@/components/SectionNavigation/SectionNavigation";
 
 // export async function generateMetadata({ params }) {
 //   try {
@@ -102,6 +103,7 @@ export default async function ProjectsIdPage({ params }) {
               break;
           }
         })}
+        <SectionNavigation content={page} />
       </ContentWrapper>
     </Suspense>
   );

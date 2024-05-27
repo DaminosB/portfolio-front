@@ -28,15 +28,9 @@ const fetchData = async () => {
       { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
     );
 
-    const tags = await axios.get(`${process.env.API_URL}/tags?populate=*`, {
-      headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
-    });
-
     const logos = await axios.get(
       `${process.env.API_URL}/logo?populate=thumbnail`,
-      {
-        headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
-      }
+      { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
     );
 
     // Then we prepare the object that will contain the needed informations
@@ -48,7 +42,7 @@ const fetchData = async () => {
       },
       style: { ...style.data.data.attributes },
       projects: projects.data.data,
-      tags: tags.data.data,
+      // tags: tags.data.data,
       logos: {
         ...logos.data.data.attributes,
         thumbnail: logos.data.data.attributes.thumbnail.data.attributes,
@@ -69,11 +63,6 @@ const fetchData = async () => {
       });
     });
 
-    // Let's clean up the tags key
-    responses.tags.forEach((tag, i) => {
-      responses.tags[i] = { ...tag.attributes, id: tag.id };
-    });
-
     return responses;
   } catch (error) {
     console.log(error);
@@ -81,7 +70,7 @@ const fetchData = async () => {
 };
 
 export default async function Home() {
-  const { profile, projects, tags, style, logos } = await fetchData();
+  const { profile, projects, style, logos } = await fetchData();
 
   return (
     <Suspense>
@@ -90,12 +79,7 @@ export default async function Home() {
           coverUrl={profile.cover.url}
           coverAltTxt={profile.cover.alternativeText}
         />
-        <ProjectsContainer
-          projects={projects}
-          tags={tags}
-          style={style}
-          logos={logos}
-        />
+        <ProjectsContainer projects={projects} style={style} logos={logos} />
       </ContentWrapper>
     </Suspense>
   );
