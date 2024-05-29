@@ -18,7 +18,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 // This component displays a vertical menu on the right of the page to jump from section to section
-const SectionNavigation = ({ content }) => {
+const SectionNavigation = ({ content, style }) => {
   const [domTarget, setDomTarget] = useState(null);
 
   const { activeIndex, setActiveIndex } = useContext(WrapperContext);
@@ -26,7 +26,13 @@ const SectionNavigation = ({ content }) => {
   // This array will be displayed with a .map function
   const navigationArray = populateNavigationArray(content);
 
+  const inlineStyle = {
+    backgroundColor: style.defaultBackgroundColor,
+    color: style.defaultFontColor,
+  };
+
   useEffect(() => {
+    console.log(style);
     // We create a portal so this comp will be a child of <body>
     setDomTarget(document.body);
   }, []);
@@ -38,7 +44,7 @@ const SectionNavigation = ({ content }) => {
   return (
     domTarget &&
     createPortal(
-      <nav className={styles.sectionNavigation}>
+      <nav className={styles.sectionNavigation} style={inlineStyle}>
         {navigationArray.map((entry, index) => {
           const buttonClass =
             activeIndex === index ? styles.activeButton : styles.inactiveButton;

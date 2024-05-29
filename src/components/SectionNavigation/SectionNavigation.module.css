@@ -7,8 +7,20 @@
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  padding-right: 30px;
-  color: white;
+  padding: 10px;
+  padding-right: 20px;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  opacity: 0.25;
+  transition: 250ms;
+}
+
+.sectionNavigation:hover {
+  opacity: 1;
+}
+
+.sectionNavigation > button {
+  width: 30px;
 }
 
 .sectionNavigation > button,

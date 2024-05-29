@@ -40,7 +40,7 @@ export default async function ProjectsIdPage({ params }) {
           }
         })}
         <RelatedProjects relatedProjects={relatedProjects} style={style} />
-        <SectionNavigation content={project} />
+        <SectionNavigation content={project} style={style} />
       </ContentWrapper>
     </Suspense>
   );
