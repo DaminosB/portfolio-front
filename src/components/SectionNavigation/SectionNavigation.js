@@ -13,8 +13,8 @@ import { WrapperContext } from "../ContentWrapper/ContentWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircle,
-  faEllipsis,
   faPanorama,
+  faPaperclip,
 } from "@fortawesome/free-solid-svg-icons";
 
 // This component displays a vertical menu on the right of the page to jump from section to section
@@ -77,7 +77,7 @@ const populateNavigationArray = (content) => {
   });
 
   if (content.tags) {
-    response.push({ id: "related-projects", icon: faEllipsis });
+    response.push({ id: "related-projects", icon: faPaperclip });
   }
 
   return response;
