@@ -6,7 +6,7 @@ import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import ContactForm from "../ContactForm/ContactForm";
 
-const ContactModale = ({ profile, style }) => {
+const ContactModale = ({ profile, customStyle }) => {
   const [showContactForm, setShowContactForm] = useState(false);
   const domTarget = useRef(null);
 
@@ -24,7 +24,7 @@ const ContactModale = ({ profile, style }) => {
         createPortal(
           <ContactForm
             profile={profile}
-            style={style}
+            customStyle={customStyle}
             setShowContactForm={setShowContactForm}
           />,
           domTarget.current

@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   overflow: hidden;
-  transition: 750ms;
+  transition: 500ms;
   max-height: 100%;
 }
 

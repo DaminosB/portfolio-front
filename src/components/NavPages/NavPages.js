@@ -1,10 +1,10 @@
-// No style so it can be set directly in the parnet component
+// No customStyle so it can be set directly in the parnet component
 
 // Next components
 import Link from "next/link";
 import ContactModale from "../ContactModale/ContactModale";
 
-const NavPages = ({ profile, pages, style }) => {
+const NavPages = ({ profile, pages, customStyle }) => {
   return (
     <nav>
       {/* The pages created by the user are displayed through a .map function */}
@@ -18,7 +18,7 @@ const NavPages = ({ profile, pages, style }) => {
 
       {/* The Contact page is created by default */}
       {/* <Link href="/contact">Contact</Link> */}
-      <ContactModale profile={profile} style={style} />
+      <ContactModale profile={profile} customStyle={customStyle} />
     </nav>
   );
 };

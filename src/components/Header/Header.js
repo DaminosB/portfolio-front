@@ -3,11 +3,11 @@ import styles from "./Header.module.css";
 import NavPages from "../NavPages/NavPages";
 import NavSocials from "../NavSocials/NavSocials";
 
-const Header = async ({ style, pages, profile }) => {
-  //   The styles defined by the user. Will be applied in the style prop of the header tag
+const Header = async ({ customStyle, pages, profile }) => {
+  //   The styles defined by the user. Will be applied in the customStyle prop of the header tag
   const customStyles = {
-    fontFamily: style.headerFont
-      .substring(0, style.headerFont.indexOf("("))
+    fontFamily: customStyle.headerFont
+      .substring(0, customStyle.headerFont.indexOf("("))
       .trim(),
   };
 
@@ -18,7 +18,7 @@ const Header = async ({ style, pages, profile }) => {
       style={customStyles}
     >
       {/* The pages navigation displays the pages created by the user and the default ones */}
-      <NavPages profile={profile} pages={pages} style={style} />
+      <NavPages profile={profile} pages={pages} customStyle={customStyle} />
       {/* The 2nd navigation menu contains the social media and other websites links */}
       <NavSocials profile={profile} />
     </header>

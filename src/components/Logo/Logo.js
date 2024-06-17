@@ -12,7 +12,7 @@ import NavPages from "../NavPages/NavPages";
 import NavSocials from "../NavSocials/NavSocials";
 
 // This component displays a logo that sends the visitor back to the homepage's cover
-const Logo = ({ profile, style, pages }) => {
+const Logo = ({ profile, customStyle, pages }) => {
   // All props are given from the fetchData function
 
   const pathname = usePathname();
@@ -29,8 +29,8 @@ const Logo = ({ profile, style, pages }) => {
   const headerHeight = useRef(0);
 
   const customStyles = {
-    backgroundColor: style.defaultBackgroundColor,
-    color: style.defaultFontColor,
+    backgroundColor: customStyle.defaultBackgroundColor,
+    color: customStyle.defaultFontColor,
   };
 
   // This is a value we will update to throttle iur ResizeObserver function
@@ -94,8 +94,8 @@ const Logo = ({ profile, style, pages }) => {
   };
   const goToProjects = () => {
     if (pathname === "/")
-      router.replace("/?section=projects-container&delay=true");
-    else router.push("/?section=projects-container&delay=true");
+      router.replace("/?slider=projects&section=projects-container&delay=true");
+    else router.push("/?slider=projects&section=projects-container&delay=true");
   };
 
   return (
@@ -118,11 +118,15 @@ const Logo = ({ profile, style, pages }) => {
         >
           <div>
             {showProjectsShortcut && (
-              <Link href="/?section=projects-container&delay=true">
+              <Link href="/?slider=projects&section=projects-container&delay=750">
                 Retour aux créations
               </Link>
             )}
-            <NavPages profile={profile} pages={pages} style={style} />
+            <NavPages
+              profile={profile}
+              pages={pages}
+              customStyle={customStyle}
+            />
             <NavSocials profile={profile} />
           </div>
         </div>

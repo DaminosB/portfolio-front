@@ -6,7 +6,7 @@ const TagsContainer = ({
   tags,
   activeFilter,
   setActiveFilter,
-  style,
+  customStyle,
   filtersToHighlight,
 }) => {
   const toggleFilter = (id) => {
@@ -22,8 +22,8 @@ const TagsContainer = ({
   };
 
   const customStyles = {
-    backgroundColor: style.defaultBackgroundColor,
-    color: style.defaultFontColor,
+    backgroundColor: customStyle.backgroundColor,
+    color: customStyle.color,
   };
 
   return (

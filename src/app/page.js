@@ -10,6 +10,31 @@ import { Suspense } from "react";
 import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
 import ProjectsContainer from "@/components/ProjectsContainer/ProjectsContainer";
 import CoverContainer from "@/components/CoverContainer/CoverContainer";
+import Slider from "@/components/Slider/Slider";
+
+export default async function Home() {
+  const { profile, projects, customStyle, logos } = await fetchData();
+
+  return (
+    <Suspense>
+      <ContentWrapper>
+        <Slider id={"homepage-cover"} hideOnInactive={true}>
+          <CoverContainer
+            coverUrl={profile.cover.url}
+            coverAltTxt={profile.cover.alternativeText}
+          />
+        </Slider>
+        <Slider id={"projects"} hideOnInactive={false} hideHeader={true}>
+          <ProjectsContainer
+            projects={projects}
+            customStyle={customStyle}
+            logos={logos}
+          />
+        </Slider>
+      </ContentWrapper>
+    </Suspense>
+  );
+}
 
 const fetchData = async () => {
   try {
@@ -19,9 +44,12 @@ const fetchData = async () => {
       { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
     );
 
-    const style = await axios.get(`${process.env.API_URL}/style?populate=*`, {
-      headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
-    });
+    const customStyle = await axios.get(
+      `${process.env.API_URL}/style?populate=*`,
+      {
+        headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
+      }
+    );
 
     const projects = await axios.get(
       `${process.env.API_URL}/projects?populate=thumbnail,tags`,
@@ -40,7 +68,7 @@ const fetchData = async () => {
         logo: profile.data.data.attributes.logo.data.attributes,
         cover: profile.data.data.attributes.cover.data.attributes,
       },
-      style: { ...style.data.data.attributes },
+      customStyle: { ...customStyle.data.data.attributes },
       projects: projects.data.data,
       // tags: tags.data.data,
       logos: {
@@ -68,19 +96,3 @@ const fetchData = async () => {
     console.log(error);
   }
 };
-
-export default async function Home() {
-  const { profile, projects, style, logos } = await fetchData();
-
-  return (
-    <Suspense>
-      <ContentWrapper>
-        <CoverContainer
-          coverUrl={profile.cover.url}
-          coverAltTxt={profile.cover.alternativeText}
-        />
-        <ProjectsContainer projects={projects} style={style} logos={logos} />
-      </ContentWrapper>
-    </Suspense>
-  );
-}

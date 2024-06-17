@@ -4,10 +4,10 @@ import styles from "./ProjectsContainer.module.css";
 import ProjectCard from "../ProjectCard/ProjectCard";
 import ProjectCardsWrapper from "../ProjectCardsWrapper/ProjectCardsWrapper";
 
-const ProjectsContainer = ({ projects, style, logos }) => {
-  const totalGapWidth = (style.thumbnailsPerRow - 1) * style.gap;
+const ProjectsContainer = ({ projects, customStyle, logos }) => {
+  const totalGapWidth = (customStyle.thumbnailsPerRow - 1) * customStyle.gap;
 
-  const projectCardWidthStr = `calc((100% - ${totalGapWidth}px) / ${style.thumbnailsPerRow})`;
+  const projectCardWidthStr = `calc((100% - ${totalGapWidth}px) / ${customStyle.thumbnailsPerRow})`;
 
   const cardsToDisplay = projects.map((project) => ({
     id: project.id,
@@ -33,9 +33,19 @@ const ProjectsContainer = ({ projects, style, logos }) => {
       },
     });
 
+  const wrapperStyle = {
+    backgroundColor: customStyle.defaultBackgroundColor,
+    color: customStyle.defaultFontColor,
+    gap: customStyle.gap,
+    thumbnailsPerRow: customStyle.thumbnailsPerRow,
+  };
+
   return (
     <section className={styles.projectsContainer} id="projects-container">
-      <ProjectCardsWrapper style={style} cardsToDisplay={cardsToDisplay}>
+      <ProjectCardsWrapper
+        customStyle={wrapperStyle}
+        cardsToDisplay={cardsToDisplay}
+      >
         {cardsToDisplay.map((card) => {
           return <ProjectCard key={card.id} cardData={card} />;
         })}

@@ -24,7 +24,7 @@ export async function generateMetadata({ params }) {
 const fetchData = async () => {
   try {
     // First we call the API to get the data we will need
-    const style = await axios.get(
+    const customStyle = await axios.get(
       `${process.env.API_URL}/style?populate=homePageBackground`,
       {
         headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
@@ -41,10 +41,10 @@ const fetchData = async () => {
     });
 
     const response = {
-      style: {
-        ...style.data.data.attributes,
+      customStyle: {
+        ...customStyle.data.data.attributes,
         homePageBackground:
-          style.data.data.attributes.homePageBackground.data.attributes,
+          customStyle.data.data.attributes.homePageBackground.data.attributes,
       },
       profile: {
         ...profile.data.data.attributes,
@@ -76,12 +76,12 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false; /* eslint-disable import/first */
 
 export default async function RootLayout({ children }) {
-  const { style, profile, pages } = await fetchData();
+  const { customStyle, profile, pages } = await fetchData();
 
   const customStyles = {
-    backgroundImage: `url(${style.homePageBackground.url})`,
-    fontFamily: style.defaultFont
-      .substring(0, style.defaultFont.indexOf("("))
+    backgroundImage: `url(${customStyle.homePageBackground.url})`,
+    fontFamily: customStyle.defaultFont
+      .substring(0, customStyle.defaultFont.indexOf("("))
       .trim(),
   };
 
@@ -100,8 +100,8 @@ export default async function RootLayout({ children }) {
         />
       </head>
       <body className="viewport" style={customStyles}>
-        <Header style={style} pages={pages} profile={profile} />
-        <Logo profile={profile} pages={pages} style={style} />
+        <Header customStyle={customStyle} pages={pages} profile={profile} />
+        <Logo profile={profile} pages={pages} customStyle={customStyle} />
         {children}
       </body>
     </html>

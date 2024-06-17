@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import TagsContainer from "../TagsContainer/TagsContainer";
 
 // This component wraps the projects cards and handles the filters and hovering effects
-const ProjectCardsWrapper = ({ style, cardsToDisplay, children }) => {
+const ProjectCardsWrapper = ({ customStyle, cardsToDisplay, children }) => {
   // The active filter is the tag on which the viewer has clicked
   const [activeFilter, setActiveFilter] = useState(null);
   // When filled in, we only show projects that are paired with said tag
@@ -59,8 +59,8 @@ const ProjectCardsWrapper = ({ style, cardsToDisplay, children }) => {
   useEffect(() => {
     // We set the custom styles object
     const styleInputs = {
-      gap: style?.gap,
-      elementsPerRow: style?.thumbnailsPerRow,
+      gap: customStyle?.gap,
+      elementsPerRow: customStyle?.thumbnailsPerRow,
     };
 
     // This variable counts the number of visible cards, as this number may vary according to the active filter
@@ -102,8 +102,10 @@ const ProjectCardsWrapper = ({ style, cardsToDisplay, children }) => {
     // The next lines let us calculate and apply its height to the cardsContainer as all its children are in absolute positions
     const cardHeight = cardsContainer.children[0].offsetHeight;
     const numberOfChildren = Array.from(cardsContainer.children).length;
-    const numberOfRows = Math.ceil(numberOfChildren / style?.thumbnailsPerRow);
-    const totalGapWidth = (numberOfRows - 1) * style?.gap;
+    const numberOfRows = Math.ceil(
+      numberOfChildren / customStyle?.thumbnailsPerRow
+    );
+    const totalGapWidth = (numberOfRows - 1) * customStyle?.gap;
 
     const cardsContainerHeight = cardHeight * numberOfRows + totalGapWidth;
 
@@ -134,12 +136,12 @@ const ProjectCardsWrapper = ({ style, cardsToDisplay, children }) => {
   }, [activeFilter]);
 
   return (
-    <div className={styles.ProjectCardsWrapper} id="thumbnails-wrapper">
+    <div className={styles.projectCardsWrapper} id="thumbnails-wrapper">
       <TagsContainer
         tags={tagsList}
         activeFilter={activeFilter}
         setActiveFilter={setActiveFilter}
-        style={style}
+        customStyle={customStyle}
         filtersToHighlight={filtersToHighlight}
       />
       <div

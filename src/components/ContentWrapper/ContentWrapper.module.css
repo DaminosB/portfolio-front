@@ -1,4 +1,5 @@
 .contentWrapper {
   overflow: hidden;
   position: relative;
+  transition: 500ms;
 }

@@ -1,3 +1,7 @@
+.projectCardsWrapper {
+  width: 100%;
+}
+
 .cardsContainer {
   position: relative;
 }

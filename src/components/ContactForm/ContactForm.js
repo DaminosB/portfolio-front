@@ -16,7 +16,7 @@ import {
   faCircleXmark,
 } from "@fortawesome/free-regular-svg-icons";
 
-const ContactForm = ({ profile, style, setShowContactForm }) => {
+const ContactForm = ({ profile, customStyle, setShowContactForm }) => {
   const [username, setUsername] = useState({
     value: "",
     isValid: false,
@@ -111,13 +111,13 @@ const ContactForm = ({ profile, style, setShowContactForm }) => {
   }, [username, email, message]);
 
   const customStyles = {
-    borderColor: style.defaultBackgroundColor,
-    fontFamily: style.defaultFont
-      .substring(0, style.defaultFont.indexOf("("))
+    borderColor: customStyle.defaultBackgroundColor,
+    fontFamily: customStyle.defaultFont
+      .substring(0, customStyle.defaultFont.indexOf("("))
       .trim(),
   };
 
-  const parseStyleToCSS = (style) => {
+  const parseStyleToCSS = (customStyle) => {
     const response = {
       inputStyle: {},
       defaultButtonStyle: {},
@@ -126,29 +126,29 @@ const ContactForm = ({ profile, style, setShowContactForm }) => {
     };
 
     response.inputStyle = {
-      borderColor: style.defaultBackgroundColor,
-      fontFamily: style.defaultFont
-        .substring(0, style.defaultFont.indexOf("("))
+      borderColor: customStyle.defaultBackgroundColor,
+      fontFamily: customStyle.defaultFont
+        .substring(0, customStyle.defaultFont.indexOf("("))
         .trim(),
     };
 
     response.activeButtonStyle = {
-      borderColor: style.defaultBackgroundColor,
-      backgroundColor: style.defaultBackgroundColor,
-      color: style.defaultFontColor,
+      borderColor: customStyle.defaultBackgroundColor,
+      backgroundColor: customStyle.defaultBackgroundColor,
+      color: customStyle.defaultFontColor,
     };
 
     response.inactiveButtonStyle = {
-      borderColor: style.defaultBackgroundColor,
-      color: style.defaultBackgroundColor,
-      backgroundColor: style.defaultFontColor,
+      borderColor: customStyle.defaultBackgroundColor,
+      color: customStyle.defaultBackgroundColor,
+      backgroundColor: customStyle.defaultFontColor,
     };
 
     return response;
   };
 
   const { inputStyle, activeButtonStyle, inactiveButtonStyle } =
-    parseStyleToCSS(style);
+    parseStyleToCSS(customStyle);
 
   const handleCloseModale = () => {
     if (!username.value && !email.value && !message.value) closeModale();

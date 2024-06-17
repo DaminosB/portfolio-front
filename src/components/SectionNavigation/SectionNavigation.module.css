@@ -11,12 +11,6 @@
   padding-right: 20px;
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
-  opacity: 0.25;
-  transition: 250ms;
-}
-
-.sectionNavigation:hover {
-  opacity: 1;
 }
 
 .sectionNavigation > button {
@@ -43,5 +37,5 @@
 }
 
 .inactiveButton {
-  opacity: 0.5;
+  opacity: 0.67;
 }
