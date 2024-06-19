@@ -10,10 +10,8 @@
 
 .videoWrapper > div {
   position: absolute;
-  z-index: 1;
   width: 100%;
   height: 100%;
-  transition: 500ms;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,12 +30,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* transform: rotate(-240deg); */
   opacity: 0.75;
 }
 
 .videoWrapper > div button:hover {
-  /* transform: rotate(240deg); */
   scale: 1.25;
   opacity: 1;
 }
@@ -45,12 +41,11 @@
 .videoWrapper > div svg {
   width: 100px;
   height: 100px;
-  margin: 0 auto;
 }
 
 .videoPlayer {
+  transition: 500ms;
   width: 100%;
-  /* height: 100%; */
+  z-index: 1;
   object-fit: contain;
-  /* position: relative; */
 }

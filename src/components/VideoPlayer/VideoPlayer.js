@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 
 const VideoPlayer = ({ children, video, customColors }) => {
-  const [videoStatus, setVideoStatus] = useState("inactive");
+  const [isActive, setIsActive] = useState(false);
 
   const videoPlayerRef = useRef(null);
 
@@ -18,12 +18,12 @@ const VideoPlayer = ({ children, video, customColors }) => {
   };
 
   const enableVideoPlayer = () => {
-    setVideoStatus("active");
+    setIsActive(true);
     videoPlayerRef.current.play();
   };
 
   const disableVideoPlayer = () => {
-    setVideoStatus("inactive");
+    setIsActive(false);
     customButtonColors("disengage", customColors, buttonId);
   };
 
@@ -31,11 +31,10 @@ const VideoPlayer = ({ children, video, customColors }) => {
     switch (event.type) {
       case "mouseenter":
         customButtonColors("engage", customColors, buttonId);
-
         break;
+
       case "mouseleave":
         customButtonColors("disengage", customColors, buttonId);
-
         break;
 
       default:
@@ -45,12 +44,10 @@ const VideoPlayer = ({ children, video, customColors }) => {
 
   return (
     <div className={styles.videoWrapper}>
-      <div className={videoStatus === "active" ? "hidden" : ""}>
+      <div>
         <button
           style={buttonStyle}
           id={buttonId}
-          //   id={`video-player-button-${video.id}`}
-          //   style={buttonStyle}
           onMouseEnter={handleMouseEvents}
           onMouseLeave={handleMouseEvents}
           onClick={enableVideoPlayer}
@@ -60,9 +57,8 @@ const VideoPlayer = ({ children, video, customColors }) => {
         <img src={video.caption} alt="" />
       </div>
       <video
-        autoPlay={videoStatus === "active" ? true : false}
         ref={videoPlayerRef}
-        className={styles.videoPlayer}
+        className={`${styles.videoPlayer} ${isActive ? "" : "hidden"}`}
         controls
         preload="metadata"
         onEnded={disableVideoPlayer}
@@ -77,8 +73,6 @@ const customButtonColors = (scenario, customColors, buttonId) => {
   const { themeColor, fontColor } = customColors;
 
   const buttonNode = document.getElementById(buttonId);
-
-  console.log(document);
 
   if (scenario === "engage") buttonNode.style.color = themeColor;
   else if (scenario === "disengage") buttonNode.style.color = fontColor;
