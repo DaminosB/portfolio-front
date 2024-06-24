@@ -13,14 +13,17 @@ const Header = async ({ customStyle, pages, profile }) => {
 
   return (
     <header
-      className={`${styles.header} container`}
+      className={styles.header}
+      // className={`${styles.header} container`}
       id="header"
       style={customStyles}
     >
-      {/* The pages navigation displays the pages created by the user and the default ones */}
-      <NavPages profile={profile} pages={pages} customStyle={customStyle} />
-      {/* The 2nd navigation menu contains the social media and other websites links */}
-      <NavSocials profile={profile} />
+      <div className="container">
+        {/* The pages navigation displays the pages created by the user and the default ones */}
+        <NavPages profile={profile} pages={pages} customStyle={customStyle} />
+        {/* The 2nd navigation menu contains the social media and other websites links */}
+        <NavSocials profile={profile} />
+      </div>
     </header>
   );
 };

@@ -19,9 +19,12 @@ const ContentWrapper = ({ children }) => {
 
   // The first index is the slider (direct child of the wrapper), the second is the section (direct child of the slider)
   const [activeSliderIndex, activeSectionIndex] = activeCoordinates;
+  const [showHeader, setShowHeader] = useState(true);
 
   // This ref will store the previous coordinates so the useEffect does not call the sliding func unecessarily
   const cachedActiveCoordinates = useRef([]);
+
+  const cachedPathname = useRef("");
 
   const wrapperRef = useRef(null);
 
@@ -29,6 +32,8 @@ const ContentWrapper = ({ children }) => {
   const contextValues = {
     activeCoordinates,
     setActiveCoordinates,
+    showHeader,
+    setShowHeader,
   };
 
   // This func handles the queries the ContentWrapper could receive. It will displayed the requested the section in the requested slider.
@@ -108,7 +113,23 @@ const ContentWrapper = ({ children }) => {
       displayActiveSlider(slidersArray, activeSliderIndex);
       cachedActiveCoordinates.current = activeCoordinates;
     }
-  }, [searchParams, activeSliderIndex]);
+
+    // The header element of the document
+    const [headerNode] = document.getElementsByTagName("HEADER");
+
+    if (showHeader) {
+      headerNode.classList.remove("zero-height");
+      // headerNode.classList.remove("hidden");
+    } else {
+      headerNode.classList.add("zero-height");
+      // headerNode.classList.add("hidden");
+    }
+
+    if (pathname !== cachedPathname.current) {
+      setActiveCoordinates([0, 0]);
+      cachedPathname.current = pathname;
+    }
+  }, [searchParams, router, activeSliderIndex, showHeader]);
 
   return (
     // This wrapper acts as a window to display the content. It should not overflow the client's screen

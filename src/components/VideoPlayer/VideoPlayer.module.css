@@ -49,3 +49,13 @@
   z-index: 1;
   object-fit: contain;
 }
+
+@media (max-width: 1023px) {
+  div:has(> div.videoWrapper) {
+    max-width: 100%;
+  }
+
+  .videoPlayer {
+    max-width: 90vw;
+  }
+}

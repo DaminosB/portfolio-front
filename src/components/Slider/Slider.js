@@ -15,8 +15,11 @@ const Slider = ({ children, id, hideOnInactive, hideHeader }) => {
 
   // This state is true when the slider is the one currently being displayed
   const [isActiveSlider, setIsActiveSlider] = useState(false);
+  // const [displayedSection, setDisplayedSection] = useState(0);
 
-  const { activeCoordinates, setActiveCoordinates } =
+  const cachedSection = useRef(0);
+
+  const { activeCoordinates, setActiveCoordinates, setShowHeader } =
     useContext(WrapperContext);
 
   // The first index is the active slider (direct child of the wrapper), the second one is the active section in the active slider
@@ -169,11 +172,13 @@ const Slider = ({ children, id, hideOnInactive, hideHeader }) => {
     const [headerNode] = document.getElementsByTagName("HEADER");
 
     // If the sectionsTopPositions ref array is not defined yet, we populate it
+    // if (headerHeight !== null) {
     if (!sectionsTopPositions.current) {
       // The ContentWrapper can display multiple sliders, each with a potentially different hideHeader prop value.
       // When calculating each section's top position, we need to account for this difference.
       const heightOffset = hideHeader
-        ? Math.floor(headerNode.getBoundingClientRect().height) // Use the exact height of the header if it is visible
+        ? // ? headerHeight // Use the exact height of the header if it is visible
+          Math.floor(headerNode.getBoundingClientRect().height) // Use the exact height of the header if it is visible
         : 0; // No height offset if the header is hidden
 
       // We call the populate func with the data we have gathered
@@ -186,31 +191,82 @@ const Slider = ({ children, id, hideOnInactive, hideHeader }) => {
     // This will check if the slider is the currently active one (if it's being displayed)
     const isActiveSlider = sliderIndex === activeSliderIndex;
 
+    // Calculate and apply the speed and translate coordinates of the slider
+    // If there are many sections to scroll, we want to lengthen the transition duration.
+    let transformTransitionDuration = 0;
+    // Default duration for all animations (in ms)
+    const DEFAULT_TRANSITION_DURATION = 750;
+    // Duration multiplier for active slider transitions (in ms)
+    const ACTIVE_SLIDER_MULTIPLIER = 300;
+    // Duration multiplier for inactive slider transitions (in ms)
+    const INACTIVE_SLIDER_MULTIPLIER = 200;
+
     // Translate the slider on the Y axis to display the desired section
     if (isActiveSlider) {
-      // If the slider is active, translate it to the active section
-      const newTranslateYValue =
-        sectionsTopPositions.current[activeSectionIndex];
-      element.style.transform = `translateY(${newTranslateYValue}px)`;
+      // If the slider is active
+
+      // Calculate the number of sections jumped by finding the difference between the previous active index and the new one
+      const sectionsJumped = Math.abs(
+        cachedSection.current - activeSectionIndex
+      );
+
+      // Calculate the transition duration based on the sections jumped
+      transformTransitionDuration = sectionsJumped * ACTIVE_SLIDER_MULTIPLIER;
+
+      // Calculate the new translate Y value to slide to the new active section
+      const newTranslateY = sectionsTopPositions.current[activeSectionIndex];
+      element.style.transform = `translateY(${newTranslateY}px)`;
+      // element.style.zIndex = 1;
 
       // Set the slider's active state to true
       setIsActiveSlider(true);
+      cachedSection.current = activeSectionIndex;
     } else if (sliderIndex > activeSliderIndex) {
-      // If the slider is after the currently active one, translate it to the first section
-      const newTranslateYValue = sectionsTopPositions.current[0];
-      element.style.transform = `translateY(${newTranslateYValue}px)`;
+      // If the slider is after the currently active one, translate it to the first section (index 0)
+
+      // Calculate the number of sections jumped (previous active section index)
+      const sectionsJumped = cachedSection.current;
+
+      // Calculate the transition duration based on the sections jumped
+      transformTransitionDuration = sectionsJumped * INACTIVE_SLIDER_MULTIPLIER;
+
+      // Calculate the new translate Y value to slide to the first section
+      const newTranslateY = sectionsTopPositions.current[0];
+      element.style.transform = `translateY(${newTranslateY}px)`;
 
       // Set the slider's active state to false
+      // element.style.zIndex = 0;
       setIsActiveSlider(false);
+      cachedSection.current = 0;
     } else if (sliderIndex < activeSliderIndex) {
       // If the slider is before the currently active one, translate it to the last section
+
+      // Get the last section index
       const lastSectionIndex = sectionsArray.length - 1;
-      const newTranslateYValue = sectionsTopPositions.current[lastSectionIndex];
-      element.style.transform = `translateY(${newTranslateYValue}px)`;
+
+      // Calculate the number of sections jumped (difference between previous active section and last section)
+      const sectionsJumped = lastSectionIndex - cachedSection.current;
+
+      // Calculate the transition duration based on the sections jumped
+      transformTransitionDuration = sectionsJumped * INACTIVE_SLIDER_MULTIPLIER;
+
+      // Calculate the new translate Y value to slide to the last section
+      const newTranslateY = sectionsTopPositions.current[lastSectionIndex];
+      // element.style.zIndex = 0;
+      element.style.transform = `translateY(${newTranslateY}px)`;
 
       // Set the slider's active state to false
       setIsActiveSlider(false);
+      cachedSection.current = lastSectionIndex;
     }
+
+    // Ensure the transition duration is not shorter than the default duration
+    if (transformTransitionDuration < DEFAULT_TRANSITION_DURATION) {
+      transformTransitionDuration = DEFAULT_TRANSITION_DURATION;
+    }
+
+    // Apply the calculated transition duration
+    element.style.transition = `${DEFAULT_TRANSITION_DURATION}ms, transform ${transformTransitionDuration}ms`;
 
     // These are the parameters we can give to the component
     // The slider fades away when it's no longer active
@@ -221,12 +277,11 @@ const Slider = ({ children, id, hideOnInactive, hideHeader }) => {
 
     // The slider hides the header when active
     if (hideHeader && isActiveSlider) {
-      headerNode.classList.add("zero-height");
-      headerNode.classList.add("hidden");
+      setShowHeader(false);
     } else if (!hideHeader && isActiveSlider) {
-      headerNode.classList.remove("zero-height");
-      headerNode.classList.remove("hidden");
+      setShowHeader(true);
     }
+    // }
   }, [activeSliderIndex, activeSectionIndex]);
 
   return (

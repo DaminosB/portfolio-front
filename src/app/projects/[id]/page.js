@@ -1,10 +1,5 @@
-import styles from "./page.module.css";
-
-import { Suspense } from "react";
-
 import axios from "axios";
 
-import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
 import CoverContainer from "@/components/CoverContainer/CoverContainer";
 import Module_Fullpage from "@/components/Module_Fullpage/Module_Fullpage";
 import Module_MultiImagesColumn from "@/components/Module_MultiImagesColumn/Module_MultiImagesColumn";
@@ -17,71 +12,69 @@ export default async function ProjectsIdPage({ params }) {
   const { project, customStyle, tagsData } = await fetchData(params.id);
 
   const customColors = {
-    themeColor: project.themeColor,
-    fontColor: project.fontColor,
+    themeColor: project.mainColor,
+    fontColor: project.secondaryColor,
   };
 
   return (
-    <Suspense>
-      <ContentWrapper>
-        {project.cover && (
-          <Slider id={"cover"} hideOnInactive={true}>
-            <CoverContainer
-              coverUrl={project.cover.url}
-              coverAltTxt={project.cover.alternativeText}
-            />
-          </Slider>
-        )}
-        <Slider id={"project-content"} hideHeader={true}>
-          {project.modules.map((module, index) => {
-            switch (module.__component) {
-              case "module.pleine-page":
-                return (
-                  <Module_Fullpage
-                    key={module.id}
-                    module={module}
-                    customColors={customColors}
-                  />
-                );
-
-              case "module.colonne-multi-images":
-                return (
-                  <Module_MultiImagesColumn
-                    key={module.id}
-                    module={module}
-                    customColors={customColors}
-                  />
-                );
-
-              case "module.container":
-                return (
-                  <Module_Container
-                    key={module.id}
-                    module={module}
-                    customColors={customColors}
-                  />
-                );
-
-              default:
-                break;
-            }
-          })}
-        </Slider>
-        <Slider
-          id={"related-projects-slider"}
-          hideHeader={true}
-          hideOnInactive={true}
-        >
-          <RelatedProjects
-            tagsData={tagsData}
-            projectId={project.id}
-            customStyle={customStyle}
-            customColors={customColors}
+    <>
+      {project.cover && (
+        <Slider id={"cover"} hideOnInactive={true}>
+          <CoverContainer
+            coverUrl={project.cover.url}
+            coverAltTxt={project.cover.alternativeText}
           />
         </Slider>
-        <SectionNavigation content={project} customStyle={customColors} />
-      </ContentWrapper>
-    </Suspense>
+      )}
+      <Slider id={"project-content"} hideHeader={true}>
+        {project.modules.map((module, index) => {
+          switch (module.__component) {
+            case "module.pleine-page":
+              return (
+                <Module_Fullpage
+                  key={module.id}
+                  module={module}
+                  customColors={customColors}
+                />
+              );
+
+            case "module.colonne-multi-images":
+              return (
+                <Module_MultiImagesColumn
+                  key={module.id}
+                  module={module}
+                  customColors={customColors}
+                />
+              );
+
+            case "module.container":
+              return (
+                <Module_Container
+                  key={module.id}
+                  module={module}
+                  customColors={customColors}
+                />
+              );
+
+            default:
+              break;
+          }
+        })}
+      </Slider>
+      <Slider
+        id={"related-projects-slider"}
+        hideHeader={true}
+        hideOnInactive={true}
+      >
+        <RelatedProjects
+          tagsData={tagsData}
+          projectId={project.id}
+          customStyle={customStyle}
+          customColors={customColors}
+        />
+      </Slider>
+      <SectionNavigation content={project} customStyle={customColors} />
+    </>
   );
 }
 export async function generateMetadata({ params }) {

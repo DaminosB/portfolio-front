@@ -1,13 +1,7 @@
-import styles from "./page.module.css";
-
 // Packages imports
 import axios from "axios";
 
-// React components imports
-import { Suspense } from "react";
-
 // Components import
-import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
 import ProjectsContainer from "@/components/ProjectsContainer/ProjectsContainer";
 import CoverContainer from "@/components/CoverContainer/CoverContainer";
 import Slider from "@/components/Slider/Slider";
@@ -16,23 +10,21 @@ export default async function Home() {
   const { profile, projects, customStyle, logos } = await fetchData();
 
   return (
-    <Suspense>
-      <ContentWrapper>
-        <Slider id={"homepage-cover"} hideOnInactive={true}>
-          <CoverContainer
-            coverUrl={profile.cover.url}
-            coverAltTxt={profile.cover.alternativeText}
-          />
-        </Slider>
-        <Slider id={"projects"} hideOnInactive={false} hideHeader={true}>
-          <ProjectsContainer
-            projects={projects}
-            customStyle={customStyle}
-            logos={logos}
-          />
-        </Slider>
-      </ContentWrapper>
-    </Suspense>
+    <>
+      <Slider id={"homepage-cover"} hideOnInactive={true}>
+        <CoverContainer
+          coverUrl={profile.cover.url}
+          coverAltTxt={profile.cover.alternativeText}
+        />
+      </Slider>
+      <Slider id={"projects"} hideOnInactive={false} hideHeader={true}>
+        <ProjectsContainer
+          projects={projects}
+          customStyle={customStyle}
+          logos={logos}
+        />
+      </Slider>
+    </>
   );
 }
 

@@ -21,7 +21,7 @@ const TagsContainer = ({
     }
   };
 
-  const customStyles = {
+  const inlineStyle = {
     backgroundColor: customStyle.backgroundColor,
     color: customStyle.color,
   };
@@ -35,7 +35,7 @@ const TagsContainer = ({
         return (
           <button
             key={tag.id}
-            style={customStyles}
+            style={inlineStyle}
             className={isActiveFilter ? styles.active : styles.inactive}
             onClick={() => toggleFilter(tag.id)}
           >

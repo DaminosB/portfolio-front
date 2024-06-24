@@ -34,8 +34,8 @@ const ProjectsContainer = ({ projects, customStyle, logos }) => {
     });
 
   const wrapperStyle = {
-    backgroundColor: customStyle.defaultBackgroundColor,
-    color: customStyle.defaultFontColor,
+    backgroundColor: customStyle.mainColor,
+    color: customStyle.secondaryColor,
     gap: customStyle.gap,
     thumbnailsPerRow: customStyle.thumbnailsPerRow,
   };

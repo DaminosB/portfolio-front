@@ -1,83 +1,114 @@
-.logo {
+/* This is the panel that will display the menu */
+.sidePanel {
   position: absolute;
-  left: 5%;
-  z-index: 10;
-
+  padding: 100px 15px 0px 15px;
+  height: 100%;
+  min-width: 33%;
   display: flex;
-  /* align-items: flex-start; */
-  gap: 15px;
+  flex-direction: column;
+  gap: 30px;
 
-  /* This makes the logo appear from above the window */
-  transform: translateY(-100%);
   transition: 500ms;
 }
 
-.logo.flexStart {
-  align-items: flex-start;
+/* If closed the panel is invisible on the left of the screen */
+.sidePanel.closed {
+  transform: translateX(-100%);
 }
 
-.logo.centered {
-  align-items: center;
+/* If open, it will be shown at its default place */
+.sidePanel.open {
+  box-shadow: 50px 0px 150px black;
+  transform: translateX(0%);
 }
 
-.logo > button > img {
-  width: 30px;
-}
-
-.navContainer {
-  max-height: 1000px;
-  overflow: hidden;
-  transition: 500ms;
-  width: 100%;
-}
-
-.navContainer > div {
-  background-color: rgba(255, 255, 255, 0.5);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 20px;
-  padding: 15px;
-  border-radius: 3px;
-}
-
-.navContainer > div > a {
-  white-space: nowrap;
-}
-
-.navContainer nav {
-  display: flex;
-  gap: 15px;
-}
-
-.navContainer nav:first-of-type {
-  flex-direction: column;
-}
-
-.navContainer nav:nth-child(2) {
-  align-items: flex-end;
-}
-
-.navContainer svg,
-.navContainer img {
+.sidePanel > nav img,
+.sidePanel > nav svg {
   height: 20px;
 }
 
-.logo span {
-  border-radius: 3px;
-  padding: 5px 10px;
-  opacity: 0;
-  user-select: none;
+.sidePanel > nav:first-of-type {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.sidePanel > nav:last-of-type {
+  display: flex;
+  justify-content: space-around;
+}
+
+/* This button can open and close the side panel */
+.sidePanel > button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: fit-content;
+  padding: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.sidePanel > button > svg {
+  height: 30px;
+  transition: 750ms;
+}
+
+/* If the side panel is closed, the x mark looks like a + */
+.sidePanel.closed > button > svg {
+  transform: rotate(45deg);
+}
+
+/* If it's closed, it looks lije a x */
+.sidePanel.open > button > svg {
+  transform: rotate(360deg);
+}
+
+.logoButton {
+  position: fixed;
+  left: 5%;
+  top: -100%;
   transition: 500ms;
-  height: 100%;
+  transform: translate(-50%, -50%);
 }
 
-.logo > button:hover + span {
-  opacity: 1;
+.sidePanel.open ~ .logoButton {
+  left: 16.5%;
 }
 
-@media (max-width: 1024px) {
-  .navContainer > div {
-    background-color: rgba(255, 255, 255, 0.75);
+.logoButton > img {
+  width: 30px;
+}
+
+@media (max-width: 1023px) {
+  /* On smaller screens, the side panel control button sticks out of the panel */
+  .sidePanel > button {
+    top: 0px;
+    left: 100%;
+  }
+
+  .logoButton {
+    top: 5%;
+  }
+
+  /* The logo goes is centered on the side panel when it's open */
+  .sidePanel.closed ~ .logoButton {
+    left: 50%;
+  }
+}
+
+@media (max-width: 767px) {
+  .sidePanel {
+    min-width: 50%;
+  }
+
+  .sidePanel > nav:last-of-type {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .sidePanel.open ~ .logoButton {
+    left: 25%;
   }
 }

@@ -59,13 +59,13 @@ const NavSocials = ({ profile }) => {
       })}
 
       {/* Then the otherURLs the user may have entered */}
-      {otherURLsArray.map((link, index) => {
+      {/* {otherURLsArray.map((link, index) => {
         return (
           <a key={link.name} href={link.url} title={link.name} target="_blank">
             <img src={link.iconURL} alt={`logo du site ${link.name}`} />
           </a>
         );
-      })}
+      })} */}
     </nav>
   );
 };

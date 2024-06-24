@@ -3,137 +3,89 @@
 import styles from "./Logo.module.css";
 
 // React hooks imports
-import { useEffect, useRef, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+
+import { usePathname } from "next/navigation";
 import Link from "next/link";
-// ResizeObserver API. Will be used tto check if the image is wider than its parent
-import ResizeObserver from "resize-observer-polyfill";
 import NavPages from "../NavPages/NavPages";
 import NavSocials from "../NavSocials/NavSocials";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 // This component displays a logo that sends the visitor back to the homepage's cover
 const Logo = ({ profile, customStyle, pages }) => {
   // All props are given from the fetchData function
 
+  // The component will be moved to the <body> element, so we store the portal destination in a state
+  const [targetDom, setTargetDom] = useState(null);
+
+  // This state indicates if the side panel must be shown or not
+  const [showSidePanel, setShowSidePanel] = useState(false);
+
+  // We check if we are on the homePage, if not we show the go to projects shortcut
   const pathname = usePathname();
-  const router = useRouter();
+  const isOnHomepage = pathname === "/";
 
-  const [isNavActive, setIsNavActive] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
-
-  const [showProjectsShortcut, setShowProjectsShortcut] = useState(false);
-
-  const logoDivRef = useRef(null);
-
-  // We store the headerHeight so the position is not untimely recalculed
-  const headerHeight = useRef(0);
-
-  const customStyles = {
-    backgroundColor: customStyle.defaultBackgroundColor,
-    color: customStyle.defaultFontColor,
+  // This object will be transmitted to the dom in order to display custom colors
+  const inlineStyle = {
+    backgroundColor: customStyle.mainColor,
+    color: customStyle.secondaryColor,
   };
 
-  // This is a value we will update to throttle iur ResizeObserver function
-  let resizeTimeout;
-
-  //   This func is called anytime the image changes dimensions
-  const resizeObserver = new ResizeObserver((entries) => {
-    // It's triggered at evry pixel change so we need to put this security
-
-    clearTimeout(resizeTimeout);
-
-    resizeTimeout = setTimeout(() => {
-      const headerNode = entries[0].target;
-      const isHeaderHidden = Array.from(headerNode.classList).includes(
-        "hidden"
-      );
-
-      if (isHeaderHidden) setIsNavActive(true);
-      else {
-        setIsNavActive(false);
-        setShowMenu(false);
-      }
-    }, 750);
-  });
-
-  // This useEffect gives the logo div its final top position and sets the Redirection URL
+  // This useEffect gives the logo div its final top position
   useEffect(() => {
-    const headerNode = document.getElementById("header");
+    // This the logo's DOM element
+    const logoButton = document.getElementById("logo-button");
 
-    const clientWindowWidth = window.innerWidth;
-    const element = logoDivRef.current;
+    // The logo must be aligned with the header, so we check fo its height
+    const headerHeight = document.getElementById("header").scrollHeight;
 
-    if (clientWindowWidth < 1024) {
-      element.style.top = "10px";
-      element.style.left = "10px";
-      element.style.transform = "translateY(0px)";
-    } else if (!headerHeight.current) {
-      // The logo must be placed in the middle of the header
-      headerHeight.current = headerNode.offsetHeight;
-      const logoHeight = document.getElementById("logo").offsetHeight;
-      element.style.top = `${headerHeight.current / 2}px`;
-      element.style.transform = `translateY(-${logoHeight / 2}px)`;
+    // If targetDom is not defined we must define it
+    if (!targetDom) {
+      setTargetDom(document.body);
+    } else if (headerHeight > 0) {
+      // Otherwise we give the logo button its final position (only if the header is displayed)
+      logoButton.style.top = `${headerHeight / 2}px`;
     }
-
-    if (pathname !== "/") setShowProjectsShortcut(true);
-    else setShowProjectsShortcut(false);
-
-    // We want to reset these 2 values at every pathname change
-    setIsNavActive(false);
-    setShowMenu(false);
-
-    resizeObserver.observe(headerNode);
-
-    return () => {
-      resizeObserver.unobserve(headerNode);
-    };
-  }, [pathname]);
+  }, [pathname, targetDom]);
 
   const toggleMenu = () => {
-    setShowMenu((prev) => !prev);
-  };
-  const goToProjects = () => {
-    if (pathname === "/")
-      router.replace("/?slider=projects&section=projects-container&delay=true");
-    else router.push("/?slider=projects&section=projects-container&delay=true");
+    setShowSidePanel((prev) => !prev);
   };
 
   return (
-    <div
-      className={`${styles.logo} ${
-        isNavActive ? styles.flexStart : styles.centered
-      }`}
-      ref={logoDivRef}
-    >
-      <button onClick={isNavActive ? toggleMenu : goToProjects}>
-        <img
-          src={profile.logo.url}
-          alt={profile.logo.alternativeText}
-          id="logo"
-        />
-      </button>
-      {isNavActive ? (
+    targetDom &&
+    createPortal(
+      <>
         <div
-          className={`${styles.navContainer} ${!showMenu ? "zero-width" : ""}`}
+          style={inlineStyle}
+          className={`${styles.sidePanel} ${
+            showSidePanel ? styles.open : styles.closed
+          }`}
         >
-          <div>
-            {showProjectsShortcut && (
-              <Link href="/?slider=projects&section=projects-container&delay=750">
-                Retour aux créations
-              </Link>
-            )}
-            <NavPages
-              profile={profile}
-              pages={pages}
-              customStyle={customStyle}
-            />
-            <NavSocials profile={profile} />
-          </div>
+          <button style={inlineStyle} onClick={toggleMenu}>
+            <FontAwesomeIcon icon={faXmark} />
+          </button>
+          {!isOnHomepage && (
+            <Link href="/?slider=projects&section=projects-container&delay=750">
+              Retour aux projets
+            </Link>
+          )}
+          <NavPages profile={profile} pages={pages} customStyle={customStyle} />
+          <NavSocials profile={profile} />
         </div>
-      ) : (
-        <span style={customStyles}>Créations</span>
-      )}
-    </div>
+
+        <button
+          className={styles.logoButton}
+          onClick={toggleMenu}
+          id="logo-button"
+        >
+          <img src={profile.logo.url} alt={profile.logo.alternativeText} />
+        </button>
+      </>,
+      targetDom
+    )
   );
 };
 

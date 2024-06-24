@@ -1,7 +1,7 @@
 .slider {
   height: 100%;
   width: 100%;
-  transition: 500ms;
+  transition: 750ms;
   position: absolute;
   top: 100%;
 }
