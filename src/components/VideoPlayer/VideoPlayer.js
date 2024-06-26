@@ -14,7 +14,7 @@ const VideoPlayer = ({ children, video, customColors }) => {
   const buttonId = `video-player-button-${video.id}`;
 
   const buttonStyle = {
-    color: customColors.fontColor,
+    color: customColors.secondaryColor,
   };
 
   const enableVideoPlayer = () => {
@@ -70,12 +70,12 @@ const VideoPlayer = ({ children, video, customColors }) => {
 };
 
 const customButtonColors = (scenario, customColors, buttonId) => {
-  const { themeColor, fontColor } = customColors;
+  const { mainColor, secondaryColor } = customColors;
 
   const buttonNode = document.getElementById(buttonId);
 
-  if (scenario === "engage") buttonNode.style.color = themeColor;
-  else if (scenario === "disengage") buttonNode.style.color = fontColor;
+  if (scenario === "engage") buttonNode.style.color = mainColor;
+  else if (scenario === "disengage") buttonNode.style.color = secondaryColor;
 };
 
 export default VideoPlayer;

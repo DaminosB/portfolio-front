@@ -18,8 +18,8 @@ const RelatedProjects = ({
   const projectCardWidthStr = `calc((100% - ${totalGapWidth}px) / ${customStyle.thumbnailsPerRow})`;
 
   const wrapperStyle = {
-    backgroundColor: customColors.themeColor,
-    color: customColors.fontColor,
+    backgroundColor: customColors.mainColor,
+    color: customColors.secondaryColor,
     gap: customStyle.gap,
     thumbnailsPerRow: customStyle.thumbnailsPerRow,
   };
@@ -28,10 +28,10 @@ const RelatedProjects = ({
 
   const colorsStyle = {
     backgroundColor: generateBgColorString(
-      customColors.themeColor,
+      customColors.mainColor,
       opacityValue
     ),
-    color: customColors.fontColor,
+    color: customColors.secondaryColor,
   };
 
   const relatedProjects = populateRelatedProjects(tagsData, projectId);

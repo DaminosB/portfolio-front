@@ -12,8 +12,8 @@ export default async function ProjectsIdPage({ params }) {
   const { project, customStyle, tagsData } = await fetchData(params.id);
 
   const customColors = {
-    themeColor: project.mainColor,
-    fontColor: project.secondaryColor,
+    mainColor: project.mainColor,
+    secondaryColor: project.secondaryColor,
   };
 
   return (

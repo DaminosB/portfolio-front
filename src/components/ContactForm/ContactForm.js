@@ -135,13 +135,13 @@ const ContactForm = ({ profile, customStyle, setShowContactForm }) => {
     response.activeButtonStyle = {
       borderColor: customStyle.defaultBackgroundColor,
       backgroundColor: customStyle.defaultBackgroundColor,
-      color: customStyle.defaultFontColor,
+      color: customStyle.defaultsecondaryColor,
     };
 
     response.inactiveButtonStyle = {
       borderColor: customStyle.defaultBackgroundColor,
       color: customStyle.defaultBackgroundColor,
-      backgroundColor: customStyle.defaultFontColor,
+      backgroundColor: customStyle.defaultsecondaryColor,
     };
 
     return response;

@@ -32,11 +32,8 @@ const SectionNavigation = ({ content, customStyle }) => {
   // This array will be displayed with a .map function
   const navigationArray = populateNavigationArray(content);
   const inlineStyle = {
-    backgroundColor: generateBgColorString(
-      customStyle.themeColor,
-      opacityValue
-    ),
-    color: customStyle.fontColor,
+    backgroundColor: generateBgColorString(customStyle.mainColor, opacityValue),
+    color: customStyle.secondaryColor,
   };
 
   useEffect(() => {
