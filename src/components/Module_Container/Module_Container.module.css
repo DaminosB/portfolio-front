@@ -1,35 +1,35 @@
 .containerModule > div {
   padding: 50px 0px;
   min-height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
-}
-
-.containerModule > div > div {
-  flex-wrap: wrap;
-  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.mediasCard {
+.mediasContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.mediasWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mediaCard {
+  flex: 1;
   height: fit-content;
 }
 
-.mediasCard > img {
+.mediaCard > img {
   width: 100%;
-  max-width: 80vw;
 }
 
-@media (max-width: 1023px) {
+/* @media (max-width: 1023px) {
   .containerModule > div > div {
     flex-wrap: nowrap;
   }
-
-  .mediasCard > img {
-    width: auto;
-  }
-}
+} */

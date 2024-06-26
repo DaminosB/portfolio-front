@@ -4,6 +4,7 @@
   justify-content: center;
   overflow-x: visible;
   scrollbar-width: none;
+  max-width: 100%;
 }
 
 /* These are the default properties of the media cards */
@@ -11,4 +12,10 @@
   flex-shrink: 0;
   display: flex;
   justify-content: center;
+}
+
+@media (max-width: 767px) {
+  .mediasWrapper {
+    flex-direction: column;
+  }
 }

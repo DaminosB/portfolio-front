@@ -6,6 +6,7 @@ import VideoPlayer from "../VideoPlayer/VideoPlayer";
 
 import generateCssClasses from "@/utils/generateCssClasses";
 import generateInlineStyle from "@/utils/generateInlineStyle";
+import MediaCardWrapper from "../MediaCardWrapper/MediaCardWrapper";
 
 const Module_Container = ({ module, customColors }) => {
   const { medias, text } = module;
@@ -15,40 +16,69 @@ const Module_Container = ({ module, customColors }) => {
   const { sectionStyle, contentDivStyle, mediasWrapperStyle } =
     generateInlineStyle(module);
 
+  const mediasArray = populateMediasArray(medias, module.imagesPerRow);
+
+  const sectionId = `section-${module.id}`;
+
   return (
-    <section className={styles.containerModule} style={sectionStyle}>
+    <section
+      className={styles.containerModule}
+      style={sectionStyle}
+      id={sectionId}
+    >
       <div className={`container ${contentDivClasses}`} style={contentDivStyle}>
-        <MediasWrapper
-          module={module}
-          id={module.id}
-          mediasWrapperStyle={mediasWrapperStyle}
-        >
-          {medias.map((media) => {
-            const isImageFile =
-              media.provider_metadata.resource_type === "image";
-            // console.log(media);
+        <div className={styles.mediasContainer} style={mediasWrapperStyle}>
+          {mediasArray.map((mediasLine, index) => {
             return (
-              <div key={media.id} className={styles.mediasCard}>
-                {isImageFile ? (
-                  <img
-                    draggable={false}
-                    src={media.url}
-                    alt={media.alternativeText}
-                    id={`media-content-${media.id}`}
-                  />
-                ) : (
-                  <VideoPlayer video={media} customColors={customColors}>
-                    <source src={media.url} />
-                  </VideoPlayer>
-                )}
-              </div>
+              <MediasWrapper
+                key={index}
+                customColors={customColors}
+                parentStyle={styles}
+                mediasWrapperStyle={mediasWrapperStyle}
+              >
+                {mediasLine.map((media) => {
+                  const isImageFile =
+                    media.provider_metadata.resource_type === "image";
+
+                  const mediaCardId = `${sectionId}-media-card-${media.id}`;
+                  return (
+                    <MediaCardWrapper
+                      key={media.id}
+                      parentStyle={styles}
+                      customColors={customColors}
+                      id={mediaCardId}
+                      media={media}
+                    >
+                      {isImageFile ? (
+                        <img
+                          draggable={false}
+                          src={media.url}
+                          alt={media.alternativeText}
+                        />
+                      ) : (
+                        <VideoPlayer video={media} customColors={customColors}>
+                          <source src={media.url} />
+                        </VideoPlayer>
+                      )}
+                    </MediaCardWrapper>
+                  );
+                })}
+              </MediasWrapper>
             );
           })}
-        </MediasWrapper>
+        </div>
         {text && <TextContainer text={text.text} />}
       </div>
     </section>
   );
+};
+
+const populateMediasArray = (array, chunkSize) => {
+  const result = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    result.push(array.slice(i, i + chunkSize));
+  }
+  return result;
 };
 
 export default Module_Container;

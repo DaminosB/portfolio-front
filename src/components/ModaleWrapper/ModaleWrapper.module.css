@@ -1,0 +1,37 @@
+.mediaModale {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 250ms;
+  z-index: 2;
+  backdrop-filter: blur(10px);
+}
+
+.childrenContainer {
+  position: relative;
+}
+
+.childrenContainer > button {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  transition: 250ms;
+}
+
+.childrenContainer > button > svg {
+  height: 25px;
+}
+
+.childrenContainer > button:hover {
+  scale: 1.5;
+}
+
+.childrenContainer > * {
+  max-width: 100%;
+  max-height: 100%;
+}

@@ -6,7 +6,7 @@
   width: 100%;
 }
 
-.fullpage > div > div {
+.mediasWrapper {
   height: 100%;
   width: 100%;
 }
@@ -17,27 +17,18 @@
   flex: 1;
 }
 
-.mediasCard {
-  height: 100%;
+.mediaCard {
   overflow: hidden;
   flex: 1;
 }
 
-.mediasCard > img {
-  min-height: 100%;
-}
-
-@media (max-width: 1023px) {
-  .fullpage > div > div {
-    width: fit-content;
+@media (max-width: 767px) {
+  .fullpage > .noHeight {
+    height: auto;
+    min-height: 100%;
   }
 
-  .fullpage > div:has(> div:nth-of-type(2)) > div {
-    width: auto;
-    min-height: 50%;
-  }
-
-  .mediasCard {
-    flex: content;
+  .fullpage > div > div:has(> :nth-child(2)) .mediaCard > img {
+    width: 100%;
   }
 }
