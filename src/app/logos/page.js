@@ -9,7 +9,7 @@ import Module_Container from "@/components/Module_Container/Module_Container";
 const fetchData = async () => {
   try {
     const logos = await axios.get(
-      `${process.env.API_URL}/logo?populate=thumbnail,moduleSelection.medias`,
+      `${process.env.API_URL}/logo?populate=thumbnail,modules.medias`,
       { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
     );
 
@@ -19,11 +19,11 @@ const fetchData = async () => {
       },
     };
 
-    response.logos.moduleSelection.forEach((module, i) => {
-      response.logos.moduleSelection[i] = { ...module };
-      response.logos.moduleSelection[i].medias = [...module.medias.data];
-      response.logos.moduleSelection[i].medias.forEach((media, j) => {
-        response.logos.moduleSelection[i].medias[j] = {
+    response.logos.modules.forEach((module, i) => {
+      response.logos.modules[i] = { ...module };
+      response.logos.modules[i].medias = [...module.medias.data];
+      response.logos.modules[i].medias.forEach((media, j) => {
+        response.logos.modules[i].medias[j] = {
           ...media.attributes,
           id: media.id,
         };
@@ -42,7 +42,7 @@ export default async function ProjectsIdPage() {
   return (
     <Suspense>
       <ContentWrapper>
-        {logos.moduleSelection.map((module, index) => {
+        {logos.modules.map((module, index) => {
           switch (module.__component) {
             case "module.pleine-page":
               return <Module_Fullpage key={module.id} module={module} />;
