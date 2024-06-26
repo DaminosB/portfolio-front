@@ -8,7 +8,6 @@ const Module_MultiImagesColumn = ({ module, customColors }) => {
     (media, index) => `section-${media.id}-media-card-${index}`
   );
 
-  console.log(cardsIdsArray);
   return module.medias.map((media, index) => {
     return (
       <section
