@@ -3,7 +3,9 @@
 import styles from "./Slider.module.css";
 
 // React hooks imports
-import { useEffect, useRef, useState, useContext } from "react";
+import { useEffect, useRef, useState, useContext, createContext } from "react";
+
+export const SliderContext = createContext();
 
 import { WrapperContext } from "../ContentWrapper/ContentWrapper";
 
@@ -16,6 +18,8 @@ const Slider = ({ children, id, hideOnInactive, hideHeader }) => {
   // This state is true when the slider is the one currently being displayed
   const [isActiveSlider, setIsActiveSlider] = useState(false);
   // const [displayedSection, setDisplayedSection] = useState(0);
+
+  const contextValues = { isActiveSlider };
 
   const cachedSection = useRef(0);
 
@@ -189,7 +193,7 @@ const Slider = ({ children, id, hideOnInactive, hideHeader }) => {
     }
 
     // This will check if the slider is the currently active one (if it's being displayed)
-    const isActiveSlider = sliderIndex === activeSliderIndex;
+    const activeStatus = sliderIndex === activeSliderIndex;
 
     // Calculate and apply the speed and translate coordinates of the slider
     // If there are many sections to scroll, we want to lengthen the transition duration.
@@ -202,7 +206,7 @@ const Slider = ({ children, id, hideOnInactive, hideHeader }) => {
     const INACTIVE_SLIDER_MULTIPLIER = 200;
 
     // Translate the slider on the Y axis to display the desired section
-    if (isActiveSlider) {
+    if (activeStatus) {
       // If the slider is active
 
       // Calculate the number of sections jumped by finding the difference between the previous active index and the new one
@@ -271,30 +275,32 @@ const Slider = ({ children, id, hideOnInactive, hideHeader }) => {
     // These are the parameters we can give to the component
     // The slider fades away when it's no longer active
     if (hideOnInactive) {
-      if (isActiveSlider) element.classList.remove("hidden");
+      if (activeStatus) element.classList.remove("hidden");
       else element.classList.add("hidden");
     }
 
     // The slider hides the header when active
-    if (hideHeader && isActiveSlider) {
+    if (hideHeader && activeStatus) {
       setShowHeader(false);
-    } else if (!hideHeader && isActiveSlider) {
+    } else if (!hideHeader && activeStatus) {
       setShowHeader(true);
     }
     // }
   }, [activeSliderIndex, activeSectionIndex]);
 
   return (
-    <div
-      id={id}
-      className={`${styles.slider}`}
-      ref={sliderRef}
-      onWheel={isActiveSlider ? handleWheel : undefined}
-      onTouchStart={isActiveSlider ? handleTouchEvents : undefined}
-      onTouchEnd={isActiveSlider ? handleTouchEvents : undefined}
-    >
-      {children}
-    </div>
+    <SliderContext.Provider value={contextValues}>
+      <div
+        id={id}
+        className={`${styles.slider}`}
+        ref={sliderRef}
+        onWheel={isActiveSlider ? handleWheel : undefined}
+        onTouchStart={isActiveSlider ? handleTouchEvents : undefined}
+        onTouchEnd={isActiveSlider ? handleTouchEvents : undefined}
+      >
+        {children}
+      </div>
+    </SliderContext.Provider>
   );
 };
 
