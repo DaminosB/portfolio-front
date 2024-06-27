@@ -24,7 +24,7 @@ const RelatedProjects = ({
     thumbnailsPerRow: customStyle.thumbnailsPerRow,
   };
 
-  const opacityValue = 0.8;
+  const opacityValue = 0.5;
 
   const inlineStyle = {
     backgroundColor: generateBgColorString(
