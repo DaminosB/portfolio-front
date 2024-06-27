@@ -20,7 +20,7 @@
 
 .sectionNavigation > button,
 .sectionNavigation > button > svg {
-  transition: var(--fast-transition) var(--normal-animation);
+  transition: var(--fast-transition) var(--default-animation);
 }
 
 .sectionNavigation svg {

@@ -5,7 +5,7 @@
   box-shadow: 0px 0px 10px 2px;
   border-radius: var(--small-radius);
   overflow: hidden;
-  transition: var(--fast-transition) var(--normal-animation);
+  transition: var(--fast-transition) var(--default-animation);
 }
 
 .translationOverview:hover {
@@ -18,7 +18,7 @@
 }
 
 .transition {
-  transition: var(--fast-transition) var(--normal-animation);
+  transition: var(--fast-transition) var(--default-animation);
 }
 
 .translationOverview svg {

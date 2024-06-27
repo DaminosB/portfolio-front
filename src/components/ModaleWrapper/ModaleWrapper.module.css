@@ -7,7 +7,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: var(--fast-transition) var(--normal-animation);
+  transition: var(--fast-transition) var(--default-animation);
   z-index: 2;
   backdrop-filter: var(--default-blur);
 }
@@ -24,7 +24,7 @@
   position: absolute;
   top: 25px;
   right: 25px;
-  transition: var(--fast-transition) var(--normal-animation);
+  transition: var(--fast-transition) var(--default-animation);
 }
 
 .mediaModale > button > svg {

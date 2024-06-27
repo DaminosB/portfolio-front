@@ -25,7 +25,7 @@
 }
 
 .videoWrapper > div button {
-  transition: var(--fast-transition) var(--normal-animation);
+  transition: var(--fast-transition) var(--default-animation);
   z-index: 1;
   display: flex;
   justify-content: center;
