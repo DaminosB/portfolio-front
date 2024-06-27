@@ -23,8 +23,12 @@ const Slider = ({ children, id, hideOnInactive, hideHeader }) => {
 
   const cachedSection = useRef(0);
 
-  const { activeCoordinates, setActiveCoordinates, setShowHeader } =
-    useContext(WrapperContext);
+  const {
+    activeCoordinates,
+    setActiveCoordinates,
+    setShowHeader,
+    isModaleDisplayed,
+  } = useContext(WrapperContext);
 
   // The first index is the active slider (direct child of the wrapper), the second one is the active section in the active slider
   const [activeSliderIndex, activeSectionIndex] = activeCoordinates;
@@ -288,15 +292,17 @@ const Slider = ({ children, id, hideOnInactive, hideHeader }) => {
     // }
   }, [activeSliderIndex, activeSectionIndex]);
 
+  const isEnabled = isActiveSlider && !isModaleDisplayed;
+
   return (
     <SliderContext.Provider value={contextValues}>
       <div
         id={id}
         className={`${styles.slider}`}
         ref={sliderRef}
-        onWheel={isActiveSlider ? handleWheel : undefined}
-        onTouchStart={isActiveSlider ? handleTouchEvents : undefined}
-        onTouchEnd={isActiveSlider ? handleTouchEvents : undefined}
+        onWheel={isEnabled ? handleWheel : undefined}
+        onTouchStart={isEnabled ? handleTouchEvents : undefined}
+        onTouchEnd={isEnabled ? handleTouchEvents : undefined}
       >
         {children}
       </div>
