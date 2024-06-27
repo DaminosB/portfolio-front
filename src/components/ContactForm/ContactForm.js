@@ -37,8 +37,6 @@ const ContactForm = ({ profile, customStyle, setShowContactForm }) => {
     message: "",
   });
 
-  const modaleRef = useRef(null);
-
   const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   const nonEmptyStringRegex = /\S/;
 
@@ -99,10 +97,6 @@ const ContactForm = ({ profile, customStyle, setShowContactForm }) => {
   };
 
   useEffect(() => {
-    const element = modaleRef.current;
-
-    requestAnimationFrame(() => (element.style.opacity = 1));
-
     if (!username.isValid || !email.isValid || !message.isValid) {
       setFormIsDisabled(true);
     } else {
@@ -110,166 +104,136 @@ const ContactForm = ({ profile, customStyle, setShowContactForm }) => {
     }
   }, [username, email, message]);
 
-  const customStyles = {
-    borderColor: customStyle.defaultBackgroundColor,
+  const { inputStyle, activeButtonStyle, inactiveButtonStyle } =
+    parseStyleToCSS(customStyle);
+
+  return (
+    <form
+      onSubmit={submitMessage}
+      className={styles.contactForm}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <h2>Contact</h2>
+      <div>
+        <label htmlFor="name">
+          <input
+            style={inputStyle}
+            type="text"
+            name="nom"
+            id="name"
+            placeholder="Nom"
+            value={username.value}
+            onChange={(e) => inputChange(e, setUsername)}
+          />
+          {username.isValid && username.value ? (
+            <FontAwesomeIcon icon={faCheck} />
+          ) : (
+            <p className={`${styles.formMessage} small`}>
+              {!username.isValid && "Ce champ est obligatoire."}
+            </p>
+          )}
+        </label>
+
+        <label htmlFor="email">
+          <input
+            style={inputStyle}
+            // style={customStyles}
+            type="email"
+            name="email"
+            id="email"
+            placeholder="Email"
+            value={email.value}
+            onChange={(e) => inputChange(e, setEmail)}
+          />
+          {email.isValid && email.value ? (
+            <FontAwesomeIcon icon={faCheck} />
+          ) : (
+            <p className={`${styles.formMessage} small`}>
+              {!email.isValid && "Format\u00a0: abc@domaine.com."}
+            </p>
+          )}
+        </label>
+      </div>
+
+      <label htmlFor="message">
+        <textarea
+          style={inputStyle}
+          // style={customStyles}
+          name="message"
+          id="message"
+          placeholder="..."
+          value={message.value}
+          onChange={(e) => inputChange(e, setMessage)}
+        ></textarea>
+        {message.isValid && message.value ? (
+          <FontAwesomeIcon icon={faCheck} />
+        ) : (
+          <p className={`${styles.formMessage} small`}>
+            {!message.isValid && "Ce champ est obligatoire."}
+          </p>
+        )}
+      </label>
+
+      <button
+        style={formIsDisabled ? inactiveButtonStyle : activeButtonStyle}
+        type="submit"
+        disabled={formIsDisabled}
+        className={formIsDisabled ? styles.disabled : ""}
+      >
+        Valider
+      </button>
+
+      <div className={confirmationMessage.formIsSent ? "greenTxt" : "redTxt"}>
+        {confirmationMessage.formIsSent !== undefined && (
+          <FontAwesomeIcon
+            icon={
+              confirmationMessage.formIsSent ? faCircleCheck : faCircleXmark
+            }
+          />
+        )}
+        <p>{confirmationMessage.message}</p>
+      </div>
+
+      <p className="small">
+        (*) Tous les champs sont obligatoires. Pour en savoir plus sur la
+        protection de vos donn&eacute;es personnelles,{" "}
+        <a href="https://www.cnil.fr/fr" target="_blank">
+          consultez le site internet de la CNIL.{" "}
+          <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+        </a>
+      </p>
+    </form>
+  );
+};
+
+export default ContactForm;
+
+const parseStyleToCSS = (customStyle) => {
+  const response = {
+    inputStyle: {},
+    defaultButtonStyle: {},
+    activeButtonStyle: {},
+    inactiveButtonStyle: {},
+  };
+
+  response.inputStyle = {
+    borderColor: customStyle.mainColor,
     fontFamily: customStyle.defaultFont
       .substring(0, customStyle.defaultFont.indexOf("("))
       .trim(),
   };
 
-  const parseStyleToCSS = (customStyle) => {
-    const response = {
-      inputStyle: {},
-      defaultButtonStyle: {},
-      activeButtonStyle: {},
-      inactiveButtonStyle: {},
-    };
-
-    response.inputStyle = {
-      borderColor: customStyle.defaultBackgroundColor,
-      fontFamily: customStyle.defaultFont
-        .substring(0, customStyle.defaultFont.indexOf("("))
-        .trim(),
-    };
-
-    response.activeButtonStyle = {
-      borderColor: customStyle.defaultBackgroundColor,
-      backgroundColor: customStyle.defaultBackgroundColor,
-      color: customStyle.defaultsecondaryColor,
-    };
-
-    response.inactiveButtonStyle = {
-      borderColor: customStyle.defaultBackgroundColor,
-      color: customStyle.defaultBackgroundColor,
-      backgroundColor: customStyle.defaultsecondaryColor,
-    };
-
-    return response;
+  response.activeButtonStyle = {
+    borderColor: customStyle.mainColor,
+    backgroundColor: customStyle.mainColor,
+    color: customStyle.secondaryColor,
   };
 
-  const { inputStyle, activeButtonStyle, inactiveButtonStyle } =
-    parseStyleToCSS(customStyle);
-
-  const handleCloseModale = () => {
-    if (!username.value && !email.value && !message.value) closeModale();
+  response.inactiveButtonStyle = {
+    borderColor: customStyle.mainColor,
+    color: customStyle.mainColor,
+    backgroundColor: customStyle.secondaryColor,
   };
 
-  const closeModale = () => {
-    const element = modaleRef.current;
-    element.style.opacity = 0;
-    element.addEventListener("transitionend", () => setShowContactForm(false), {
-      once: true,
-    });
-  };
-
-  return (
-    <div
-      className={styles.modaleContainer}
-      ref={modaleRef}
-      onClick={handleCloseModale}
-    >
-      <form
-        onSubmit={submitMessage}
-        className={styles.contactForm}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button className={styles.closeBtn} type="button" onClick={closeModale}>
-          <FontAwesomeIcon icon={faXmark} />
-        </button>
-        <h2>Contact</h2>
-        <div>
-          <label htmlFor="name">
-            <input
-              style={inputStyle}
-              // style={customStyles}
-              type="text"
-              name="nom"
-              id="name"
-              placeholder="Nom"
-              value={username.value}
-              onChange={(e) => inputChange(e, setUsername)}
-            />
-            {username.isValid && username.value ? (
-              <FontAwesomeIcon icon={faCheck} />
-            ) : (
-              <p className={`${styles.formMessage} small`}>
-                {!username.isValid && "Ce champ est obligatoire."}
-              </p>
-            )}
-          </label>
-
-          <label htmlFor="email">
-            <input
-              style={inputStyle}
-              // style={customStyles}
-              type="email"
-              name="email"
-              id="email"
-              placeholder="Email"
-              value={email.value}
-              onChange={(e) => inputChange(e, setEmail)}
-            />
-            {email.isValid && email.value ? (
-              <FontAwesomeIcon icon={faCheck} />
-            ) : (
-              <p className={`${styles.formMessage} small`}>
-                {!email.isValid && "Format\u00a0: abc@domaine.com."}
-              </p>
-            )}
-          </label>
-        </div>
-
-        <label htmlFor="message">
-          <textarea
-            style={inputStyle}
-            // style={customStyles}
-            name="message"
-            id="message"
-            placeholder="..."
-            value={message.value}
-            onChange={(e) => inputChange(e, setMessage)}
-          ></textarea>
-          {message.isValid && message.value ? (
-            <FontAwesomeIcon icon={faCheck} />
-          ) : (
-            <p className={`${styles.formMessage} small`}>
-              {!message.isValid && "Ce champ est obligatoire."}
-            </p>
-          )}
-        </label>
-
-        <button
-          style={formIsDisabled ? inactiveButtonStyle : activeButtonStyle}
-          // style={customStyles}
-          type="submit"
-          disabled={formIsDisabled}
-          className={formIsDisabled ? styles.disabled : ""}
-        >
-          Valider
-        </button>
-
-        <div className={confirmationMessage.formIsSent ? "greenTxt" : "redTxt"}>
-          {confirmationMessage.formIsSent !== undefined && (
-            <FontAwesomeIcon
-              icon={
-                confirmationMessage.formIsSent ? faCircleCheck : faCircleXmark
-              }
-            />
-          )}
-          <p>{confirmationMessage.message}</p>
-        </div>
-
-        <p className="small">
-          (*) Tous les champs sont obligatoires. Pour en savoir plus sur la
-          protection de vos donn&eacute;es personnelles,{" "}
-          <a href="https://www.cnil.fr/fr" target="_blank">
-            consultez le site internet de la CNIL.{" "}
-            <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
-          </a>
-        </p>
-      </form>
-    </div>
-  );
+  return response;
 };
-
-export default ContactForm;

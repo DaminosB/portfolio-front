@@ -25,7 +25,6 @@
 
 .sectionNavigation svg {
   height: 20px;
-  width: 20px;
 }
 
 .sectionNavigation > button:not(.activeButton):hover {
@@ -34,9 +33,28 @@
 
 .activeButton > svg {
   height: 30px;
-  width: 30px;
 }
 
 .inactiveButton {
   opacity: 0.67;
+}
+
+@media (max-width: 768px) {
+  .sectionNavigation {
+    padding: 5px;
+    padding-right: 10px;
+  }
+
+  .sectionNavigation svg {
+    height: 15px;
+  }
+
+  .activeButton > svg {
+    height: 25px;
+  }
+}
+@media (max-width: 425px) {
+  .sectionNavigation {
+    padding: 10px;
+  }
 }

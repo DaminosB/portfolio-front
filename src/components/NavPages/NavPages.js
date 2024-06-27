@@ -2,7 +2,7 @@
 
 // Next components
 import Link from "next/link";
-import ContactModale from "../ContactModale/ContactModale";
+import ContactButton from "../ContactButton/ContactButton";
 
 const NavPages = ({ profile, pages, customStyle }) => {
   return (
@@ -17,8 +17,7 @@ const NavPages = ({ profile, pages, customStyle }) => {
       })}
 
       {/* The Contact page is created by default */}
-      {/* <Link href="/contact">Contact</Link> */}
-      <ContactModale profile={profile} customStyle={customStyle} />
+      <ContactButton profile={profile} customStyle={customStyle} />
     </nav>
   );
 };
