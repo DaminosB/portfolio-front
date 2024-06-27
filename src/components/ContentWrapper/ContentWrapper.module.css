@@ -1,5 +1,5 @@
 .contentWrapper {
   overflow: hidden;
   position: relative;
-  transition: 500ms;
+  transition: var(--normal-transition) var(--default-animation);
 }

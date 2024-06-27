@@ -11,9 +11,9 @@
 }
 
 .tagsContainer > button {
-  border-radius: 3px;
+  border-radius: var(--small-radius);
   padding: 5px 10px;
-  transition: 500ms;
+  transition: var(--normal-transition) var(--default-animation);
 }
 
 .active {

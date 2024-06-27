@@ -1,3 +1,14 @@
+:root {
+  --normal-transition: 500ms;
+  --slow-transition: 750ms;
+  --fast-transition: 250ms;
+  --default-animation: ease-in-out;
+
+  --small-radius: 3px;
+
+  --default-blur: blur(15px);
+}
+
 /* ------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------- */
@@ -196,14 +207,14 @@ section:first-of-type {
   font-size: 30px;
   border: 1px black solid;
   padding: 10px;
-  border-radius: 3px;
+  border-radius: var(--small-radius);
   background-color: rgba(255, 255, 255, 0.5);
 }
 
 .error-component > button:hover > svg,
 .error-component > a:hover > svg {
   transform: rotate(-360deg);
-  transition: 500ms;
+  transition: var(--normal-transition) var(--default-animation);
 }
 
 .flex-row {

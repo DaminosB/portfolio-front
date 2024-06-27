@@ -1,6 +1,6 @@
 .projectCard {
   position: absolute;
-  transition: 500ms;
+  transition: var(--normal-transition) var(--default-animation);
 }
 
 .projectCard img {

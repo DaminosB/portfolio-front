@@ -1,5 +1,5 @@
 .coverContainer {
-  transition: 500ms;
+  transition: var(--normal-transition) var(--default-animation);
   overflow: hidden;
   position: relative;
 }
@@ -16,7 +16,7 @@
 
 @media (max-width: 768px) {
   .coverContainer > img {
-    filter: blur(10px);
+    filter: var(--default-blur);
   }
 
   .altCover {

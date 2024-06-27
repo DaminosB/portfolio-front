@@ -7,7 +7,7 @@
   flex-direction: column;
   width: 80%;
   padding: 30px;
-  border-radius: 3px;
+  border-radius: var(--small-radius);
 }
 
 .contactForm h2 {
@@ -29,9 +29,9 @@
 .contactForm input,
 .contactForm textarea,
 .contactForm button {
-  border-radius: 3px;
+  border-radius: var(--small-radius);
   font-size: 16px;
-  transition: 500ms;
+  transition: var(--normal-transition) var(--default-animation);
   border: 1px transparent solid;
   padding: 2px;
 }
@@ -47,7 +47,7 @@
 
 .contactForm button {
   width: fit-content;
-  transition: 500ms;
+  transition: var(--normal-transition) var(--default-animation);
 }
 
 .contactForm button.disabled {
