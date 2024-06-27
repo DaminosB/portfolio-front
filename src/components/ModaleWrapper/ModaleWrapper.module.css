@@ -16,18 +16,18 @@
   position: relative;
 }
 
-.childrenContainer > button {
+.mediaModale > button {
   position: absolute;
   top: 25px;
   right: 25px;
   transition: 250ms;
 }
 
-.childrenContainer > button > svg {
+.mediaModale > button > svg {
   height: 25px;
 }
 
-.childrenContainer > button:hover {
+.mediaModale > button:hover {
   scale: 1.5;
 }
 

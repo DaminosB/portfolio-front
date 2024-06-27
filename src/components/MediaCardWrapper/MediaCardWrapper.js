@@ -7,10 +7,9 @@ import { useState, useContext, useEffect, useRef } from "react";
 import { MediasWrapperContext } from "../MediasWrapper/MediasWrapper";
 import { WrapperContext } from "../ContentWrapper/ContentWrapper";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExpand } from "@fortawesome/free-solid-svg-icons";
-import useDragAndMove from "@/hooks/useDragAndMove";
+import useGrabAndMove from "@/hooks/useGrabAndMove";
 import { SliderContext } from "../Slider/Slider";
+import TranslationOverview from "../TranslationOverview/TranslationOverview";
 
 const MediaCardWrapper = ({
   parentStyle,
@@ -23,17 +22,8 @@ const MediaCardWrapper = ({
   const [contentOverflows, setContentOverflows] = useState(undefined);
 
   const mediaCardWrapperRef = useRef(null);
-  const { startDrag, onDrag, stopDrag } = useDragAndMove(id, relatedSiblings);
-
-  const inlineStyle = {
-    backgroundColor: customColors.mainColor,
-    color: customColors.secondaryColor,
-  };
-
-  const handleOnClick = (e) => {
-    handleStopPropagation(e);
-    setModaleContent(media);
-  };
+  const { startGrab, grabbing, stopGrab, currentTranslateValue } =
+    useGrabAndMove(id, relatedSiblings);
 
   useEffect(() => {
     const element = mediaCardWrapperRef.current;
@@ -57,42 +47,30 @@ const MediaCardWrapper = ({
   return (
     <div
       ref={mediaCardWrapperRef}
-      //   id={cardId}
       id={id}
       className={classList}
-      onTouchStart={contentOverflows ? startDrag : null}
-      onMouseDown={contentOverflows ? startDrag : null}
-      onMouseMove={contentOverflows ? onDrag : null}
-      onTouchMove={contentOverflows ? onDrag : null}
-      onMouseUp={contentOverflows ? stopDrag : null}
-      onTouchEnd={contentOverflows ? stopDrag : null}
-      onMouseLeave={contentOverflows ? stopDrag : null}
-      onDrag={() => console.log("drag")}
-      onDragStart={() => console.log("dragstart")}
-      onTransitionEnd={() => console.log("transitionend")}
-      onAnimationEnd={() => console.log("animation")}
-      onResize={() => console.log("resize")}
+      onTouchStart={contentOverflows ? startGrab : null}
+      onMouseDown={contentOverflows ? startGrab : null}
+      onMouseMove={contentOverflows ? grabbing : null}
+      onTouchMove={contentOverflows ? grabbing : null}
+      onMouseUp={contentOverflows ? stopGrab : null}
+      onTouchEnd={contentOverflows ? stopGrab : null}
+      onMouseLeave={contentOverflows ? stopGrab : null}
     >
       {children}
       {/* --------------------------------------------------- */}
       {/* ------------------ EXPAND BUTTON ------------------ */}
       {/* --------------------------------------------------- */}
       {contentOverflows && (
-        <button
-          className={styles.expandButton}
-          style={inlineStyle}
-          onClick={handleOnClick}
-          onMouseMove={handleStopPropagation}
-        >
-          <FontAwesomeIcon icon={faExpand} />
-        </button>
+        <TranslationOverview
+          customColors={customColors}
+          media={media}
+          currentTranslateValue={currentTranslateValue}
+          containerId={id}
+        />
       )}
     </div>
   );
-};
-
-const handleStopPropagation = (e) => {
-  e.stopPropagation();
 };
 
 export default MediaCardWrapper;

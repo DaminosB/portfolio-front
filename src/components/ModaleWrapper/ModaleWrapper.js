@@ -51,10 +51,10 @@ const ModaleWrapper = ({ customColors, exitFunction, children }) => {
       onClick={handleCloseModale}
       onTransitionEnd={handleTransitionEnd}
     >
+      <button onClick={handleCloseModale}>
+        <FontAwesomeIcon icon={faXmark} />
+      </button>
       <div className={styles.childrenContainer} onClick={handleStopPropagation}>
-        <button onClick={handleCloseModale}>
-          <FontAwesomeIcon icon={faXmark} />
-        </button>
         {children}
       </div>
     </div>

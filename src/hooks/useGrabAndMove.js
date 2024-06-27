@@ -1,12 +1,13 @@
 import { useState, useRef } from "react";
 
-const useDragAndMove = (containerId, relatedSiblings) => {
+const useGrabAndMove = (containerId, relatedSiblings) => {
   const [isDragging, setIsDragging] = useState(false);
+  const [currentTranslateValue, setCurrentTranslateValue] = useState(0);
   const previousClickPosition = useRef(0);
   const previousDeltaX = useRef(0);
   const elementsToMove = useRef([]);
 
-  const startDrag = (e) => {
+  const startGrab = (e) => {
     if (elementsToMove.current.length === 0) {
       if (relatedSiblings) {
         relatedSiblings.forEach((sibling) =>
@@ -35,7 +36,7 @@ const useDragAndMove = (containerId, relatedSiblings) => {
     }
   };
 
-  const onDrag = (e) => {
+  const grabbing = (e) => {
     // If the isDragging state is false, nothing happens
     if (isDragging) {
       // We must set the click's position, but it's stored in different places on mouse and touch events
@@ -63,7 +64,7 @@ const useDragAndMove = (containerId, relatedSiblings) => {
   };
 
   // This func is called when the wrapper is unclicked
-  const stopDrag = (e) => {
+  const stopGrab = (e) => {
     // If the dragging state was on false, nothing happens
     if (isDragging) {
       // We begin by turning the dragging state off
@@ -79,7 +80,7 @@ const useDragAndMove = (containerId, relatedSiblings) => {
         // moveElementInParent(animatedScrollDistance, e.target);
         moveElementInParent(animatedScrollDistance, elementsToMove.current);
         // The distance to scroll loses 10% on each call
-        animatedScrollDistance /= 1.1;
+        animatedScrollDistance /= 1.15;
         if (Math.abs(animatedScrollDistance) > 0.1) {
           animationFrame = requestAnimationFrame(step);
         } else {
@@ -90,46 +91,49 @@ const useDragAndMove = (containerId, relatedSiblings) => {
     }
   };
 
+  // This func moves a given element in its parent on its x axis
+  const moveElementInParent = (value, array) => {
+    // value: Number. The quantity of pixels the viewer has slided.
+    // domElement : the element we want to move.
+    // relatedSiblings: Array. With the multi-images-column module, we must move each related sibling together.
+
+    // This stores the current amount of pixels is currently translated on the domElement
+    const currentTranslateValue =
+      parseFloat(array[0].style.transform.split("(")[1]) || 0;
+    // It checks the transform css property value. If undefined, the value is 0.
+
+    // The new amount of translated pixels equals the previous value + the quantity of pixels the viewer has slided.
+    let newTranslateXValue = currentTranslateValue + value;
+
+    // The parent's width will give us the min and max translation values
+    const parentWidth = array[0].parentNode.offsetWidth;
+
+    const widthDifference = array[0].offsetWidth - parentWidth;
+    const translateXValueMax = widthDifference / 2;
+    const translateXValueMin = -translateXValueMax;
+
+    // If the newTranslateValue is over or under its min and max values, we give it these values.
+    if (newTranslateXValue > translateXValueMax) {
+      newTranslateXValue = translateXValueMax;
+    } else if (newTranslateXValue < translateXValueMin) {
+      newTranslateXValue = translateXValueMin;
+    }
+
+    // If the related siblings array has any data, we move all of them simultaneously
+    // if (relatedSiblings !== undefined) {
+    array.map((sibling) => {
+      sibling.style.transform = `translateX(${newTranslateXValue}px)`;
+    });
+
+    setCurrentTranslateValue(newTranslateXValue);
+  };
+
   return {
-    startDrag,
-    onDrag,
-    stopDrag,
+    startGrab,
+    grabbing,
+    stopGrab,
+    currentTranslateValue,
   };
 };
 
-// This func moves a given element in its parent on its x axis
-const moveElementInParent = (deltaX, elementsToMove, relatedSiblings) => {
-  // deltaX: Number. The quantity of pixels the viewer has slided.
-  // domElement : the element we want to move.
-  // relatedSiblings: Array. With the multi-images-column module, we must move each related sibling together.
-
-  // This stores the current amount of pixels is currently translated on the domElement
-  const translateXValue =
-    parseFloat(elementsToMove[0].style.transform.split("(")[1]) || 0;
-  // It checks the transform css property value. If undefined, the value is 0.
-
-  // The new amount of translated pixels equals the previous value + the quantity of pixels the viewer has slided.
-  let newTranslateXValue = translateXValue + deltaX;
-
-  // The parent's width will give us the min and max translation values
-  const parentWidth = elementsToMove[0].parentNode.offsetWidth;
-
-  const widthDifference = elementsToMove[0].offsetWidth - parentWidth;
-  const translateXValueMax = widthDifference / 2;
-  const translateXValueMin = -translateXValueMax;
-
-  // If the newTranslateValue is over or under its min and max values, we give it these values.
-  if (newTranslateXValue > translateXValueMax) {
-    newTranslateXValue = translateXValueMax;
-  } else if (newTranslateXValue < translateXValueMin) {
-    newTranslateXValue = translateXValueMin;
-  }
-
-  // If the related siblings array has any data, we move all of them simultaneously
-  // if (relatedSiblings !== undefined) {
-  elementsToMove.map((sibling) => {
-    sibling.style.transform = `translateX(${newTranslateXValue}px)`;
-  });
-};
-
-export default useDragAndMove;
+export default useGrabAndMove;

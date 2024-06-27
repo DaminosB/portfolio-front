@@ -1,32 +1,3 @@
 .mediaCardWrapper {
   position: relative;
 }
-
-.expandButton {
-  position: absolute;
-  bottom: 25px;
-  right: 25px;
-
-  height: 35px;
-  aspect-ratio: 1;
-  overflow: hidden;
-  border-radius: 3px;
-
-  opacity: 0.75;
-
-  transition: 250ms;
-}
-
-.expandButton:hover {
-  opacity: 1;
-}
-
-.expandButton > svg {
-  height: 25px;
-  transform: scale(1.5);
-  transition: 250ms;
-}
-
-.expandButton:hover > svg {
-  transform: scale(1);
-}
