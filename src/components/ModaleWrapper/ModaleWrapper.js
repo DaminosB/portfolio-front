@@ -3,13 +3,17 @@
 import generateBgColorString from "@/utils/generateBgColorString";
 import styles from "./ModaleWrapper.module.css";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
+import { WrapperContext } from "../ContentWrapper/ContentWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const ModaleWrapper = ({ customColors, exitFunction, children }) => {
   const [shouldOpen, setShouldOpen] = useState(true);
   const modaleWrapperRef = useRef(null);
+
+  const { isModaleDisplayed, setIsModaleDisplayed } =
+    useContext(WrapperContext);
 
   const backgroundOpacity = 0.8;
 
@@ -27,8 +31,10 @@ const ModaleWrapper = ({ customColors, exitFunction, children }) => {
     requestAnimationFrame(() => {
       if (shouldOpen) {
         element.classList.remove("hidden");
+        setIsModaleDisplayed(true);
       } else {
         element.classList.add("hidden");
+        setIsModaleDisplayed(false);
       }
     });
   }, [shouldOpen]);

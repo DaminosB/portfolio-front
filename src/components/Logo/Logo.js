@@ -3,7 +3,8 @@
 import styles from "./Logo.module.css";
 
 // React hooks imports
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
+import { WrapperContext } from "../ContentWrapper/ContentWrapper";
 import { createPortal } from "react-dom";
 
 import { usePathname } from "next/navigation";
@@ -27,6 +28,10 @@ const Logo = ({ profile, customStyle, pages }) => {
   const pathname = usePathname();
   const isOnHomepage = pathname === "/";
 
+  const cachedPathname = useRef(null);
+
+  const { isModaleDisplayed } = useContext(WrapperContext);
+
   // This object will be transmitted to the dom in order to display custom colors
   const inlineStyle = {
     backgroundColor: customStyle.mainColor,
@@ -48,7 +53,14 @@ const Logo = ({ profile, customStyle, pages }) => {
       // Otherwise we give the logo button its final position (only if the header is displayed)
       logoButton.style.top = `${headerHeight / 2}px`;
     }
-  }, [pathname, targetDom]);
+
+    if (pathname !== cachedPathname.current) {
+      setShowSidePanel(false);
+      cachedPathname.current = pathname;
+    } else if (isModaleDisplayed) {
+      setShowSidePanel(false);
+    }
+  }, [pathname, targetDom, isModaleDisplayed]);
 
   const toggleMenu = () => {
     setShowSidePanel((prev) => !prev);
