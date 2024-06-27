@@ -20,6 +20,7 @@ const ContentWrapper = ({ children }) => {
   // The first index is the slider (direct child of the wrapper), the second is the section (direct child of the slider)
   const [activeSliderIndex, activeSectionIndex] = activeCoordinates;
   const [showHeader, setShowHeader] = useState(true);
+  const [isModaleDisplayed, setIsModaleDisplayed] = useState(false);
 
   // This ref will store the previous coordinates so the useEffect does not call the sliding func unecessarily
   const cachedActiveCoordinates = useRef([]);
@@ -34,6 +35,8 @@ const ContentWrapper = ({ children }) => {
     setActiveCoordinates,
     showHeader,
     setShowHeader,
+    isModaleDisplayed,
+    setIsModaleDisplayed,
   };
 
   // This func handles the queries the ContentWrapper could receive. It will displayed the requested the section in the requested slider.
