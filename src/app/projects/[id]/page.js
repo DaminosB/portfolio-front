@@ -23,6 +23,7 @@ export default async function ProjectsIdPage({ params }) {
           <CoverContainer
             coverUrl={project.cover.url}
             coverAltTxt={project.cover.alternativeText}
+            customColors={customColors}
           />
         </Slider>
       )}
@@ -61,11 +62,7 @@ export default async function ProjectsIdPage({ params }) {
           }
         })}
       </Slider>
-      <Slider
-        id={"related-projects-slider"}
-        hideHeader={true}
-        hideOnInactive={true}
-      >
+      <Slider id={"related-projects-slider"} hideHeader={true}>
         <RelatedProjects
           tagsData={tagsData}
           projectId={project.id}

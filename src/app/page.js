@@ -9,12 +9,18 @@ import Slider from "@/components/Slider/Slider";
 export default async function Home() {
   const { profile, projects, customStyle, logos } = await fetchData();
 
+  const customColors = {
+    mainColor: customStyle.mainColor,
+    secondaryColor: customStyle.secondaryColor,
+  };
+
   return (
     <>
       <Slider id={"homepage-cover"} hideOnInactive={true}>
         <CoverContainer
           coverUrl={profile.cover.url}
           coverAltTxt={profile.cover.alternativeText}
+          customColors={customColors}
         />
       </Slider>
       <Slider id={"projects"} hideOnInactive={false} hideHeader={true}>

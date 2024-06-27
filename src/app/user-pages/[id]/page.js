@@ -7,6 +7,49 @@ import Module_Container from "@/components/Module_Container/Module_Container";
 import SectionNavigation from "@/components/SectionNavigation/SectionNavigation";
 import Slider from "@/components/Slider/Slider";
 
+export default async function ProjectsIdPage({ params }) {
+  const { page } = await fetchData(params.id);
+
+  const customColors = {
+    mainColor: page.mainColor,
+    secondaryColor: page.secondaryColor,
+  };
+
+  return (
+    <>
+      {page.cover && (
+        <Slider id={"cover"} hideOnInactive={true}>
+          <CoverContainer
+            coverUrl={page.cover.url}
+            coverAltTxt={page.cover.alternativeText}
+            customColors={customColors}
+          />
+        </Slider>
+      )}
+      <Slider id={"page-content"} hideHeader={true}>
+        {page.modules.map((module, index) => {
+          switch (module.__component) {
+            case "module.pleine-page":
+              return <Module_Fullpage key={module.id} module={module} />;
+
+            case "module.colonne-multi-images":
+              return (
+                <Module_MultiImagesColumn key={module.id} module={module} />
+              );
+
+            case "module.container":
+              return <Module_Container key={module.id} module={module} />;
+
+            default:
+              break;
+          }
+        })}
+      </Slider>
+      <SectionNavigation content={page} customStyle={customColors} />
+    </>
+  );
+}
+
 const fetchData = async (pageId) => {
   try {
     const page = await axios.get(
@@ -42,45 +85,3 @@ const fetchData = async (pageId) => {
     console.log(error);
   }
 };
-
-export default async function ProjectsIdPage({ params }) {
-  const { page } = await fetchData(params.id);
-
-  const customColors = {
-    mainColor: page.mainColor,
-    secondaryColor: page.secondaryColor,
-  };
-
-  return (
-    <>
-      {page.cover && (
-        <Slider id={"cover"} hideOnInactive={true}>
-          <CoverContainer
-            coverUrl={page.cover.url}
-            coverAltTxt={page.cover.alternativeText}
-          />
-        </Slider>
-      )}
-      <Slider id={"page-content"} hideHeader={true}>
-        {page.modules.map((module, index) => {
-          switch (module.__component) {
-            case "module.pleine-page":
-              return <Module_Fullpage key={module.id} module={module} />;
-
-            case "module.colonne-multi-images":
-              return (
-                <Module_MultiImagesColumn key={module.id} module={module} />
-              );
-
-            case "module.container":
-              return <Module_Container key={module.id} module={module} />;
-
-            default:
-              break;
-          }
-        })}
-      </Slider>
-      <SectionNavigation content={page} customStyle={customColors} />
-    </>
-  );
-}
