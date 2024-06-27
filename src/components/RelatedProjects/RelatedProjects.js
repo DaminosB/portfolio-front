@@ -26,7 +26,7 @@ const RelatedProjects = ({
 
   const opacityValue = 0.8;
 
-  const colorsStyle = {
+  const inlineStyle = {
     backgroundColor: generateBgColorString(
       customColors.mainColor,
       opacityValue
@@ -48,7 +48,7 @@ const RelatedProjects = ({
   }));
 
   return (
-    <section style={colorsStyle}>
+    <section className={styles.relatedProjects} style={inlineStyle}>
       <ProjectCardsWrapper
         customStyle={wrapperStyle}
         cardsToDisplay={cardsToDisplay}
