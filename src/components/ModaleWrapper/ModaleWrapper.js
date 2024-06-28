@@ -37,7 +37,7 @@ const ModaleWrapper = ({ customColors, exitFunction, children }) => {
         setIsModaleDisplayed(false);
       }
     });
-  }, [shouldOpen]);
+  }, [shouldOpen, setIsModaleDisplayed]);
 
   const handleCloseModale = () => {
     setShouldOpen(false);

@@ -3,7 +3,7 @@
 import styles from "./ProjectCardsWrapper.module.css";
 
 // React hooks import
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 // Components import
 import TagsContainer from "../TagsContainer/TagsContainer";
@@ -29,29 +29,32 @@ const ProjectCardsWrapper = ({ customStyle, cardsToDisplay, children }) => {
   };
 
   // This func is called when a project card is hovered. It fades the unhovered card and displays the cover of the hovered project
-  const dimCardsOpacity = (index, cardsContainer) => {
-    // index : Number. It's the position of the card in its parent
+  const dimCardsOpacity = useCallback(
+    (index, cardsContainer) => {
+      // index : Number. It's the position of the card in its parent
 
-    // We start by creating an array of all the cards container inactive children
-    const inactiveCards = Array.from(cardsContainer.children).filter(
-      (card, i) => i !== index
-    );
-
-    inactiveCards.map((card) => {
-      card.classList.add(styles.inactiveCard);
-    });
-
-    // If the card has any tag
-    if (cardsToDisplay[index].tags.length > 0) {
-      // We can can highlight the tags that are paired with the project
-      // const activeCardTagsIdsList = projects[index].tags.map((tag) => tag.id);
-      const activeCardTagsIdsList = cardsToDisplay[index].tags.map(
-        (tag) => tag.id
+      // We start by creating an array of all the cards container inactive children
+      const inactiveCards = Array.from(cardsContainer.children).filter(
+        (card, i) => i !== index
       );
 
-      setFiltersToHighlight(activeCardTagsIdsList);
-    }
-  };
+      inactiveCards.map((card) => {
+        card.classList.add(styles.inactiveCard);
+      });
+
+      // If the card has any tag
+      if (cardsToDisplay[index].tags.length > 0) {
+        // We can can highlight the tags that are paired with the project
+        // const activeCardTagsIdsList = projects[index].tags.map((tag) => tag.id);
+        const activeCardTagsIdsList = cardsToDisplay[index].tags.map(
+          (tag) => tag.id
+        );
+
+        setFiltersToHighlight(activeCardTagsIdsList);
+      }
+    },
+    [cardsToDisplay]
+  );
 
   // This constant stores the list of tags that will be given to the TagsContainer component
   const tagsList = populateTagsList(cardsToDisplay);
@@ -59,8 +62,8 @@ const ProjectCardsWrapper = ({ customStyle, cardsToDisplay, children }) => {
   useEffect(() => {
     // We set the custom styles object
     const styleInputs = {
-      gap: customStyle?.gap,
-      elementsPerRow: customStyle?.thumbnailsPerRow,
+      gap: customStyle.gap,
+      elementsPerRow: customStyle.thumbnailsPerRow,
     };
 
     // This variable counts the number of visible cards, as this number may vary according to the active filter
@@ -133,7 +136,7 @@ const ProjectCardsWrapper = ({ customStyle, cardsToDisplay, children }) => {
         thumbnail.removeEventListener("mouseleave", handleMousleave);
       });
     };
-  }, [activeFilter]);
+  }, [activeFilter, cardsToDisplay, customStyle, dimCardsOpacity]);
 
   return (
     <div className={styles.projectCardsWrapper} id="thumbnails-wrapper">

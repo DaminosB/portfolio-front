@@ -12,17 +12,18 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  width: 100%;
 }
 
 .mediasWrapper > div {
+  flex: 1;
+  width: 100%;
   display: flex;
   justify-content: center;
 }
 
 .mediaCard {
   flex: 1;
-  height: fit-content;
-  width: fit-content;
 }
 
 .mediaCard > img {

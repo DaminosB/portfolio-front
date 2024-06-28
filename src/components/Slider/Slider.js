@@ -290,7 +290,14 @@ const Slider = ({ children, id, hideOnInactive, hideHeader }) => {
       setShowHeader(true);
     }
     // }
-  }, [activeSliderIndex, activeSectionIndex]);
+  }, [
+    activeSliderIndex,
+    activeSectionIndex,
+    hideHeader,
+    hideOnInactive,
+    id,
+    setShowHeader,
+  ]);
 
   const isEnabled = isActiveSlider && !isModaleDisplayed;
 

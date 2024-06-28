@@ -87,7 +87,7 @@ const TranslationOverview = ({
 
     // We store this value as we will need it later
     spotlightLeftPos.current = positionValue;
-  }, [currentTranslateValue]);
+  }, [currentTranslateValue, containerId, media]);
 
   // On click, a modale is displayed
   const handleOnClick = (e) => {

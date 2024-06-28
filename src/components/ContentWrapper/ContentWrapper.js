@@ -3,7 +3,7 @@
 import styles from "./ContentWrapper.module.css";
 
 // React hooks imports
-import { useState, useEffect, useRef, createContext } from "react";
+import { useState, useEffect, useRef, createContext, useCallback } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 export const WrapperContext = createContext();
@@ -40,54 +40,58 @@ const ContentWrapper = ({ children }) => {
   };
 
   // This func handles the queries the ContentWrapper could receive. It will displayed the requested the section in the requested slider.
-  const handleQueries = (queries, slidersArray) => {
-    const { queriedSliderId, queriedSectionId, queriedDelay } = queries;
-    // queriedSliderId: String. the id of the slider we want to display. Given through the prop slider=. Mandatory, without it the func is not called.
-    // queriedSectionId: String The id of the Section we want to display. Given through the prop section=. If undefined, the dispalyed section will be index 0.
-    // queriedDelay: Number. In milliseconds, the delay we want to apply to the sliding effect. It avoids any uncomfortable blinking of the content. Default is 0.
+  const handleQueries = useCallback(
+    (queries, slidersArray) => {
+      const { queriedSliderId, queriedSectionId, queriedDelay } = queries;
+      // queriedSliderId: String. the id of the slider we want to display. Given through the prop slider=. Mandatory, without it the func is not called.
+      // queriedSectionId: String The id of the Section we want to display. Given through the prop section=. If undefined, the dispalyed section will be index 0.
+      // queriedDelay: Number. In milliseconds, the delay we want to apply to the sliding effect. It avoids any uncomfortable blinking of the content. Default is 0.
 
-    // First we search the queriedSlider index in the slidersArray
-    const queriedSliderIndex = Array.from(slidersArray).findIndex(
-      (slider) => slider.id === queriedSliderId
-    );
-
-    if (queriedSliderIndex !== -1) {
-      // If the slider is identified, we execute the rest of the code
-
-      // These are the newCoordinates we are going to set
-      const newActiveCoords = [];
-
-      // A delay may be requested, so we put a variable
-      let timer = 0;
-
-      // The first entry of the new active coords is the queried slider
-      newActiveCoords.push(queriedSliderIndex);
-
-      // This is the dom element of the queried slider
-      const queriedSlider = slidersArray[queriedSliderIndex];
-
-      // We use it to check if one of its children has the id given in the queries
-      const queriedSectionIndex = Array.from(queriedSlider.children).findIndex(
-        (section) => section.id === queriedSectionId
+      // First we search the queriedSlider index in the slidersArray
+      const queriedSliderIndex = Array.from(slidersArray).findIndex(
+        (slider) => slider.id === queriedSliderId
       );
 
-      // If so we push the resulat as the second entry
-      if (queriedSectionIndex !== -1) newActiveCoords.push(queriedSectionIndex);
-      else newActiveCoords.push(0);
-      // Otherwise, we activate the first section of the slider
+      if (queriedSliderIndex !== -1) {
+        // If the slider is identified, we execute the rest of the code
 
-      // We check if a delay is needed to display the desired content
-      if (queriedDelay) timer = queriedDelay;
-      // Otherwise we want the sliding effect to be immediate
+        // These are the newCoordinates we are going to set
+        const newActiveCoords = [];
 
-      // Don't forget to reset the query
-      router.replace(pathname);
+        // A delay may be requested, so we put a variable
+        let timer = 0;
 
-      setTimeout(() => {
-        setActiveCoordinates(newActiveCoords);
-      }, timer);
-    }
-  };
+        // The first entry of the new active coords is the queried slider
+        newActiveCoords.push(queriedSliderIndex);
+
+        // This is the dom element of the queried slider
+        const queriedSlider = slidersArray[queriedSliderIndex];
+
+        // We use it to check if one of its children has the id given in the queries
+        const queriedSectionIndex = Array.from(
+          queriedSlider.children
+        ).findIndex((section) => section.id === queriedSectionId);
+
+        // If so we push the resulat as the second entry
+        if (queriedSectionIndex !== -1)
+          newActiveCoords.push(queriedSectionIndex);
+        else newActiveCoords.push(0);
+        // Otherwise, we activate the first section of the slider
+
+        // We check if a delay is needed to display the desired content
+        if (queriedDelay) timer = queriedDelay;
+        // Otherwise we want the sliding effect to be immediate
+
+        // Don't forget to reset the query
+        router.replace(pathname);
+
+        setTimeout(() => {
+          setActiveCoordinates(newActiveCoords);
+        }, timer);
+      }
+    },
+    [pathname, router]
+  );
 
   // This func displays the right content according to the active coordinates state
   useEffect(() => {
@@ -132,7 +136,15 @@ const ContentWrapper = ({ children }) => {
       setActiveCoordinates([0, 0]);
       cachedPathname.current = pathname;
     }
-  }, [searchParams, router, activeSliderIndex, showHeader]);
+  }, [
+    searchParams,
+    router,
+    activeSliderIndex,
+    showHeader,
+    activeCoordinates,
+    handleQueries,
+    pathname,
+  ]);
 
   return (
     // This wrapper acts as a window to display the content. It should not overflow the client's screen

@@ -36,19 +36,12 @@ const MediaCardWrapper = ({
 
     const mediaOnScreenWidth =
       (elementHeight / mediaFileHeight) * mediaFileWidth;
-
-    console.log("------------------------------------------");
-    console.log("mediaFileHeight", mediaFileHeight);
-    console.log("elementHeight", elementHeight);
-    console.log("mediaOnScreenWidth", mediaOnScreenWidth);
-    console.log("------------------------------------------");
-
     const marginOfError = 5;
 
     setContentOverflows(
       () => mediaOnScreenWidth > elementWidth + marginOfError
     );
-  }, []);
+  }, [media]);
 
   const classList = `${styles.mediaCardWrapper} ${parentStyle.mediaCard} ${
     contentOverflows ? "grabbable" : ""
