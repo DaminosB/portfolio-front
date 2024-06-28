@@ -7,29 +7,30 @@
   justify-content: center;
 }
 
-.mediasContainer {
+.mediasWrapper {
   display: flex;
+  align-items: center;
   justify-content: center;
   flex-direction: column;
 }
 
-.mediasWrapper {
+.mediasWrapper > div {
   display: flex;
-  align-items: center;
   justify-content: center;
 }
 
 .mediaCard {
   flex: 1;
   height: fit-content;
+  width: fit-content;
 }
 
 .mediaCard > img {
   width: 100%;
 }
 
-/* @media (max-width: 1023px) {
-  .containerModule > div > div {
-    flex-wrap: nowrap;
+@media (max-width: 767px) {
+  .mediasWrapper > div {
+    flex-direction: column;
   }
-} */
+}

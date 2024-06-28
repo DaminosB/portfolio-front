@@ -27,15 +27,14 @@ const Module_Container = ({ module, customColors }) => {
       id={sectionId}
     >
       <div className={`container ${contentDivClasses}`} style={contentDivStyle}>
-        <div className={styles.mediasContainer} style={mediasWrapperStyle}>
+        <MediasWrapper
+          customColors={customColors}
+          parentStyle={styles}
+          mediasWrapperStyle={mediasWrapperStyle}
+        >
           {mediasArray.map((mediasLine, index) => {
             return (
-              <MediasWrapper
-                key={index}
-                customColors={customColors}
-                parentStyle={styles}
-                mediasWrapperStyle={mediasWrapperStyle}
-              >
+              <div key={index} style={mediasWrapperStyle}>
                 {mediasLine.map((media) => {
                   const isImageFile =
                     media.provider_metadata.resource_type === "image";
@@ -63,10 +62,10 @@ const Module_Container = ({ module, customColors }) => {
                     </MediaCardWrapper>
                   );
                 })}
-              </MediasWrapper>
+              </div>
             );
           })}
-        </div>
+        </MediasWrapper>
         {text && <TextContainer text={text.text} />}
       </div>
     </section>
