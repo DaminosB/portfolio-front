@@ -31,20 +31,21 @@ const MediaCardWrapper = ({
     const elementWidth = element.offsetWidth;
     const elementHeight = element.offsetHeight;
 
-    const imageWidth = element.children[0].offsetWidth;
-
     const mediaFileHeight = media.height;
     const mediaFileWidth = media.width;
 
     const mediaOnScreenWidth =
       (elementHeight / mediaFileHeight) * mediaFileWidth;
 
-    const marginOfError = 5;
+    console.log("------------------------------------------");
+    console.log("mediaFileHeight", mediaFileHeight);
+    console.log("elementHeight", elementHeight);
+    console.log("mediaOnScreenWidth", mediaOnScreenWidth);
+    console.log("------------------------------------------");
 
-    setContentOverflows(() => imageWidth > elementWidth);
-    // setContentOverflows(
-    //   () => mediaOnScreenWidth > elementWidth + marginOfError
-    // );
+    setContentOverflows(
+      () => mediaOnScreenWidth > elementWidth + marginOfError
+    );
   }, []);
 
   const classList = `${styles.mediaCardWrapper} ${parentStyle.mediaCard} ${
@@ -74,6 +75,7 @@ const MediaCardWrapper = ({
           media={media}
           currentTranslateValue={currentTranslateValue}
           containerId={id}
+          contentOverflows={contentOverflows}
         />
       )}
     </div>
