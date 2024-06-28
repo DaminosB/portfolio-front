@@ -35,9 +35,13 @@ const MediaCardWrapper = ({
     const mediaFileWidth = media.width;
 
     const mediaOnScreenWidth =
-      Math.floor(elementHeight / mediaFileHeight) * mediaFileWidth;
+      (elementHeight / mediaFileHeight) * mediaFileWidth;
 
-    setContentOverflows(() => mediaOnScreenWidth > elementWidth);
+    const marginOfError = 5;
+
+    setContentOverflows(
+      () => mediaOnScreenWidth > elementWidth + marginOfError
+    );
   }, []);
 
   const classList = `${styles.mediaCardWrapper} ${parentStyle.mediaCard} ${
