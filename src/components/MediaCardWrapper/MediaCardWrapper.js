@@ -43,6 +43,8 @@ const MediaCardWrapper = ({
     console.log("mediaOnScreenWidth", mediaOnScreenWidth);
     console.log("------------------------------------------");
 
+    const marginOfError = 5;
+
     setContentOverflows(
       () => mediaOnScreenWidth > elementWidth + marginOfError
     );
