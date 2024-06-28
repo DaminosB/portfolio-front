@@ -35,7 +35,7 @@ const MediaCardWrapper = ({
     const mediaFileWidth = media.width;
 
     const mediaOnScreenWidth =
-      (elementHeight / mediaFileHeight) * mediaFileWidth;
+      Math.floor(elementHeight / mediaFileHeight) * mediaFileWidth;
 
     setContentOverflows(() => mediaOnScreenWidth > elementWidth);
   }, []);
