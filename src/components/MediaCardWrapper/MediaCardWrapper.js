@@ -31,6 +31,8 @@ const MediaCardWrapper = ({
     const elementWidth = element.offsetWidth;
     const elementHeight = element.offsetHeight;
 
+    const imageWidth = element.children[0].offsetWidth;
+
     const mediaFileHeight = media.height;
     const mediaFileWidth = media.width;
 
@@ -39,9 +41,10 @@ const MediaCardWrapper = ({
 
     const marginOfError = 5;
 
-    setContentOverflows(
-      () => mediaOnScreenWidth > elementWidth + marginOfError
-    );
+    setContentOverflows(() => imageWidth > elementWidth);
+    // setContentOverflows(
+    //   () => mediaOnScreenWidth > elementWidth + marginOfError
+    // );
   }, []);
 
   const classList = `${styles.mediaCardWrapper} ${parentStyle.mediaCard} ${
