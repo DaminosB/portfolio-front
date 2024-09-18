@@ -1,5 +1,0 @@
-.contentWrapper {
-  overflow: hidden;
-  position: relative;
-  transition: var(--normal-transition) var(--default-animation);
-}
