@@ -2,7 +2,7 @@ import styles from "./ProjectsContainer.module.css";
 
 // Components imports
 import ProjectCard from "../ProjectCard/ProjectCard";
-import ProjectCardsWrapper from "../ProjectCardsWrapper/ProjectCardsWrapper";
+import ProjectCardsWrapper from "../../wrappers/ProjectCardsWrapper/ProjectCardsWrapper";
 
 const ProjectsContainer = ({ projects, customStyle, logos }) => {
   const totalGapWidth = (customStyle.thumbnailsPerRow - 1) * customStyle.gap;
@@ -41,7 +41,7 @@ const ProjectsContainer = ({ projects, customStyle, logos }) => {
   };
 
   return (
-    <section className={styles.projectsContainer} id="projects-container">
+    <div className={styles.projectsContainer} id="projects-container">
       <ProjectCardsWrapper
         customStyle={wrapperStyle}
         cardsToDisplay={cardsToDisplay}
@@ -50,7 +50,7 @@ const ProjectsContainer = ({ projects, customStyle, logos }) => {
           return <ProjectCard key={card.id} cardData={card} />;
         })}
       </ProjectCardsWrapper>
-    </section>
+    </div>
   );
 };
 
