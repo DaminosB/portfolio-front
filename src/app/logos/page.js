@@ -6,43 +6,6 @@ import Module_Fullpage from "@/modules/Module_Fullpage/Module_Fullpage";
 import Module_MultiImagesColumn from "@/modules/Module_MultiImagesColumn/Module_MultiImagesColumn";
 import Module_Container from "@/modules/Module_Container/Module_Container";
 
-const fetchData = async () => {
-  const response = { logos: {}, customStyle: {} };
-  try {
-    const logos = await axios.get(
-      `${process.env.API_URL}/logo?populate=thumbnail,modules.medias`,
-      { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
-    );
-
-    response.logos = { ...logos.data.data.attributes };
-  } catch (error) {
-    console.log(error);
-  }
-
-  try {
-    const customStyle = await axios.get(`${process.env.API_URL}/style`, {
-      headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
-    });
-
-    response.customStyle = { ...customStyle.data.data.attributes };
-  } catch (error) {
-    console.log(error);
-  }
-
-  response.logos.modules.forEach((module, i) => {
-    response.logos.modules[i] = { ...module };
-    response.logos.modules[i].medias = [...module.medias.data];
-    response.logos.modules[i].medias.forEach((media, j) => {
-      response.logos.modules[i].medias[j] = {
-        ...media.attributes,
-        id: media.id,
-      };
-    });
-  });
-
-  return response;
-};
-
 export default async function ProjectsIdPage() {
   const { logos, customStyle } = await fetchData();
 
@@ -89,3 +52,40 @@ export default async function ProjectsIdPage() {
     </SnapScrollWrapper>
   );
 }
+
+const fetchData = async () => {
+  const response = { logos: {}, customStyle: {} };
+  try {
+    const logos = await axios.get(
+      `${process.env.API_URL}/logo?populate=thumbnail,modules.medias`,
+      { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
+    );
+
+    response.logos = { ...logos.data.data.attributes };
+  } catch (error) {
+    console.log(error);
+  }
+
+  try {
+    const customStyle = await axios.get(`${process.env.API_URL}/style`, {
+      headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
+    });
+
+    response.customStyle = { ...customStyle.data.data.attributes };
+  } catch (error) {
+    console.log(error);
+  }
+
+  response.logos.modules.forEach((module, i) => {
+    response.logos.modules[i] = { ...module };
+    response.logos.modules[i].medias = [...module.medias.data];
+    response.logos.modules[i].medias.forEach((media, j) => {
+      response.logos.modules[i].medias[j] = {
+        ...media.attributes,
+        id: media.id,
+      };
+    });
+  });
+
+  return response;
+};
