@@ -2,11 +2,8 @@ import "./globals.css";
 
 import axios from "axios";
 
-import { Suspense } from "react";
-
-import Header from "@/components/Header/Header";
-import Logo from "@/components/Logo/Logo";
-import ContentWrapper from "@/components/ContentWrapper/ContentWrapper";
+import LogoAndSideMenu from "@/components/LogoAndSideMenu/LogoAndSideMenu";
+import LayoutWrapper from "@/wrappers/LayoutWrapper/LayoutWrapper";
 
 // The following import prevents a Font Awesome icon server-side rendering bug,
 // where the icons flash from a very large icon down to a properly sized one:
@@ -40,19 +37,22 @@ export default async function RootLayout({ children }) {
         />
       </head>
       <body className="viewport" style={customStyles}>
-        <Header customStyle={customStyle} pages={pages} profile={profile} />
-        <Suspense>
-          <ContentWrapper>
-            <Logo profile={profile} pages={pages} customStyle={customStyle} />
+        <main>
+          <LayoutWrapper>
+            <LogoAndSideMenu
+              profile={profile}
+              customStyle={customStyle}
+              pages={pages}
+            />
             {children}
-          </ContentWrapper>
-        </Suspense>
+          </LayoutWrapper>
+        </main>
       </body>
     </html>
   );
 }
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata() {
   try {
     const { data } = await axios.get(`${process.env.API_URL}/site-parameter`, {
       headers: { authorization: `Bearer ${process.env.API_TOKEN}` },

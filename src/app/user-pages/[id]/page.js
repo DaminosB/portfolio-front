@@ -1,11 +1,11 @@
 import axios from "axios";
 
 import CoverContainer from "@/components/CoverContainer/CoverContainer";
-import Module_Fullpage from "@/components/Module_Fullpage/Module_Fullpage";
-import Module_MultiImagesColumn from "@/components/Module_MultiImagesColumn/Module_MultiImagesColumn";
-import Module_Container from "@/components/Module_Container/Module_Container";
-import SectionNavigation from "@/components/SectionNavigation/SectionNavigation";
-import Slider from "@/components/Slider/Slider";
+import Module_Fullpage from "@/modules/Module_Fullpage/Module_Fullpage";
+import Module_MultiImagesColumn from "@/modules/Module_MultiImagesColumn/Module_MultiImagesColumn";
+import Module_Container from "@/modules/Module_Container/Module_Container";
+import SidePanelNavigation from "@/components/SidePanelNavigation/SidePanelNavigation";
+import SnapScrollWrapper from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
 
 export default async function ProjectsIdPage({ params }) {
   const { page } = await fetchData(params.id);
@@ -18,15 +18,13 @@ export default async function ProjectsIdPage({ params }) {
   return (
     <>
       {page.cover && (
-        <Slider id={"cover"} hideOnInactive={true}>
-          <CoverContainer
-            coverUrl={page.cover.url}
-            coverAltTxt={page.cover.alternativeText}
-            customColors={customColors}
-          />
-        </Slider>
+        <CoverContainer
+          coverUrl={page.cover.url}
+          coverAltTxt={page.cover.alternativeText}
+          customColors={customColors}
+        />
       )}
-      <Slider id={"page-content"} hideHeader={true}>
+      <SnapScrollWrapper>
         {page.modules.map((module, index) => {
           switch (module.__component) {
             case "module.pleine-page":
@@ -60,8 +58,8 @@ export default async function ProjectsIdPage({ params }) {
               break;
           }
         })}
-      </Slider>
-      <SectionNavigation content={page} customStyle={customColors} />
+        <SidePanelNavigation content={page} customStyle={customColors} />
+      </SnapScrollWrapper>
     </>
   );
 }

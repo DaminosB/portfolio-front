@@ -1,12 +1,13 @@
 import axios from "axios";
 
 import CoverContainer from "@/components/CoverContainer/CoverContainer";
-import Module_Fullpage from "@/components/Module_Fullpage/Module_Fullpage";
-import Module_MultiImagesColumn from "@/components/Module_MultiImagesColumn/Module_MultiImagesColumn";
-import Module_Container from "@/components/Module_Container/Module_Container";
-import SectionNavigation from "@/components/SectionNavigation/SectionNavigation";
+import Module_Fullpage from "@/modules/Module_Fullpage/Module_Fullpage";
+import Module_MultiImagesColumn from "@/modules/Module_MultiImagesColumn/Module_MultiImagesColumn";
+import Module_Container from "@/modules/Module_Container/Module_Container";
+import SidePanelNavigation from "@/components/SidePanelNavigation/SidePanelNavigation";
 import RelatedProjects from "@/components/RelatedProjects/RelatedProjects";
-import Slider from "@/components/Slider/Slider";
+
+import SnapScrollWrapper from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
 
 export default async function ProjectsIdPage({ params }) {
   const { project, customStyle, tagsData } = await fetchData(params.id);
@@ -19,15 +20,13 @@ export default async function ProjectsIdPage({ params }) {
   return (
     <>
       {project.cover && (
-        <Slider id={"cover"} hideOnInactive={true}>
-          <CoverContainer
-            coverUrl={project.cover.url}
-            coverAltTxt={project.cover.alternativeText}
-            customColors={customColors}
-          />
-        </Slider>
+        <CoverContainer
+          coverUrl={project.cover.url}
+          coverAltTxt={project.cover.alternativeText}
+          customColors={customColors}
+        />
       )}
-      <Slider id={"project-content"} hideHeader={true}>
+      <SnapScrollWrapper>
         {project.modules.map((module, index) => {
           switch (module.__component) {
             case "module.pleine-page":
@@ -61,16 +60,14 @@ export default async function ProjectsIdPage({ params }) {
               break;
           }
         })}
-      </Slider>
-      <Slider id={"related-projects-slider"} hideHeader={true}>
-        <RelatedProjects
-          tagsData={tagsData}
-          projectId={project.id}
-          customStyle={customStyle}
-          customColors={customColors}
-        />
-      </Slider>
-      <SectionNavigation content={project} customStyle={customColors} />
+        <SidePanelNavigation content={project} customStyle={customColors} />
+      </SnapScrollWrapper>
+      <RelatedProjects
+        tagsData={tagsData}
+        projectId={project.id}
+        customStyle={customStyle}
+        customColors={customColors}
+      />
     </>
   );
 }
