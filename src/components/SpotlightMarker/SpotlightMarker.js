@@ -3,7 +3,7 @@ import styles from "./SpotlightMarker.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPanorama, faSquareFull } from "@fortawesome/free-solid-svg-icons";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 // This component displays an image with a spotlight that moves in sync with the draggable image, highlighting the visible part and showing a modal with the image details when clicked
 const SpotlightMarker = ({ customColors, onClickFunction, metrics }) => {
@@ -23,6 +23,24 @@ const SpotlightMarker = ({ customColors, onClickFunction, metrics }) => {
 
   const spotlightRef = useRef(null);
 
+  // Calculates the new translation value for the spotlight div
+  const calcSpotlightOffset = useCallback(
+    (buttonWidth, translateValue) => {
+      // Determine the ratio of the translate value:
+      // 100% = left edge of the image is visible, -100% = right edge is visible
+      const maxOffset = (childWidth - containerWidth) / 2;
+      const translateValueRatio = translateValue / maxOffset;
+
+      // Calculate the maximum offset for the spotlight
+      const spotlightWidthPx = buttonWidth * spotlightWidthRatio;
+      const maxSpotlightOffset = (buttonWidth - spotlightWidthPx) / 2;
+
+      // Move the spotlight in the opposite direction to the image
+      return maxSpotlightOffset * -translateValueRatio;
+    },
+    [childWidth, containerWidth, spotlightWidthRatio]
+  );
+
   // Function called whenever the translation changes to move the spotlight accordingly
   useEffect(() => {
     const spotlight = spotlightRef.current;
@@ -35,22 +53,12 @@ const SpotlightMarker = ({ customColors, onClickFunction, metrics }) => {
 
     spotlight.style.transform = `translateX(${spotlightOffset}px)`;
     spotlight.style.width = `${spotlightWidthRatio * 100}%`;
-  }, [metrics]);
-
-  // Calculates the new translation value for the spotlight div
-  const calcSpotlightOffset = (buttonWidth, translateValue) => {
-    // Determine the ratio of the translate value:
-    // 100% = left edge of the image is visible, -100% = right edge is visible
-    const maxOffset = (childWidth - containerWidth) / 2;
-    const translateValueRatio = translateValue / maxOffset;
-
-    // Calculate the maximum offset for the spotlight
-    const spotlightWidthPx = buttonWidth * spotlightWidthRatio;
-    const maxSpotlightOffset = (buttonWidth - spotlightWidthPx) / 2;
-
-    // Move the spotlight in the opposite direction to the image
-    return maxSpotlightOffset * -translateValueRatio;
-  };
+  }, [
+    metrics,
+    calcSpotlightOffset,
+    currentTranslateValue,
+    spotlightWidthRatio,
+  ]);
 
   return (
     <button

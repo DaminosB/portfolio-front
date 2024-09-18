@@ -39,7 +39,7 @@ const Carousel = ({ medias, indexStart, customColors }) => {
     ).findIndex((child) => child.offsetLeft === scrollPosition);
 
     setActiveIndex(newActiveIndex);
-  }, [scrollPosition]);
+  }, [scrollPosition, indexStart, jumpTo]);
 
   const sideButtonsInlineStyle = {
     color: customColors.secondaryColor,
@@ -123,6 +123,7 @@ const Carousel = ({ medias, indexStart, customColors }) => {
 
               return (
                 <button
+                  key={media.id}
                   className={isActive ? styles.active : ""}
                   onClick={handleJumpButtons}
                 >

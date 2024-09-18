@@ -55,7 +55,13 @@ const ModuleWrapper = ({
       activeChildIndex === sectionIndex;
 
     setIsActiveSection(activeStatus);
-  }, [activeCoordinates]);
+  }, [
+    activeCoordinates,
+    activeChildIndex,
+    activeContainerIndex,
+    getSectionCoords,
+    sectionId,
+  ]);
 
   return (
     <ModuleContext.Provider value={contextValues}>

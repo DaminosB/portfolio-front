@@ -73,7 +73,7 @@ const useScrollSticky = (scrollX) => {
     if (containerRef.current) {
       notifyHeightChange(containerRef.current);
     }
-  }, [containerRef.current]);
+  }, [containerRef.current, notifyHeightChange]);
 
   // Function to handle snapping behavior based on scroll position
   const scrollSnap = (e) => {

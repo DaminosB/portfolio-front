@@ -41,7 +41,7 @@ const SnapScrollWrapper = ({ children }) => {
   useEffect(() => {
     const container = containerRef.current;
     notifyScrollChange(container, scrollPosition);
-  }, [scrollPosition]);
+  }, [scrollPosition, notifyScrollChange]);
 
   return (
     // This wrapper acts as a window to display the content. It should not overflow the client's screen

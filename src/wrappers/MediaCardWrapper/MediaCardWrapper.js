@@ -3,7 +3,7 @@
 import styles from "./MediaCardWrapper.module.css";
 
 // React hooks import
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext, useRef, useCallback } from "react";
 
 // Custom hooks import
 import useGrabAndMove from "@/hooks/useGrabAndMove";
@@ -62,7 +62,7 @@ const MediaCardWrapper = ({
   const { isModaleDisplayed } = useContext(LayoutContext);
 
   // This function switches the views of the media
-  const toggleViews = () => {
+  const toggleViews = useCallback(() => {
     if (preventContainedView) return;
 
     // If the hook is working or if the wrapper is in normal view with no overflow, nothing happens
@@ -89,7 +89,16 @@ const MediaCardWrapper = ({
       container.style.height = "";
       child.style.left = "";
     }
-  };
+  }, [
+    isWorking,
+    isContainedView,
+    childWidth,
+    containerWidth,
+    currentTranslateValue,
+    contentOverflows,
+    preventContainedView,
+    mediaCardWrapperRef,
+  ]);
 
   // This function opens the media carousel modal
   const handleOpenCarousel = () => {
@@ -140,7 +149,14 @@ const MediaCardWrapper = ({
 
     if (isActiveSection && !isModaleDisplayed) setShouldPlayVideo(true);
     else setShouldPlayVideo(false);
-  }, [childWidth, containerWidth, isActiveSection, isModaleDisplayed]);
+  }, [
+    childWidth,
+    containerWidth,
+    isActiveSection,
+    isModaleDisplayed,
+    initGrabAndMove,
+    toggleViews,
+  ]);
 
   const cardBackgroundInlineStyle = {
     backgroundImage: `url(${media.url})`,
