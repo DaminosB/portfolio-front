@@ -16,6 +16,8 @@ const Module_Fullpage = ({ module, customColors }) => {
   const { sectionStyle, contentDivStyle, mediasContainerStyle } =
     generateInlineStyle(module);
 
+  console.log(sectionStyle, contentDivStyle, mediasContainerStyle);
+
   const sectionId = `section-${module.id}`;
 
   const hasMultipleChildren = medias.length > 1;

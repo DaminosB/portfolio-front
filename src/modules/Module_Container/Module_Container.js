@@ -32,7 +32,10 @@ const Module_Container = ({ module, customColors }) => {
         style={contentDivStyle}
       >
         <div className={styles.mediasFrame}>
-          <div className={styles.mediasContainer} style={mediasContainerStyle}>
+          <div
+            className={styles.mediasContainerStyle}
+            style={mediasContainerStyle}
+          >
             {mediasArray.map((mediasLine, index) => {
               return (
                 <div key={index} style={mediasContainerStyle}>
