@@ -1,7 +1,15 @@
-.textContainer {
+/* .textContainer {
   overflow-y: scroll;
   scrollbar-width: none;
   display: flex;
   justify-content: center;
   align-items: center;
+} */
+
+.textContainer {
+  will-change: transform;
+}
+
+.textContainer p {
+  height: 100%;
 }

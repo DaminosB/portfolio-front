@@ -1,9 +1,13 @@
+"use client";
+
 import styles from "./TextContainer.module.css";
 
-const TextContainer = ({ text }) => {
+const TextContainer = ({ sectionId, children }) => {
+  const textWrapperId = `${sectionId}-text-wrapper`;
+
   return (
-    <div className={styles.textContainer}>
-      <p>{text}</p>
+    <div id={textWrapperId} className={styles.textContainer}>
+      <p>{children}</p>
     </div>
   );
 };
