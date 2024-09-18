@@ -15,9 +15,6 @@ const NavPages = ({ profile, pages, customStyle }) => {
           </Link>
         );
       })}
-
-      {/* The Contact page is created by default */}
-      <ContactButton profile={profile} customStyle={customStyle} />
     </nav>
   );
 };
