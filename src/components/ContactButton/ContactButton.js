@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import ContactForm from "../ContactForm/ContactForm";
-import ModaleWrapper from "../ModaleWrapper/ModaleWrapper";
+// import ModaleWrapper from "../../wrappers/ModaleWrapper/ModaleWrapper";
 
 const ContactButton = ({ profile, customStyle }) => {
   const [showContactForm, setShowContactForm] = useState(false);
@@ -28,7 +28,7 @@ const ContactButton = ({ profile, customStyle }) => {
   return (
     <>
       <button onClick={handleOnClick}>Contact</button>
-      {showContactForm &&
+      {/* {showContactForm &&
         createPortal(
           <ModaleWrapper
             exitFunction={handleExitModale}
@@ -41,7 +41,7 @@ const ContactButton = ({ profile, customStyle }) => {
             />
           </ModaleWrapper>,
           domTarget.current
-        )}
+        )} */}
     </>
   );
 };
