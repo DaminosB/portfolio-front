@@ -1,0 +1,25 @@
+.spotlightContainer {
+  transition: var(--fast-transition) var(--default-animation);
+  display: flex;
+  justify-content: center;
+}
+
+.spotlightContainer > div {
+  position: absolute;
+  height: 100%;
+  border: 3px solid;
+  border-radius: var(--small-radius);
+  transition: var(--fast-transition);
+}
+
+button.spotlightContainer:hover > div {
+  width: 100% !important;
+  transform: translateX(0px) !important ;
+}
+
+.spotlightContainer svg {
+  /* width: 100%;
+  height: 100%; */
+  position: relative;
+  z-index: 1;
+}
