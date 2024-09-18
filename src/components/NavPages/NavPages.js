@@ -2,7 +2,6 @@
 
 // Next components
 import Link from "next/link";
-import ContactButton from "../ContactButton/ContactButton";
 
 const NavPages = ({ profile, pages, customStyle }) => {
   return (
