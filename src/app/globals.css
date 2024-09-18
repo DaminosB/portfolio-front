@@ -4,9 +4,15 @@
   --fast-transition: 250ms;
   --default-animation: ease-in-out;
 
+  --logo-position: 10px;
+  --logo-height: 60px;
+  --logo-height-offset: calc(var(--logo-position) * 2 + var(--logo-height));
+
   --small-radius: 3px;
 
   --default-blur: blur(15px);
+
+  --standard-shadow: 0px 0px 50px;
 }
 
 /* ------------------------------------------------------------------------------------- */
@@ -164,24 +170,16 @@ textarea {
 /* ------------------------------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------- */
 
+html {
+  overflow: hidden;
+}
+
 body {
   scrollbar-gutter: stable;
 }
 
 button:not(.grabbable, .grabbed) {
   cursor: pointer;
-}
-
-section {
-  height: 100%;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  position: relative;
-  scrollbar-gutter: stable;
-}
-
-section:first-of-type {
-  display: flex;
 }
 
 .container {
@@ -284,12 +282,11 @@ section:first-of-type {
 
 .viewport {
   height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
 .viewport > main {
-  flex: 1;
+  overflow: hidden;
+  height: 100%;
 }
 
 .xLarge {
@@ -311,7 +308,11 @@ section:first-of-type {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
+  :root {
+    --logo-height: 45px;
+  }
+
   .flex-row {
     flex-direction: column;
   }
