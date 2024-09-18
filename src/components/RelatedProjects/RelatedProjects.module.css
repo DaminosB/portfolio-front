@@ -1,3 +1,7 @@
 .relatedProjects {
   backdrop-filter: var(--default-blur);
+  height: 100%;
+  transition: var(--normal-transition) var(--default-animation);
+  padding-top: var(--logo-height-offset);
+  overflow-y: scroll;
 }

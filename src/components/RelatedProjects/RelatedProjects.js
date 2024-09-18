@@ -1,11 +1,11 @@
 import styles from "./RelatedProjects.module.css";
 
 // Components import
-import ProjectCardsWrapper from "../ProjectCardsWrapper/ProjectCardsWrapper";
+import ProjectCardsWrapper from "../../wrappers/ProjectCardsWrapper/ProjectCardsWrapper";
 import ProjectCard from "../ProjectCard/ProjectCard";
 
 // Utils import
-import generateBgColorString from "@/utils/generateBgColorString";
+import generateRGBAString from "@/utils/generateRGBAString";
 
 // This comp takes the tagsData request and displays projects that share 1 or more tag with the currently displayed one
 const RelatedProjects = ({
@@ -27,10 +27,7 @@ const RelatedProjects = ({
   const opacityValue = 0.5;
 
   const inlineStyle = {
-    backgroundColor: generateBgColorString(
-      customColors.mainColor,
-      opacityValue
-    ),
+    backgroundColor: generateRGBAString(customColors.mainColor, opacityValue),
     color: customColors.secondaryColor,
   };
 
@@ -48,7 +45,7 @@ const RelatedProjects = ({
   }));
 
   return (
-    <section className={styles.relatedProjects} style={inlineStyle}>
+    <div className={styles.relatedProjects} style={inlineStyle}>
       <ProjectCardsWrapper
         customStyle={wrapperStyle}
         cardsToDisplay={cardsToDisplay}
@@ -57,7 +54,7 @@ const RelatedProjects = ({
           return <ProjectCard key={card.id} cardData={card} />;
         })}
       </ProjectCardsWrapper>
-    </section>
+    </div>
   );
 };
 
