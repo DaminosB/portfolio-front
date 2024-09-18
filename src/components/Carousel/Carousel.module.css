@@ -1,0 +1,104 @@
+.carouselContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80%;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.carousel {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  scrollbar-width: none;
+  flex-direction: column;
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.slider {
+  position: sticky;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  overflow-x: visible;
+  overflow-y: clip;
+  transition: var(--normal-transition) var(--default-animation);
+}
+
+.slider > div {
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.slider > div > img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.carouselContainer > button {
+  font-size: 30px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 100%;
+  padding: 0px 35px;
+  opacity: 0.5;
+  transition: var(--normal-transition) var(--default-animation);
+}
+
+.carouselContainer > button:hover {
+  opacity: 1;
+}
+
+.carouselContainer > button:first-of-type {
+  left: 0px;
+}
+
+.carouselContainer > button:last-of-type {
+  right: 0px;
+}
+
+.carouselContainer > nav {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  height: 30px;
+  width: fit-content;
+  padding: 10px;
+  border-radius: var(--small-radius);
+}
+
+.carouselContainer > nav > button {
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  transition: var(--normal-transition) var(--default-animation);
+}
+
+.carouselContainer > nav > button.active {
+  scale: 1.5;
+}
+
+@media (max-width: 767px) {
+  .carouselContainer {
+    height: 100%;
+    gap: 0px;
+  }
+
+  .carouselContainer > nav {
+    position: absolute;
+    bottom: 0px;
+  }
+}
