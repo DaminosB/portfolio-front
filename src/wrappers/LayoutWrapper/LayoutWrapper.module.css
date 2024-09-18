@@ -1,0 +1,12 @@
+.scrollOverlapWrapper {
+  height: 100%;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+.innerContainer {
+  height: 100%;
+  overflow-y: visible;
+  position: sticky;
+  top: 0px;
+}

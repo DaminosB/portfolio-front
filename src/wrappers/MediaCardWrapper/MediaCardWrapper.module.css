@@ -1,0 +1,109 @@
+.mediaCardWrapper {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  container-type: inline-size;
+  width: 100%;
+}
+
+.mediaCardWrapper > div:first-of-type {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  transition: height var(--normal-transition) var(--default-animation),
+    box-shadow var(--normal-transition) var(--default-animation);
+}
+
+/* .mediaCardWrapper.contained > div:first-of-type {
+  box-shadow: var(--standard-shadow);
+} */
+
+.mediaCardWrapper.contained img,
+.mediaCardWrapper.underflow img {
+  box-shadow: var(--standard-shadow);
+}
+
+.mediaCardWrapper img {
+  position: relative;
+  left: 0px;
+  will-change: transform;
+  transition: left var(--normal-transition) var(--default-animation),
+    box-shadow var(--normal-transition) var(--default-animation);
+}
+
+.buttonsContainer {
+  position: absolute;
+  right: 25px;
+  width: 50px;
+  height: 50px;
+  font-size: 50px;
+  overflow: hidden;
+  opacity: 0.5;
+  border-radius: var(--small-radius);
+  transition: var(--normal-transition) var(--default-animation);
+}
+
+.buttonsContainer:first-of-type {
+  bottom: 25px;
+}
+
+.buttonsContainer:nth-of-type(2) {
+  top: 25px;
+}
+
+.mediaCardWrapper > img:hover ~ .buttonsContainer {
+  opacity: 0.75;
+}
+
+.buttonsContainer:hover {
+  opacity: 0.9;
+}
+
+.buttonsContainer > div {
+  position: absolute;
+  transition: inherit;
+  width: 100%;
+  height: 100%;
+}
+
+.buttonsContainer > div.active {
+  z-index: 1;
+}
+
+.cardBackground {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: -100%;
+  display: flex;
+  align-items: center;
+  z-index: -1;
+  filter: var(--default-blur);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: auto 100%;
+  transition: var(--normal-transition) var(--default-animation);
+}
+
+.mediaCardWrapper.contained > .cardBackground {
+  left: 0px;
+}
+
+.mediaCardWrapper.underflow > .cardBackground {
+  left: 0px;
+  background-size: 100%;
+}
+
+@container (max-width:500px) {
+  .buttonsContainer {
+    width: 35px;
+    height: 35px;
+    bottom: 10px;
+    right: 10px;
+    font-size: 35px;
+  }
+}

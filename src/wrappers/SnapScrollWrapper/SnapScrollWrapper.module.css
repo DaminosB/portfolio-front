@@ -1,0 +1,27 @@
+.snapScrollWrapper {
+  height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  position: relative;
+  transition: var(--normal-transition) var(--default-animation);
+  scrollbar-width: none;
+}
+
+.slider {
+  position: sticky;
+  top: 0px;
+  height: 100%;
+  width: 100%;
+  overflow-y: visible;
+  transition: inherit;
+  will-change: top;
+}
+
+.slider > section {
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  position: relative;
+  scrollbar-gutter: stable;
+}

@@ -1,0 +1,26 @@
+.modaleWrapper {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  backdrop-filter: var(--default-blur);
+  transition: var(--normal-transition) var(--default-animation);
+  z-index: 1;
+}
+
+.modaleWrapper > button {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  font-size: 35px;
+  transition: inherit;
+  z-index: 10;
+}
+
+.modaleWrapper > button:hover {
+  scale: 1.25;
+}

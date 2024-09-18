@@ -1,0 +1,11 @@
+.projectCardsWrapper {
+  width: 100%;
+}
+
+.cardsContainer {
+  position: relative;
+}
+
+.inactiveCard {
+  opacity: 0.33;
+}
