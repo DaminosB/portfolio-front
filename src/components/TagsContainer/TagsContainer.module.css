@@ -1,6 +1,7 @@
 .tagsContainer {
   position: sticky;
   top: 0px;
+  /* top: var(--logo-height-offset); */
   z-index: 1;
   padding: 30px 0;
   display: flex;
@@ -28,9 +29,9 @@
   opacity: 0.75;
 }
 
-@media (max-width: 1023px) {
+/* @media (max-width: 1023px) {
   .tagsContainer {
-    margin-top: 75px;
-    top: 75px;
+    margin-top: var(--logo-height-offset);
+    top: var(--logo-height-offset);
   }
-}
+} */
