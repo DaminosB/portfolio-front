@@ -1,0 +1,77 @@
+.sectionNavigation {
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translate(100%, -50%);
+  /* transform: translateY(-50%); */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  /* padding-right: 20px; */
+  border-top-left-radius: var(--small-radius);
+  border-bottom-left-radius: var(--small-radius);
+  /* border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px; */
+  transition: var(--normal-transition) var(--default-animation);
+}
+
+.sectionNavigation.open {
+  transform: translate(0%, -50%);
+}
+
+.sectionNavigation > button {
+  transition: inherit;
+  font-size: 20px;
+}
+
+.sectionNavigation > button:first-of-type svg {
+  transition: inherit;
+}
+
+.sectionNavigation.open > button:first-of-type svg {
+  transform: rotateY(180deg);
+}
+
+.sectionNavigation > button:first-of-type {
+  position: absolute;
+  border: 1px solid;
+  border-right: none;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 100%;
+  padding: 5px;
+  border-radius: inherit;
+  font-size: 20px;
+  border-top-left-radius: var(--small-radius);
+  border-bottom-left-radius: var(--small-radius);
+}
+
+.sectionNavigation > button:not(:first-of-type) {
+  width: 30px;
+}
+
+.sectionNavigation > button:not(.activeButton):hover {
+  opacity: 0.9;
+}
+
+.sectionNavigation > button.activeButton {
+  scale: 1.33;
+}
+
+.inactiveButton {
+  opacity: 0.67;
+}
+
+@media (max-width: 767px) {
+  .sectionNavigation {
+    padding: 5px;
+    padding-top: 10px;
+    gap: 5px;
+  }
+
+  .sectionNavigation svg {
+    height: 15px;
+  }
+}
