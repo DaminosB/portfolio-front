@@ -7,7 +7,7 @@ const generateInlineStyle = (module) => {
   const response = {
     sectionStyle: {},
     contentDivStyle: {},
-    mediasWrapperStyle: {},
+    mediasContainerStyle: {},
   };
 
   // Background properties
@@ -18,7 +18,7 @@ const generateInlineStyle = (module) => {
 
   if (medias.length > 1) {
     // If multiple medias must be displayed, we apply the gap value the user has stored
-    response.mediasWrapperStyle.gap = `${gap}px`;
+    response.mediasContainerStyle.gap = `${gap}px`;
   }
 
   // If the module contains text, more parameters must be set
