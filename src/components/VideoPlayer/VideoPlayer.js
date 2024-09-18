@@ -1,57 +1,49 @@
 "use client";
-
-import { useState, useRef } from "react";
-
 import styles from "./VideoPlayer.module.css";
+
+import { useState, useRef, useEffect } from "react";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 
-const VideoPlayer = ({ children, video, customColors }) => {
+const VideoPlayer = ({ children, video, shouldPlayVideo, customColors }) => {
   const [isActive, setIsActive] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const videoPlayerRef = useRef(null);
 
-  const buttonId = `video-player-button-${video.id}`;
-
-  const buttonStyle = {
-    color: customColors.secondaryColor,
+  const buttonInlineStyle = {
+    color: isHovered ? customColors.mainColor : customColors.secondaryColor,
   };
 
-  const enableVideoPlayer = () => {
+  const enableVideoPlayer = (e) => {
+    e.stopPropagation();
     setIsActive(true);
     videoPlayerRef.current.play();
   };
 
-  const disableVideoPlayer = () => {
+  const closePlayer = () => {
     setIsActive(false);
-    customButtonColors("disengage", customColors, buttonId);
+    const videoPlayer = videoPlayerRef.current;
+
+    videoPlayer.pause();
+    videoPlayer.currentTime = 0;
   };
 
-  const handleMouseEvents = (event) => {
-    switch (event.type) {
-      case "mouseenter":
-        customButtonColors("engage", customColors, buttonId);
-        break;
+  useEffect(() => {
+    if (!shouldPlayVideo && isActive) closePlayer();
+  }, [shouldPlayVideo, isActive]);
 
-      case "mouseleave":
-        customButtonColors("disengage", customColors, buttonId);
-        break;
-
-      default:
-        break;
-    }
-  };
+  const toggleIsHovered = () => setIsHovered((prev) => !prev);
 
   return (
-    <div className={styles.videoWrapper}>
+    <div
+      className={styles.videoWrapper}
+      onMouseEnter={toggleIsHovered}
+      onMouseLeave={toggleIsHovered}
+    >
       <div>
-        <button
-          style={buttonStyle}
-          id={buttonId}
-          onMouseEnter={handleMouseEvents}
-          onMouseLeave={handleMouseEvents}
-          onClick={enableVideoPlayer}
-        >
+        <button style={buttonInlineStyle} onClick={enableVideoPlayer}>
           <FontAwesomeIcon icon={faPlay} />
         </button>
         <img src={video.caption} alt="" />
@@ -60,22 +52,14 @@ const VideoPlayer = ({ children, video, customColors }) => {
         ref={videoPlayerRef}
         className={`${styles.videoPlayer} ${isActive ? "" : "hidden"}`}
         controls
+        controlsList="nofullscreen"
         preload="metadata"
-        onEnded={disableVideoPlayer}
+        onEnded={closePlayer}
       >
         {children}
       </video>
     </div>
   );
-};
-
-const customButtonColors = (scenario, customColors, buttonId) => {
-  const { mainColor, secondaryColor } = customColors;
-
-  const buttonNode = document.getElementById(buttonId);
-
-  if (scenario === "engage") buttonNode.style.color = mainColor;
-  else if (scenario === "disengage") buttonNode.style.color = secondaryColor;
 };
 
 export default VideoPlayer;
