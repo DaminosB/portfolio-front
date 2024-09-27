@@ -2,42 +2,67 @@
 
 import styles from "./TagsContainer.module.css";
 
+import { useState } from "react";
+
+import generateRGBAString from "@/utils/generateRGBAString";
+
 const TagsContainer = ({
   tags,
   activeFilter,
   setActiveFilter,
   customStyle,
-  filtersToHighlight,
+  activeCard,
 }) => {
+  const [isHovered, setIsHovered] = useState([]);
   const toggleFilter = (id) => {
     const isActiveFilter = activeFilter === id;
 
-    if (isActiveFilter) {
-      setActiveFilter(null);
-    } else {
-      const thumbnailsWrapper = document.getElementById("thumbnails-wrapper");
-      thumbnailsWrapper.scrollIntoView({ behavior: "smooth" });
-      setActiveFilter(id);
-    }
+    if (isActiveFilter) setActiveFilter(null);
+    else setActiveFilter(id);
   };
 
-  const inlineStyle = {
-    backgroundColor: customStyle.backgroundColor,
-    color: customStyle.color,
-  };
+  const mainColorStringStrong = generateRGBAString(
+    customStyle.backgroundColor,
+    1
+  );
+  const mainColorStringLight = generateRGBAString(
+    customStyle.backgroundColor,
+    0.5
+  );
 
   return (
     <div className={`${styles.tagsContainer} container`}>
-      {tags.map((tag) => {
-        const isActiveFilter =
-          activeFilter === tag.id ||
-          filtersToHighlight.some((filter) => tag.id === filter);
+      {tags.map((tag, i) => {
+        const isActiveFilter = activeFilter === tag.id;
+
+        const isTagInActiveCard = activeCard?.tags.some(
+          (activeCardTags) => activeCardTags.id === tag.id
+        );
+
+        const highlightButton =
+          isHovered[i] || isActiveFilter || isTagInActiveCard;
+
+        const inlineStyle = {
+          backgroundColor: highlightButton
+            ? mainColorStringStrong
+            : mainColorStringLight,
+          color: customStyle.color,
+        };
+
+        const handleHoverEvent = (e) => {
+          const newTab = [...isHovered];
+          newTab[i] = e.type === "mouseenter" ? true : false;
+
+          setIsHovered(newTab);
+        };
+
         return (
           <button
             key={tag.id}
             style={inlineStyle}
-            className={isActiveFilter ? styles.active : styles.inactive}
             onClick={() => toggleFilter(tag.id)}
+            onMouseEnter={handleHoverEvent}
+            onMouseLeave={handleHoverEvent}
           >
             {tag.name}
           </button>

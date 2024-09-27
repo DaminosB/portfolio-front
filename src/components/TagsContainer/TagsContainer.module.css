@@ -17,9 +17,9 @@
   transition: var(--normal-transition) var(--default-animation);
 }
 
-.active {
+/* .active {
   opacity: 1;
-}
+} */
 
 .inactive {
   opacity: 0.5;
