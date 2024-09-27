@@ -2,86 +2,78 @@
 
 import styles from "./LayoutWrapper.module.css";
 
-import useScrollSticky from "@/hooks/useScrollSticky";
-import { createContext, useEffect, useState, useRef } from "react";
+import { createContext, useEffect, useState, useCallback, useRef } from "react";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+
+import useScrollTracker from "@/hooks/useScrollTracker";
+
 import ModalePortal from "../ModalePortal/ModalePortal";
 
 export const LayoutContext = createContext();
 
 const LayoutWrapper = ({ children }) => {
   const [activeCoordinates, setActiveCoordinates] = useState([0, 0]);
+  const [containersPositions, setContainersPositions] = useState([]);
+
   const [isModaleDisplayed, setIsModaleDisplayed] = useState(false);
+
+  const router = useRouter();
 
   const [modaleContent, setModaleContent] = useState({
     customColors: { mainColor: "", secondaryColor: "" },
     domElement: null,
   });
-
-  const { scrollOverlapChildren, jumpTo, notifyHeightChange, scrollPosition } =
-    useScrollSticky();
+  const {
+    scrollTrack,
+    activeChildIndex: activeContainerIndex,
+    scrollPosition,
+  } = useScrollTracker();
 
   const layoutRef = useRef(null);
 
   const pathname = usePathname();
   const cachedPathname = useRef(pathname);
 
-  // This function is passed to the children to update the activeCoordinates state when their scroll position changes
-  const notifyScrollChange = (container, scrollValue) => {
+  const updateContainerPos = useCallback((container, newIndex) => {
     const layoutNode = layoutRef.current;
+    const containersArray = Array.from(layoutNode.children);
 
-    // Determine if the container is currently active (displayed)
-    const isActive = scrollPosition === container.offsetTop;
+    const containerIndex = containersArray.findIndex(
+      (child) => child === container
+    );
 
-    if (isActive) {
-      // Find the index of the container within the layoutNode
-      const containerIndex = Array.from(
-        layoutNode.firstElementChild.children
-      ).indexOf(container);
-
-      // Find the index of the active child within the container
-      const activeChildIndex = Array.from(
-        container.firstElementChild.children
-      ).findIndex((child) => child.offsetTop === scrollValue);
-
-      // Update the activeCoordinates state with the container and child indices
-      setActiveCoordinates([containerIndex, activeChildIndex]);
-    }
-  };
+    setContainersPositions((prev) => {
+      const newTab = [...prev];
+      newTab[containerIndex] = newIndex;
+      return newTab;
+    });
+  }, []);
 
   useEffect(() => {
     const layoutNode = layoutRef.current;
-    const containers = Array.from(layoutNode.firstElementChild.children);
+    const activeChildIndex = containersPositions[activeContainerIndex] || 0;
 
-    //  Find the active container's index by the scroll position
-    const activeContainerIndex = containers.findIndex(
-      (container) => container.offsetTop === scrollPosition
-    );
-
-    // If an active container is found
-    if (activeContainerIndex !== -1) {
-      const activeContainer = containers[activeContainerIndex];
-      const children = Array.from(activeContainer.firstElementChild.children);
-
-      // Find the active child in the active container
-      const activeChildIndex = children.findIndex(
-        (child) => child.offsetTop === activeContainer.scrollTop
-      );
-
-      // Update the active coordinates (if no active child is found, default is 0)
-      setActiveCoordinates([
-        activeContainerIndex,
-        activeChildIndex !== -1 ? activeChildIndex : 0,
-      ]);
-    }
+    setActiveCoordinates([activeContainerIndex, activeChildIndex]);
 
     if (pathname !== cachedPathname.current) {
-      jumpTo(layoutNode, 0);
-      notifyHeightChange(layoutNode);
       cachedPathname.current = pathname;
+
+      layoutNode.parentNode.style.opacity = 1;
+      const childrenArray = Array.from(layoutNode.children);
+      setContainersPositions(() => childrenArray.map(() => 0));
     }
-  }, [scrollPosition, pathname]);
+  }, [activeContainerIndex, containersPositions, pathname]);
+
+  const linkTo = (link) => {
+    const layoutNode = layoutRef.current;
+
+    layoutNode.parentNode.style.opacity = 0;
+    setTimeout(() => {
+      layoutNode.scrollTo({ top: 0, behavior: "instant" });
+      router.push(link, { scroll: false });
+    }, 150);
+  };
 
   const [showModale, setShowModale] = useState(false);
 
@@ -107,22 +99,22 @@ const LayoutWrapper = ({ children }) => {
   const contextValues = {
     activeCoordinates,
     layoutScrollPos: scrollPosition,
-    layoutJumpFunc: jumpTo,
-    notifyScrollChange,
     layoutNode: layoutRef.current,
     isModaleDisplayed,
-    setIsModaleDisplayed,
     openModale,
+    updateContainerPos,
+    getSectionCoords,
+    linkTo,
   };
 
   return (
     <LayoutContext.Provider value={contextValues}>
       <div
-        className={styles.scrollOverlapWrapper}
+        className={styles.layoutContainer}
         ref={layoutRef}
-        onScroll={scrollOverlapChildren}
+        onScroll={scrollTrack}
       >
-        <div className={styles.innerContainer}>{children}</div>
+        {children}
       </div>
       <ModalePortal
         showModale={showModale}
@@ -134,6 +126,18 @@ const LayoutWrapper = ({ children }) => {
       </ModalePortal>
     </LayoutContext.Provider>
   );
+};
+
+const getSectionCoords = (sectionNode) => {
+  const findIndexInParent = (parent, targetChild) =>
+    Array.from(parent.children).findIndex((child) => child === targetChild);
+
+  const container = sectionNode.parentNode;
+
+  const containerIndex = findIndexInParent(container.parentNode, container);
+  const sectionIndex = findIndexInParent(container, sectionNode);
+
+  return [containerIndex, sectionIndex];
 };
 
 export default LayoutWrapper;

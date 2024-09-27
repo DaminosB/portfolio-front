@@ -1,7 +1,6 @@
-import useScrollSticky from "@/hooks/useScrollSticky";
 import styles from "./Carousel.module.css";
 
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
@@ -11,36 +10,51 @@ import {
 import generateRGBAString from "@/utils/generateRGBAString";
 
 import VideoPlayer from "../VideoPlayer/VideoPlayer";
+import useScrollTracker from "@/hooks/useScrollTracker";
 
+// Carousel component that displays a series of media (images or videos) with horizontal sliding navigation
 const Carousel = ({ medias, indexStart, customColors }) => {
-  const { scrollSnap, jumpTo, scrollPosition } = useScrollSticky(true);
-  const [activeIndex, setActiveIndex] = useState(indexStart || 0);
+  // medias: Array. List of media objects (with URLs and alternative texts) to display.
+  // indexStart: Number. The initial position of the carousel on mount.
+  // customColors: Object. Custom color scheme applied to carousel elements.
 
-  const carouselRef = useRef();
+  // Hook that tracks scroll position and provides the index of the currently visible media
+  const { scrollTrack, activeChildIndex } = useScrollTracker(true);
 
-  const isFirstRender = useRef(true);
+  // Reference to the container holding the media elements
+  const sliderRef = useRef(null);
 
-  useEffect(() => {
-    const carousel = carouselRef.current;
+  // Function to handle clicks on left/right navigation buttons
+  const handleSideButtons = (moveStep) => {
+    const slider = sliderRef.current;
+    const maxIndex = medias.length - 1;
+    const targetIndex = activeChildIndex + moveStep;
 
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
+    let scrollTarget = 0;
 
-      carousel.firstElementChild.style.transition = "none";
-      jumpTo(carousel, indexStart || 0);
-
-      setTimeout(() => {
-        carousel.firstElementChild.style.transition = "";
-      });
+    // Scroll to the appropriate child based on target index, handling edge cases
+    if (targetIndex <= maxIndex && targetIndex >= 0) {
+      // Scroll to the child at the target index
+      scrollTarget = slider.children[targetIndex].offsetLeft;
+    } else if (targetIndex > maxIndex) {
+      // If target index exceeds the maximum, scroll to the first child
+      scrollTarget = 0;
+    } else if (targetIndex < 0) {
+      // If target index is below 0, scroll to the last child
+      scrollTarget = slider.children[maxIndex].offsetLeft;
     }
 
-    const newActiveIndex = Array.from(
-      carousel.firstElementChild.children
-    ).findIndex((child) => child.offsetLeft === scrollPosition);
+    slider.scrollTo({ left: scrollTarget, behavior: "smooth" });
+  };
 
-    setActiveIndex(newActiveIndex);
-  }, [scrollPosition, indexStart, jumpTo]);
+  // Effect to set the initial scroll position based on indexStart when the component mounts
+  useEffect(() => {
+    const slider = sliderRef.current;
+    const scrollTarget = slider.children[indexStart || 0].offsetLeft;
+    slider.scrollTo({ left: scrollTarget, behavior: "instant" });
+  }, []);
 
+  // Inline styles for the side buttons and navigation dots
   const sideButtonsInlineStyle = {
     color: customColors.secondaryColor,
   };
@@ -50,18 +64,7 @@ const Carousel = ({ medias, indexStart, customColors }) => {
     color: customColors.secondaryColor,
   };
 
-  const handleSideButtons = (moveStep) => {
-    const carousel = carouselRef.current;
-    const maxIndex = medias.length - 1;
-
-    const targetIndex = activeIndex + moveStep;
-
-    if (targetIndex <= maxIndex && targetIndex >= 0)
-      jumpTo(carousel, targetIndex);
-    else if (targetIndex > maxIndex) jumpTo(carousel, 0);
-    else if (targetIndex < 0) jumpTo(carousel, maxIndex);
-  };
-
+  // Check if there are multiple media items to display navigation controls
   const hasMultipleMedias = medias.length > 1;
 
   return (
@@ -69,56 +72,61 @@ const Carousel = ({ medias, indexStart, customColors }) => {
       className={styles.carouselContainer}
       onClick={(e) => e.stopPropagation()}
     >
-      <div className={styles.carousel} ref={carouselRef} onScroll={scrollSnap}>
-        <div className={styles.slider}>
-          {medias.map((media, index) => {
-            const isImageFile =
-              media.provider_metadata.resource_type === "image";
+      <div className={styles.slider} ref={sliderRef} onScroll={scrollTrack}>
+        {medias.map((media, index) => {
+          // Determine whether the current media is an image or a video
+          const isImageFile = media.provider_metadata.resource_type === "image";
 
-            const shouldPlayVideo = index === activeIndex;
+          // Only play the video for the currently visible media
+          const shouldPlayVideo = index === activeChildIndex;
 
-            return (
-              <div key={media.id}>
-                {isImageFile ? (
-                  <img src={media.url} alt={media.alternativeText} />
-                ) : (
-                  <VideoPlayer
-                    video={media}
-                    shouldPlayVideo={shouldPlayVideo}
-                    customColors={customColors}
-                  >
-                    <source src={media.url} />
-                  </VideoPlayer>
-                )}
-              </div>
-            );
-          })}
-        </div>
+          return (
+            <div key={media.id}>
+              {isImageFile ? (
+                <img src={media.url} alt={media.alternativeText} />
+              ) : (
+                <VideoPlayer
+                  video={media}
+                  shouldPlayVideo={shouldPlayVideo}
+                  customColors={customColors}
+                >
+                  <source src={media.url} />
+                </VideoPlayer>
+              )}
+            </div>
+          );
+        })}
       </div>
-      {/* --------------------------------------------------- */}
-      {/* --------------- NAVIGATION BUTTONS ---------------- */}
-      {/* --------------------------------------------------- */}
+      {/* Navigation controls (left/right arrows and dots) displayed only if there are multiple media items */}
       {hasMultipleMedias && (
         <>
+          {/* Left arrow */}
           <button
             style={sideButtonsInlineStyle}
             onClick={() => handleSideButtons(-1)}
           >
             <FontAwesomeIcon icon={faChevronLeft} />
           </button>
+
+          {/* Right arrow */}
           <button
             style={sideButtonsInlineStyle}
             onClick={() => handleSideButtons(1)}
           >
             <FontAwesomeIcon icon={faChevronRight} />
           </button>
+
+          {/* Navigation dots */}
           <nav style={navInlineStyle}>
             {medias.map((media, index) => {
-              const carousel = carouselRef.current;
-              const isActive = index === activeIndex;
+              // Each media is represented by a dot, which becomes larger when the media is active
+              const isActive = index === activeChildIndex;
 
+              // Handles the click on a dot to jump to the corresponding media
               const handleJumpButtons = () => {
-                jumpTo(carousel, index);
+                const slider = sliderRef.current;
+                const scrollTarget = slider.children[index].offsetLeft;
+                slider.scrollTo({ left: scrollTarget, behavior: "smooth" });
               };
 
               return (
