@@ -1,5 +1,7 @@
 .projectCardsWrapper {
   width: 100%;
+  overflow: hidden;
+  margin-bottom: var(--logo-height-offset);
 }
 
 .cardsContainer {
