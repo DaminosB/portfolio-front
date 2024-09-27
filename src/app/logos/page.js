@@ -6,6 +6,8 @@ import Module_Fullpage from "@/modules/Module_Fullpage/Module_Fullpage";
 import Module_MultiImagesColumn from "@/modules/Module_MultiImagesColumn/Module_MultiImagesColumn";
 import Module_Container from "@/modules/Module_Container/Module_Container";
 
+import SidePanelNavigation from "@/components/SidePanelNavigation/SidePanelNavigation";
+
 export default async function ProjectsIdPage() {
   const { logos, customStyle } = await fetchData();
 
@@ -15,41 +17,44 @@ export default async function ProjectsIdPage() {
   };
 
   return (
-    <SnapScrollWrapper>
-      {logos.modules.map((module, index) => {
-        switch (module.__component) {
-          case "module.pleine-page":
-            return (
-              <Module_Fullpage
-                key={module.id}
-                module={module}
-                customColors={customColors}
-              />
-            );
+    <>
+      <SnapScrollWrapper>
+        {logos.modules.map((module, index) => {
+          switch (module.__component) {
+            case "module.pleine-page":
+              return (
+                <Module_Fullpage
+                  key={module.id}
+                  module={module}
+                  customColors={customColors}
+                />
+              );
 
-          case "module.colonne-multi-images":
-            return (
-              <Module_MultiImagesColumn
-                key={module.id}
-                module={module}
-                customColors={customColors}
-              />
-            );
+            case "module.colonne-multi-images":
+              return (
+                <Module_MultiImagesColumn
+                  key={module.id}
+                  module={module}
+                  customColors={customColors}
+                />
+              );
 
-          case "module.container":
-            return (
-              <Module_Container
-                key={module.id}
-                module={module}
-                customColors={customColors}
-              />
-            );
+            case "module.container":
+              return (
+                <Module_Container
+                  key={module.id}
+                  module={module}
+                  customColors={customColors}
+                />
+              );
 
-          default:
-            break;
-        }
-      })}
-    </SnapScrollWrapper>
+            default:
+              break;
+          }
+        })}
+      </SnapScrollWrapper>
+      <SidePanelNavigation content={logos} customStyle={customColors} />
+    </>
   );
 }
 

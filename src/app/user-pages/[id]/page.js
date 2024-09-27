@@ -58,8 +58,8 @@ export default async function ProjectsIdPage({ params }) {
               break;
           }
         })}
-        <SidePanelNavigation content={page} customStyle={customColors} />
       </SnapScrollWrapper>
+      <SidePanelNavigation content={page} customStyle={customColors} />
     </>
   );
 }

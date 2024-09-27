@@ -4,7 +4,6 @@ import axios from "axios";
 // Components import
 import ProjectsContainer from "@/components/ProjectsContainer/ProjectsContainer";
 import CoverContainer from "@/components/CoverContainer/CoverContainer";
-// import Slider from "@/components/Slider/Slider";
 
 export default async function Home() {
   const { profile, projects, customStyle, logos } = await fetchData();
@@ -16,20 +15,16 @@ export default async function Home() {
 
   return (
     <>
-      {/* <Slider id={"homepage-cover"} hideOnInactive={true}> */}
       <CoverContainer
         coverUrl={profile.cover.url}
         coverAltTxt={profile.cover.alternativeText}
         customColors={customColors}
       />
-      {/* </Slider> */}
-      {/* <Slider id={"projects"} hideOnInactive={false} hideHeader={true}> */}
       <ProjectsContainer
         projects={projects}
         customStyle={customStyle}
         logos={logos}
       />
-      {/* </Slider> */}
     </>
   );
 }
