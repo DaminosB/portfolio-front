@@ -1,16 +1,15 @@
 .coverContainer {
   position: relative;
   height: 100%;
-  transition: var(--normal-transition) var(--default-animation);
+  will-change: opacity;
   display: flex;
-  align-items: center;
+  justify-content: center;
 }
 
 .coverContainer > img {
   max-width: 100%;
   height: 100%;
   object-fit: contain;
-  /* filter: drop-shadow(10px 10px 100px); */
   filter: drop-shadow(var(--standard-shadow));
 }
 
@@ -24,6 +23,11 @@
   background-position: center center;
   background-size: cover;
   z-index: -1;
+  overflow: scroll;
+}
+
+.coverContainer > div > p {
+  width: 25%;
 }
 
 .altCover {
@@ -50,38 +54,3 @@
     box-shadow: 0px 0px 100px 25px;
   }
 }
-/* .coverContainer {
-  height: 100%;
-  transition: var(--normal-transition) var(--default-animation);
-}
-
-.coverContainer > img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.altCover {
-  display: none;
-}
-
-@media (max-width: 768px) {
-  div > section.coverContainer > img {
-    filter: var(--default-blur);
-  }
-
-  .altCover {
-    display: flex;
-    position: absolute;
-    top: 0px;
-    height: 100%;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .altCover > img {
-    width: 95%;
-    box-shadow: 0px 0px 100px 25px;
-  }
-} */

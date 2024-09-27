@@ -2,24 +2,24 @@
 
 import styles from "./CoverContainer.module.css";
 
-import { useContext, useRef, useEffect, useState } from "react";
+import { useContext, useRef, useEffect } from "react";
 
 import { LayoutContext } from "@/wrappers/LayoutWrapper/LayoutWrapper";
 
 const CoverContainer = ({ coverUrl, coverAltTxt, customColors }) => {
   const { layoutScrollPos } = useContext(LayoutContext);
 
-  const [hideCover, setHideCover] = useState(false);
-
   const coverRef = useRef(null);
 
   useEffect(() => {
     const coverElem = coverRef.current;
+    const nextSibling = coverElem.nextSibling;
 
-    const isDisplayed = coverElem.offsetTop === layoutScrollPos;
+    const offsetRatio = coverElem.offsetTop / nextSibling.offsetTop;
 
-    if (isDisplayed) setHideCover(false);
-    else setHideCover(true);
+    const newOpacity = 1 - offsetRatio;
+
+    coverElem.style.opacity = newOpacity;
   }, [layoutScrollPos]);
 
   const containerInlineStyle = {
@@ -27,16 +27,18 @@ const CoverContainer = ({ coverUrl, coverAltTxt, customColors }) => {
   };
 
   const backgroundInlineStyle = {
-    background: `url(${coverUrl}) no-repeat center / auto 100%`,
+    backgroundImage: `url(${coverUrl})`,
   };
+
+  const title = useRef(null);
 
   return (
     <div
-      className={`${styles.coverContainer} ${hideCover && "hidden"}`}
+      className={styles.coverContainer}
       ref={coverRef}
       style={containerInlineStyle}
     >
-      <div style={backgroundInlineStyle}></div>
+      <div style={backgroundInlineStyle} ref={title}></div>
       <img src={coverUrl} alt={coverAltTxt} />
     </div>
   );
