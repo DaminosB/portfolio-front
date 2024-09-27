@@ -5,14 +5,14 @@ import styles from "./LogoAndSideMenu.module.css";
 // React hooks imports
 import { useEffect, useState, useRef, useContext } from "react";
 import { LayoutContext } from "@/wrappers/LayoutWrapper/LayoutWrapper";
-import { createPortal } from "react-dom";
 
+import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
-import Link from "next/link";
-import NavPages from "../NavPages/NavPages";
-import NavSocials from "../NavSocials/NavSocials";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+
+import NavSocials from "../NavSocials/NavSocials";
 import ContactForm from "../ContactForm/ContactForm";
 
 // This component displays a logo that sends the visitor back to the homepage's cover
@@ -31,7 +31,7 @@ const LogoAndSideMenu = ({ profile, customStyle, pages }) => {
 
   const cachedPathname = useRef(null);
 
-  const { isModaleDisplayed, openModale } = useContext(LayoutContext);
+  const { isModaleDisplayed, openModale, linkTo } = useContext(LayoutContext);
 
   // This object will be transmitted to the dom in order to display custom colors
   const inlineStyle = {
@@ -83,9 +83,24 @@ const LogoAndSideMenu = ({ profile, customStyle, pages }) => {
           >
             <FontAwesomeIcon icon={faXmark} />
           </button>
-          {!isOnHomepage && <Link href="/">Accueil</Link>}
-          <NavPages profile={profile} pages={pages} customStyle={customStyle} />
-          <button onClick={openContactForm}>Contact</button>
+          <nav>
+            {!isOnHomepage && (
+              <button onClick={() => linkTo("/")}>Accueil</button>
+            )}
+            {/* The pages created by the user are displayed through a .map function */}
+            {pages.map((page) => {
+              const handleOnClick = () => {
+                const link = `/user-pages/${page.id}`;
+                linkTo(link);
+              };
+              return (
+                <button key={page.id} onClick={handleOnClick}>
+                  {page.name}
+                </button>
+              );
+            })}
+            <button onClick={openContactForm}>Contact</button>
+          </nav>
           <NavSocials profile={profile} />
         </div>
 
