@@ -2,11 +2,9 @@
 
 import styles from "./TextContainer.module.css";
 
-const TextContainer = ({ sectionId, children }) => {
-  const textWrapperId = `${sectionId}-text-wrapper`;
-
+const TextContainer = ({ children }) => {
   return (
-    <div id={textWrapperId} className={styles.textContainer}>
+    <div className={styles.textContainer}>
       <p>{children}</p>
     </div>
   );
