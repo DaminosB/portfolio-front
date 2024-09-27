@@ -6,13 +6,11 @@ import MediaCardWrapper from "@/wrappers/MediaCardWrapper/MediaCardWrapper";
 const Module_MultiImagesColumn = ({ module, customColors }) => {
   const { medias } = module;
 
-  const cardsIdsArray = module.medias.map(
-    (media, index) => `section-${media.id}-media-card-${index}`
+  const cardsIdsArray = medias.map(
+    (media) => `section-${module.id}-media-card-${media.id}`
   );
 
   return medias.map((media, index) => {
-    const sectionId = `section-${media.id}`;
-
     const mediaCardId = cardsIdsArray[index];
 
     const relatedSiblings = cardsIdsArray.filter(
@@ -20,18 +18,12 @@ const Module_MultiImagesColumn = ({ module, customColors }) => {
     );
 
     return (
-      <ModuleWrapper
-        key={media.id}
-        customColors={customColors}
-        sectionId={sectionId}
-        medias={medias}
-      >
+      <ModuleWrapper key={media.id} customColors={customColors} medias={medias}>
         <div className={styles.mediaContainer}>
           <MediaCardWrapper
             customColors={customColors}
             media={media}
-            sectionId={sectionId}
-            id={mediaCardId}
+            cardId={cardsIdsArray[index]}
             relatedSiblings={relatedSiblings}
           >
             <img

@@ -18,13 +18,10 @@ const Module_Container = ({ module, customColors }) => {
 
   const mediasArray = populateMediasArray(medias, module.imagesPerRow);
 
-  const sectionId = `section-${module.id}`;
-
   return (
     <ModuleWrapper
       inlineStyle={sectionStyle}
       customColors={customColors}
-      sectionId={sectionId}
       medias={medias}
     >
       <div
@@ -32,10 +29,7 @@ const Module_Container = ({ module, customColors }) => {
         style={contentDivStyle}
       >
         <div className={styles.mediasFrame}>
-          <div
-            className={styles.mediasContainerStyle}
-            style={mediasContainerStyle}
-          >
+          <div className={styles.mediasContainer} style={mediasContainerStyle}>
             {mediasArray.map((mediasLine, index) => {
               return (
                 <div key={index} style={mediasContainerStyle}>
@@ -43,15 +37,11 @@ const Module_Container = ({ module, customColors }) => {
                     const isImageFile =
                       media.provider_metadata.resource_type === "image";
 
-                    const mediaCardId = `${sectionId}-media-card-${media.id}`;
                     return (
                       <MediaCardWrapper
                         key={media.id}
                         customColors={customColors}
-                        id={mediaCardId}
                         media={media}
-                        preventContainedView={true}
-                        sectionId={sectionId}
                       >
                         {isImageFile ? (
                           <img
@@ -70,9 +60,7 @@ const Module_Container = ({ module, customColors }) => {
             })}
           </div>
         </div>
-        {text && (
-          <TextContainer sectionId={sectionId}>{text.text}</TextContainer>
-        )}
+        {text && <TextContainer>{text.text}</TextContainer>}
       </div>
     </ModuleWrapper>
   );

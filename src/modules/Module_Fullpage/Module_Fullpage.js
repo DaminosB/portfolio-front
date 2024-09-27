@@ -16,17 +16,12 @@ const Module_Fullpage = ({ module, customColors }) => {
   const { sectionStyle, contentDivStyle, mediasContainerStyle } =
     generateInlineStyle(module);
 
-  console.log(sectionStyle, contentDivStyle, mediasContainerStyle);
-
-  const sectionId = `section-${module.id}`;
-
   const hasMultipleChildren = medias.length > 1;
 
   return (
     <ModuleWrapper
       inlineStyle={sectionStyle}
       customColors={customColors}
-      sectionId={sectionId}
       medias={medias}
     >
       <div
@@ -38,13 +33,11 @@ const Module_Fullpage = ({ module, customColors }) => {
             const isImageFile =
               media.provider_metadata.resource_type === "image";
 
-            const mediaCardId = `${sectionId}-media-card-${media.id}`;
             return (
               <MediaCardWrapper
                 key={media.id}
                 customColors={customColors}
                 media={media}
-                id={mediaCardId}
               >
                 {isImageFile ? (
                   <img
@@ -59,9 +52,7 @@ const Module_Fullpage = ({ module, customColors }) => {
             );
           })}
         </div>
-        {text && (
-          <TextContainer sectionId={sectionId}>{text.text}</TextContainer>
-        )}
+        {text && <TextContainer>{text.text}</TextContainer>}
       </div>
     </ModuleWrapper>
   );
