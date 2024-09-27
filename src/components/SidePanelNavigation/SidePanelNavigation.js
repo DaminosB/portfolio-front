@@ -2,15 +2,14 @@
 
 import styles from "./SidePanelNavigation.module.css";
 
-// React hooks imports
+// Import React hooks
 import { useEffect, useState, useContext } from "react";
 import { createPortal } from "react-dom";
 
-// Context import
+// Import Contexts
 import { LayoutContext } from "@/wrappers/LayoutWrapper/LayoutWrapper";
-import { SnapScrollerContext } from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
 
-// Packages imports
+// Import font-awesome icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
@@ -19,90 +18,110 @@ import {
   faPaperclip,
 } from "@fortawesome/free-solid-svg-icons";
 
+// Utility function import
 import generateRGBAString from "@/utils/generateRGBAString";
 
-// This component displays a vertical menu on the right of the page to jump from section to section
+// This component displays a vertical side navigation panel to jump between sections of the page
 const SidePanelNavigation = ({ content, customStyle }) => {
-  const [domTarget, setDomTarget] = useState(null);
-  const [isMouseOver, setIsMouseOver] = useState(false);
-  const [isOpen, setIsOpen] = useState(true);
+  const [domTarget, setDomTarget] = useState(null); // Holds the target DOM node for the portal
+  const [isMouseOver, setIsMouseOver] = useState(false); // Tracks if the mouse is over the side panel
+  const [isPanelOpen, setIsPanelOpen] = useState(true); // Controls whether the panel is open or collapsed
 
-  const { activeCoordinates, layoutNode, layoutJumpFunc } =
-    useContext(LayoutContext);
-
-  const { snapScrollerJumpFunc } = useContext(SnapScrollerContext);
-
+  // Get the current active coordinates from context (active container and child section)
+  const { activeCoordinates, layoutNode } = useContext(LayoutContext);
   const [activeContainerIndex, activeChildIndex] = activeCoordinates;
 
-  const opacityValue = isMouseOver ? 0.66 : 0.33;
+  // Set opacity based on whether the mouse is hovering over the panel
+  const panelOpacity = isMouseOver ? 0.66 : 0.33;
 
-  // This array will be displayed with a .map function
-  const navigationArray = populateNavigationArray(content);
-  const inlineStyle = {
-    backgroundColor: generateRGBAString(customStyle.mainColor, opacityValue),
+  // Prepare the navigation array using the content prop
+  const navigationItems = createNavigationItems(content);
+
+  // Set the inline style for the panel background and text color
+  const panelStyle = {
+    backgroundColor: generateRGBAString(customStyle.mainColor, panelOpacity),
     color: customStyle.secondaryColor,
   };
 
+  // Create a portal to attach this component to the body element on mount
   useEffect(() => {
-    // We create a portal so this comp will be a child of <body>
     setDomTarget(document.body);
   }, []);
 
-  const openButtonInlineStyle = {
+  // Inline style for the panel toggle button
+  const toggleButtonStyle = {
     borderColor: customStyle.mainColor,
     color: customStyle.mainColor,
     backgroundColor: generateRGBAString(
       customStyle.secondaryColor,
-      opacityValue
+      panelOpacity
     ),
   };
 
+  // Render the side navigation panel
   return (
     domTarget &&
     createPortal(
       <nav
-        className={`${styles.sectionNavigation} ${isOpen ? styles.open : ""}`}
-        style={inlineStyle}
+        className={`${styles.sectionNavigation} ${
+          isPanelOpen ? styles.open : ""
+        }`}
+        style={panelStyle}
         onMouseEnter={() => setIsMouseOver(true)}
         onMouseLeave={() => setIsMouseOver(false)}
       >
+        {/* Button to toggle the side panel */}
         <button
-          style={openButtonInlineStyle}
-          onClick={() => setIsOpen((prev) => !prev)}
+          style={toggleButtonStyle}
+          onClick={() => setIsPanelOpen((prev) => !prev)}
         >
           <FontAwesomeIcon icon={faChevronLeft} />
         </button>
-        {navigationArray.map((entry) => {
-          const [containerIndex, childIndex] = entry.coords;
 
+        {/* Render each navigation button */}
+        {navigationItems.map((navItem) => {
+          const [containerIndex, childIndex] = navItem.coords;
           const isActiveSection =
             containerIndex === activeContainerIndex &&
             childIndex === activeChildIndex;
 
-          // On click, the user jumps to the targeted element
-          const handleOnClick = () => {
-            // Retrieve the container element corresponding to the specified index
-            const container =
-              layoutNode.firstElementChild.children[containerIndex];
+          // Function to handle clicks and scroll to the appropriate section
+          const handleScrollToSection = () => {
+            const containers = Array.from(layoutNode.children);
+            const targetContainer = containers[containerIndex];
 
-            // Scroll the main layout to the correct container
-            layoutJumpFunc(layoutNode, containerIndex);
+            // Calculate the total height to scroll to the target container
+            const cumulativeHeight = containers
+              .slice(0, containerIndex)
+              .reduce((acc, container) => acc + container.offsetHeight, 0);
 
-            // If necessary, scroll within the container to display the targeted child element
-            if (entry.scrollToChild) {
-              snapScrollerJumpFunc(container, childIndex);
+            // Scroll to the target container in the layout
+            layoutNode.scrollTo({
+              top: cumulativeHeight,
+              behavior: "smooth",
+            });
+
+            // If necessary, scroll within the container to a specific child element
+            if (navItem.scrollToChild) {
+              const targetChildPosition =
+                targetContainer.children[childIndex].offsetTop;
+
+              targetContainer.scrollTo({
+                top: targetChildPosition,
+                behavior: "smooth",
+              });
             }
           };
 
           return (
             <button
-              key={entry.id}
+              key={navItem.id}
               className={
                 isActiveSection ? styles.activeButton : styles.inactiveButton
               }
-              onClick={handleOnClick}
+              onClick={handleScrollToSection}
             >
-              <FontAwesomeIcon icon={entry.icon} />
+              <FontAwesomeIcon icon={navItem.icon} />
             </button>
           );
         })}
@@ -112,66 +131,62 @@ const SidePanelNavigation = ({ content, customStyle }) => {
   );
 };
 
-// This function takes the content prop and returns an array to be rendered with a .map function
-const populateNavigationArray = (content) => {
-  const response = [];
+// This function transforms the content into an array of navigation items
+const createNavigationItems = (content) => {
+  const navigationItems = [];
 
-  let sliderIndex = 0;
-  let sectionIndex = 0;
+  let containerIndex = 0; // Tracks the container (or section) index
+  let childIndex = 0; // Tracks the child (or subsection) index
 
   // If a cover exists, add it to the navigation array
   if (content.cover) {
-    response.push({
+    navigationItems.push({
       id: content.cover.id,
       icon: faPanorama,
-      coords: [sliderIndex, sectionIndex],
-      scrollToChild: false, // No parent action needed for the cover
+      coords: [containerIndex, childIndex],
+      scrollToChild: false, // No need to scroll inside container for the cover
     });
-
-    sliderIndex++;
+    containerIndex++;
   }
 
-  // Iterate through each module in the content
+  // Loop through each module in the content
   content.modules.forEach((module) => {
-    // If the module is a multi-image column, iterate through its media items
+    // For multi-image columns, add each image as a separate item
     if (module.__component === "module.colonne-multi-images") {
       module.medias.forEach((media) => {
-        response.push({
+        navigationItems.push({
           id: media.id,
           icon: faCircle,
-          coords: [sliderIndex, sectionIndex],
-          scrollToChild: true, // Action on parent required for each media
+          coords: [containerIndex, childIndex],
+          scrollToChild: true, // Scroll inside the container to the specific media
         });
-
-        sectionIndex++;
+        childIndex++;
       });
     } else {
-      // Add other modules directly to the navigation array
-      response.push({
+      // For other modules, add them directly
+      navigationItems.push({
         id: module.id,
         icon: faCircle,
-        coords: [sliderIndex, sectionIndex],
-        scrollToChild: true, // Action on parent required for other modules
+        coords: [containerIndex, childIndex],
+        scrollToChild: true, // Scroll inside the container to the module
       });
-
-      sectionIndex++;
+      childIndex++;
     }
   });
 
-  // If tags are present, add them to the navigation array
+  // If there are related projects or tags, add them to the navigation
   if (content.tags) {
-    sliderIndex++;
-    sectionIndex = 0;
-
-    response.push({
+    containerIndex++;
+    childIndex = 0; // Reset child index for related projects section
+    navigationItems.push({
       id: "related-projects",
       icon: faPaperclip,
-      coords: [sliderIndex, sectionIndex],
-      scrollToChild: false, // No parent action needed for tags
+      coords: [containerIndex, childIndex],
+      scrollToChild: false, // No need to scroll inside for tags
     });
   }
 
-  return response;
+  return navigationItems;
 };
 
 export default SidePanelNavigation;
