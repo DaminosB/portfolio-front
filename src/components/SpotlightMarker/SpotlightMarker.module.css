@@ -9,7 +9,7 @@
   height: 100%;
   border: 3px solid;
   border-radius: var(--small-radius);
-  transition: var(--fast-transition);
+  transition: var(--fastest-transition);
 }
 
 button.spotlightContainer:hover > div {
