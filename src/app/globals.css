@@ -2,6 +2,7 @@
   --normal-transition: 500ms;
   --slow-transition: 750ms;
   --fast-transition: 250ms;
+  --fastest-transition: 100ms;
   --default-animation: ease-in-out;
 
   --logo-position: 10px;
@@ -171,7 +172,8 @@ textarea {
 /* ------------------------------------------------------------------------------------- */
 
 html {
-  overflow: hidden;
+  overflow-x: hidden;
+  width: 100vw;
 }
 
 body {
