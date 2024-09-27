@@ -2,172 +2,163 @@
 
 import styles from "./MediaCardWrapper.module.css";
 
-// React hooks import
-import { useState, useEffect, useContext, useRef, useCallback } from "react";
+// Import React hooks
+import { useState, useEffect, useContext, useRef } from "react";
 
-// Custom hooks import
+// Import custom hooks
 import useGrabAndMove from "@/hooks/useGrabAndMove";
 
-// Context import
+// Import context providers
 import { ModuleContext } from "../ModuleWrapper/ModuleWrapper";
-import { LayoutContext } from "../LayoutWrapper/LayoutWrapper";
 
-// Components import
-import SpotlightMarker from "@/components/SpotlightMarker/SpotlightMarker";
-import ZoomButton from "@/components/ZoomButton/ZoomButton";
-import VideoPlayer from "@/components/VideoPlayer/VideoPlayer";
+// Import FontAwesome icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExpand } from "@fortawesome/free-solid-svg-icons";
 
-// This component wraps the displayed media in a standardized visualization
+// Import components
+import SpotlightMarker from "@/components/SpotlightMarker/SpotlightMarker";
+import ZoomButton from "@/components/ZoomButton/ZoomButton";
+import VideoPlayer from "@/components/VideoPlayer/VideoPlayer";
+
+// MediaCardWrapper component manages how media (image or video) is displayed
 const MediaCardWrapper = ({
   customColors,
   media,
+  cardId,
   relatedSiblings,
-  id,
-  preventContainedView,
   children,
 }) => {
-  // Stores the wrapper's DOM element
+  // Reference to the media card wrapper element
   const mediaCardWrapperRef = useRef(null);
 
-  const isFirstRender = useRef(true);
+  // Check if the media is an image file
+  const isImageFile = media.provider_metadata.resource_type === "image";
 
-  // The wrapper can display the media in its full width (making it grabbable and movable),
-  // or contain its width to 100% of the parent.
-  const [isContainedView, setIsContainedView] = useState(false);
+  // Manages the current display mode of the media ("overflow", "underflow", etc.)
+  const [displayMode, setDisplayMode] = useState("overflow");
 
+  // Controls whether the video should play or not
   const [shouldPlayVideo, setShouldPlayVideo] = useState(true);
 
-  // The media will be grabbable and movable in its parent if it overflows
-  const {
-    startGrab,
-    grabbing,
-    stopGrab,
-    initGrabAndMove,
-    isWorking,
-    isResizing,
-    metrics,
-  } = useGrabAndMove();
-  const { currentTranslateValue, containerWidth, childWidth } = metrics;
+  // Determines if the media should be displayed in a contained view
+  const [isContainedView, setIsContainedView] = useState(false);
 
-  // The overflow constant checks if the container is smaller than its child
-  const contentOverflows = containerWidth < childWidth;
-  const contentUnderflows = childWidth < containerWidth;
+  // Use custom hook for handling grab-and-move functionality
+  const { startGrab, grabbing, stopGrab, initGrabAndMove, isWorking, metrics } =
+    useGrabAndMove();
+  const { containerWidth, childWidth } = metrics;
 
-  // If in contained view or content doesn't overflow, show a button to zoom in the media
-  const showZoomButton = isContainedView;
+  // Access context values
+  const { isActiveSection, openCarousel, isModaleDisplayed } =
+    useContext(ModuleContext);
 
-  const { isActiveSection, openCarousel } = useContext(ModuleContext);
-  const { isModaleDisplayed } = useContext(LayoutContext);
-
-  // This function switches the views of the media
-  const toggleViews = useCallback(() => {
-    if (preventContainedView) return;
-
-    // If the hook is working or if the wrapper is in normal view with no overflow, nothing happens
-    if (isWorking || (!isContainedView && !contentOverflows)) return;
-
-    const container = mediaCardWrapperRef.current.firstElementChild;
-    const child = container.firstElementChild;
-
-    // If the wrapper is not in contained view, switch to contained view
-    if (!isContainedView) {
-      setIsContainedView(true);
-
-      // The media's height is by default 100% of its parent.
-      // So to contain its width in its container, adjust its height accordingly.
-      const newHeightPercent = 100 / (childWidth / containerWidth);
-      container.style.height = `${newHeightPercent}%`;
-
-      // To center the media in contained view, compensate for the translate value.
-      child.style.left = `${-currentTranslateValue}px`;
-    } else {
-      // Otherwise, switch back to normal view and reset the style properties.
-      setIsContainedView(false);
-
-      container.style.height = "";
-      child.style.left = "";
-    }
-  }, [
-    isWorking,
-    isContainedView,
-    childWidth,
-    containerWidth,
-    currentTranslateValue,
-    contentOverflows,
-    preventContainedView,
-    mediaCardWrapperRef,
-  ]);
-
-  // This function opens the media carousel modal
+  // Function to open the media carousel modal
   const handleOpenCarousel = () => {
-    setShouldPlayVideo(false);
+    setShouldPlayVideo(false); // Stop the video when opening the carousel
     openCarousel(media.id);
   };
 
-  // These events trigger the associated functions
-  const eventHandlers = {
-    touchstart: startGrab,
-    mousedown: startGrab,
-    touchmove: grabbing,
-    mousemove: grabbing,
-    touchend: stopGrab,
-    mouseup: stopGrab,
-    mouseleave: stopGrab,
-    click: preventContainedView ? handleOpenCarousel : toggleViews,
-  };
-
-  // Handle event dispatching based on current interaction
+  // Handle user interactions and propagate events if necessary
   const handleEvents = (e) => {
-    // If a resizing action is ongoing, ignore the event
-    if (isResizing) return;
-
     const handler = eventHandlers[e.type];
     if (handler) handler(e);
 
-    // If related siblings exist, dispatch the event to them
+    // Propagate the event to related sibling elements, if any
     if (relatedSiblings) dispatchEventToSiblings(e, relatedSiblings);
   };
 
-  // Initialize the grab-and-move hook and check for overflow on mount
+  // Toggle between normal and contained views
+  const toggleViews = () => {
+    if (isWorking || !isActiveSection) return; // Prevent toggling if the grab-and-move hook is active or if the section is not displayed
+    setIsContainedView((prev) => !prev);
+  };
+
+  // Display mode configuration based on the calculated mode
+  const displayModeSettings = {
+    excess: {
+      defaultContained: true, // Contained view by default
+      onClick: toggleViews, // Switch between contained and normal views
+      grabbable: true, // Enable grab-and-move functionality
+      display: {
+        allowContainedView: true,
+        background: false,
+      },
+    },
+    overflow: {
+      defaultContained: false, // Normal view by default
+      onClick: toggleViews,
+      grabbable: true,
+      display: {
+        allowContainedView: true,
+        background: false,
+      },
+    },
+    none: {
+      defaultContained: false, // No need for contained view
+      onClick: handleOpenCarousel, // Open the carousel for media
+      grabbable: false, // No grab-and-move required
+      display: {
+        allowContainedView: false, // The media is already contained
+        background: false,
+      },
+    },
+    underflow: {
+      defaultContained: false,
+      onClick: handleOpenCarousel,
+      grabbable: false,
+      display: {
+        allowContainedView: false,
+        background: true, // Background is needed for smaller media
+      },
+    },
+  };
+
+  // Initialize grab-and-move functionality and determine display mode on component mount
   useEffect(() => {
-    const element = mediaCardWrapperRef.current.firstElementChild;
-    if (isFirstRender.current) initGrabAndMove(element);
+    initGrabAndMove(mediaCardWrapperRef.current.firstElementChild);
 
-    // If the child's width is more than twice its parent's width,
-    // automatically switch to contained view.
-    const overflowExcess = childWidth / containerWidth > 2;
-    if (overflowExcess && isFirstRender.current) {
-      isFirstRender.current = false;
-      toggleViews();
-    }
+    // Determine the display mode based on element sizes
+    let displayModeString;
+    if (childWidth < containerWidth) displayModeString = "underflow";
+    else if (childWidth === containerWidth) displayModeString = "none";
+    else if (childWidth / containerWidth > 2) displayModeString = "excess";
+    else displayModeString = "overflow";
 
-    if (childWidth < containerWidth) {
-      setIsContainedView(true);
-    }
+    setDisplayMode(displayModeString);
 
-    if (isActiveSection && !isModaleDisplayed) setShouldPlayVideo(true);
-    else setShouldPlayVideo(false);
+    // Set default view based on the display mode
+    if (isActiveSection)
+      setIsContainedView(
+        displayModeSettings[displayModeString].defaultContained
+      );
+    else setIsContainedView(false);
+    // Control video playback based on the active section and modal visibility
+    setShouldPlayVideo(isActiveSection && !isModaleDisplayed);
   }, [
     childWidth,
     containerWidth,
     isActiveSection,
     isModaleDisplayed,
-    initGrabAndMove,
-    toggleViews,
+    displayModeSettings,
   ]);
 
-  const cardBackgroundInlineStyle = {
-    backgroundImage: `url(${media.url})`,
+  // Destructure the settings for the current display mode
+  const { onClick, grabbable, display } = displayModeSettings[displayMode];
+
+  // Event handlers for various user interactions (mouse/touch)
+  const eventHandlers = {
+    touchstart: grabbable ? startGrab : null,
+    mousedown: grabbable ? startGrab : null,
+    touchmove: grabbable ? grabbing : null,
+    mousemove: grabbable ? grabbing : null,
+    touchend: grabbable ? stopGrab : null,
+    mouseup: grabbable ? stopGrab : null,
+    mouseleave: grabbable ? stopGrab : null,
+    click: onClick,
   };
 
-  const cardContainerInlineStyle = {
-    color: customColors.secondaryColor,
-  };
-
-  const isImageFile = media.provider_metadata.resource_type === "image";
-
+  // Inline styles for custom colors
+  const altDisplayInlineStyle = { color: customColors.secondaryColor };
   const expandButtonInlineStyle = {
     color: customColors.secondaryColor,
     backgroundColor: customColors.mainColor,
@@ -175,15 +166,14 @@ const MediaCardWrapper = ({
 
   return (
     <div
-      id={id}
       className={`${styles.mediaCardWrapper} ${
         isContainedView ? styles.contained : ""
-      } ${contentUnderflows ? styles.underflow : ""}`}
+      }`}
       ref={mediaCardWrapperRef}
+      id={cardId ? cardId : `media-card-${media.id}`}
     >
       <div
-        className={contentOverflows ? "grabbable" : ""}
-        style={cardContainerInlineStyle}
+        className={`${styles.mediaWindow} ${grabbable ? "grabbable" : ""}`}
         onTouchStart={handleEvents}
         onMouseDown={handleEvents}
         onMouseMove={handleEvents}
@@ -191,7 +181,7 @@ const MediaCardWrapper = ({
         onMouseUp={handleEvents}
         onMouseLeave={handleEvents}
         onTouchEnd={handleEvents}
-        onClick={isImageFile ? handleEvents : null}
+        onClick={handleEvents}
       >
         {isImageFile ? (
           children
@@ -204,82 +194,73 @@ const MediaCardWrapper = ({
             {children}
           </VideoPlayer>
         )}
-        {/* --------------------------------------------------- */}
-        {/* --------------------- BUTTONS --------------------- */}
-        {/* --------------------------------------------------- */}
-        {!preventContainedView && isImageFile && !contentUnderflows && (
-          <div
-            className={styles.buttonsContainer}
-            onTouchStart={handleStopPropagation}
-            onMouseDown={handleStopPropagation}
-            onMouseMove={handleStopPropagation}
-            onTouchMove={handleStopPropagation}
-            onMouseUp={handleStopPropagation}
-            onMouseLeave={handleStopPropagation}
-            onTouchEnd={handleStopPropagation}
-            onClick={handleStopPropagation}
-          >
-            <div className={!showZoomButton ? styles.active : "hidden"}>
-              <SpotlightMarker
-                customColors={customColors}
-                onClickFunction={toggleViews}
-                metrics={metrics}
-              />
-            </div>
-            <div className={showZoomButton ? styles.active : "hidden"}>
-              <ZoomButton
-                customColors={customColors}
-                onClickFunction={toggleViews}
-              />
-            </div>
-          </div>
-        )}
-        <div
-          className={styles.buttonsContainer}
-          onTouchStart={handleStopPropagation}
-          onMouseDown={handleStopPropagation}
-          onMouseMove={handleStopPropagation}
-          onTouchMove={handleStopPropagation}
-          onMouseUp={handleStopPropagation}
-          onMouseLeave={handleStopPropagation}
-          onTouchEnd={handleStopPropagation}
-          onClick={handleStopPropagation}
-        >
-          <button style={expandButtonInlineStyle} onClick={handleOpenCarousel}>
-            <FontAwesomeIcon icon={faExpand} />
-          </button>
-        </div>
       </div>
+
       {/* --------------------------------------------------- */}
-      {/* ------------------- BACKGROUND -------------------- */}
+      {/* --------------------- BUTTONS --------------------- */}
       {/* --------------------------------------------------- */}
-      {!preventContainedView && (
+      {/* Display buttons (SpotlightMarker, ZoomButton, and Expand Button) */}
+      {isImageFile && display.allowContainedView && (
+        <div className={styles.buttonsContainer}>
+          <div className={!isContainedView ? styles.active : "hidden"}>
+            <SpotlightMarker
+              customColors={customColors}
+              onClickFunction={toggleViews}
+              metrics={metrics}
+            />
+          </div>
+          <div className={isContainedView ? styles.active : "hidden"}>
+            <ZoomButton
+              customColors={customColors}
+              onClickFunction={toggleViews}
+            />
+          </div>
+        </div>
+      )}
+      <div className={styles.buttonsContainer}>
+        <button style={expandButtonInlineStyle} onClick={handleOpenCarousel}>
+          <FontAwesomeIcon icon={faExpand} />
+        </button>
+      </div>
+
+      {/* --------------------------------------------------- */}
+      {/* ------------------- ALT DISPLAY ------------------- */}
+      {/* --------------------------------------------------- */}
+      {/* Alternative display for contained view */}
+      {isImageFile && display.allowContainedView && (
         <div
-          className={styles.cardBackground}
-          style={cardBackgroundInlineStyle}
-        ></div>
+          className={styles.altDisplay}
+          style={altDisplayInlineStyle}
+          onClick={toggleViews}
+        >
+          {children}
+        </div>
+      )}
+
+      {/* --------------------------------------------------- */}
+      {/* -------------------- BACKGROUND ------------------- */}
+      {/* --------------------------------------------------- */}
+      {/* Background for underflow display mode */}
+      {isImageFile && display.background && (
+        <div className={styles.background} onClick={handleOpenCarousel}>
+          {children}
+        </div>
       )}
     </div>
   );
 };
 
-// Dispatch the event to all related sibling elements
+// Dispatch event to related sibling elements
 const dispatchEventToSiblings = (originalEvent, relatedSiblings) => {
-  // originalEvent: Object. The event object received when an event is triggered
-  // relatedSiblings: Array. Ids of all the siblings that must receive the cloned event
-
-  // Only proceed if the event was triggered by the user (not programmatically)
   if (originalEvent.isTrusted) {
-    // Dynamically retrieve the constructor of the original event (e.g., MouseEvent, TouchEvent)
+    // Clone the original event to be dispatched to sibling elements
     const eventConstructorName = originalEvent.nativeEvent.constructor.name;
     const EventConstructor = window[eventConstructorName];
-
-    // Create a new event using the same constructor and properties
     const clonedEvent = new EventConstructor(originalEvent.type, {
       ...originalEvent,
     });
 
-    // Dispatch the new event to each related sibling element
+    // Dispatch the cloned event to each sibling
     relatedSiblings.forEach((siblingId) => {
       const siblingTarget =
         document.getElementById(siblingId).firstElementChild;
@@ -288,7 +269,7 @@ const dispatchEventToSiblings = (originalEvent, relatedSiblings) => {
   }
 };
 
-// Function to stop event propagation
+// Prevent event propagation
 const handleStopPropagation = (e) => e.stopPropagation();
 
 export default MediaCardWrapper;
