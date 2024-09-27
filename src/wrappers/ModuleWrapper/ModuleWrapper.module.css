@@ -1,0 +1,9 @@
+.moduleWrapper {
+  box-sizing: content-box;
+}
+
+.moduleWrapper > div > div {
+  /* will-change: transform; */
+  /* transition: var(--fast-transition); */
+  transition: var(--fastest-transition);
+}
