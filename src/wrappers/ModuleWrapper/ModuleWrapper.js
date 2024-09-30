@@ -52,7 +52,7 @@ const ModuleWrapper = ({ medias, inlineStyle, customColors, children }) => {
       (elem) => elem.offsetTop === initialPositionFirstElement
     );
 
-    if (!allElementsAligned) return;
+    if (!allElementsAligned || movableElements.length === 1) return;
 
     movableElements.forEach((element, i) => {
       const translateValue = movableElemPositions.current[i] || 0;
