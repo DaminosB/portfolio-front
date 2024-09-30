@@ -3,7 +3,7 @@
 import styles from "./MediaCardWrapper.module.css";
 
 // Import React hooks
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext, useRef, useMemo } from "react";
 
 // Import custom hooks
 import useGrabAndMove from "@/hooks/useGrabAndMove";
@@ -71,18 +71,11 @@ const MediaCardWrapper = ({
   const toggleViews = () => {
     if (isWorking || !isActiveSection) return; // Prevent toggling if the grab-and-move hook is active or if the section is not displayed
 
-    console.log(0, isContainedView);
-
-    setIsContainedView((prev) => {
-      console.log(1, prev);
-      console.log(2, !prev);
-
-      return !prev;
-    });
+    setIsContainedView((prev) => !prev);
   };
 
   // Display mode configuration based on the calculated mode
-  const displayModeSettings = {
+  const displayModeSettings = useMemo(() => ({
     excess: {
       defaultContained: true, // Contained view by default
       onClick: toggleViews, // Switch between contained and normal views
@@ -119,7 +112,7 @@ const MediaCardWrapper = ({
         background: true, // Background is needed for smaller media
       },
     },
-  };
+  }));
 
   // Initialize grab-and-move functionality and determine display mode on component mount
   useEffect(() => {
@@ -135,24 +128,17 @@ const MediaCardWrapper = ({
     setDisplayMode(displayModeString);
 
     // Set default view based on the display mode
-    if (isActiveSection)
+    if (isActiveSection) {
       setIsContainedView(
         displayModeSettings[displayModeString].defaultContained
       );
-    else {
-      console.log("bug");
-
+      console.log("là");
+    } else {
       setIsContainedView(false);
     }
     // Control video playback based on the active section and modal visibility
     setShouldPlayVideo(isActiveSection && !isModaleDisplayed);
-  }, [
-    childWidth,
-    containerWidth,
-    isActiveSection,
-    isModaleDisplayed,
-    displayModeSettings,
-  ]);
+  }, [childWidth, containerWidth, isActiveSection, isModaleDisplayed]);
 
   // Destructure the settings for the current display mode
   const { onClick, grabbable, display } = displayModeSettings[displayMode];
