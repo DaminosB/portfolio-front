@@ -41,7 +41,7 @@ const useScrollTracker = (scrollX = false) => {
     // Find the index of the last child whose offset value matches the container's current scroll position
     const newIndex = childrenPositions.findLastIndex(
       // Sticky elements may have the same offset value, so `findLastIndex` ensures the last matching element is selected
-      (position) => position === container[scrollAxis]
+      (position) => position === Math.round(container[scrollAxis])
     );
 
     // If a valid index is found and it differs from the current one, update the active child index
