@@ -70,7 +70,15 @@ const MediaCardWrapper = ({
   // Toggle between normal and contained views
   const toggleViews = () => {
     if (isWorking || !isActiveSection) return; // Prevent toggling if the grab-and-move hook is active or if the section is not displayed
-    setIsContainedView((prev) => !prev);
+
+    console.log(0, isContainedView);
+
+    setIsContainedView((prev) => {
+      console.log(1, prev);
+      console.log(2, !prev);
+
+      return !prev;
+    });
   };
 
   // Display mode configuration based on the calculated mode
