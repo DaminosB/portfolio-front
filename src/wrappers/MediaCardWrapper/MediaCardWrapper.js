@@ -139,7 +139,11 @@ const MediaCardWrapper = ({
       setIsContainedView(
         displayModeSettings[displayModeString].defaultContained
       );
-    else setIsContainedView(false);
+    else {
+      console.log("bug");
+
+      setIsContainedView(false);
+    }
     // Control video playback based on the active section and modal visibility
     setShouldPlayVideo(isActiveSection && !isModaleDisplayed);
   }, [
