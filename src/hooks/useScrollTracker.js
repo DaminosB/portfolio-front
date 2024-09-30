@@ -1,60 +1,3 @@
-// import { useRef, useState } from "react";
-
-// // Tracks the user's scroll movements and returns the element's scroll position and the child it's currently on
-// const useScrollTracker = (scrollX) => {
-//   // By default, the scrutated axis is Y but if asked the hook can stracks the scrolls on the x axis
-
-//   // The corresponding keys by the asked axis
-//   const scrollProps = {
-//     offsetAxis: scrollX ? "offsetLeft" : "offsetTop",
-//     scroll: scrollX ? "scrollLeft" : "scrollTop",
-//   };
-//   const { offsetAxis, scroll } = scrollProps;
-
-//   // The scrollTop or scrollLeft value of the component
-//   const [scrollPosition, setScrollPosition] = useState(0);
-
-//   // The index of the child the scroll is on
-//   const [activeChildIndex, setActiveChildIndex] = useState(0);
-
-//   // Stores the element the hook is filled in
-//   const containerRef = useRef(null);
-
-//   // Stores the last active index
-//   const cachedActiveIndex = useRef(activeChildIndex);
-
-//   // Connected to the scrollabale elements, it sets the scrollPosition and activeChildIndex states
-//   const scrollTrack = (e) => {
-//     // If not filled yet, stores the element in its ref
-//     if (!containerRef.current) containerRef.current = e.target;
-//     const container = containerRef.current;
-
-//     // Updates the scrollPosition state
-//     setScrollPosition(container[scroll]);
-
-//     // Every child's offsetTop or offsetLeft value
-//     const childrenPositions = Array.from(container.children).map(
-//       (child) => child[offsetAxis]
-//     );
-
-//     // Finds which child has its top border at the top of the element
-//     const newIndex = childrenPositions.findLastIndex(
-//       // Uses the last index because sticky elements have the same offsetAxis value when they are scrolled
-//       (position) => position === container[scroll]
-//     );
-
-//     // If an index has been found and it's different from the cached one, updates the corresponding child
-//     if (newIndex !== -1 && newIndex !== cachedActiveIndex.current) {
-//       setActiveChildIndex(newIndex);
-//       cachedActiveIndex.current = newIndex;
-//     }
-//   };
-
-//   return { scrollTrack, activeChildIndex, scrollPosition };
-// };
-
-// export default useScrollTracker;
-
 import { useRef, useState } from "react";
 
 // Custom hook to track the user's scroll movements and return the scroll position of an element and the currently visible child element's index
@@ -91,6 +34,9 @@ const useScrollTracker = (scrollX = false) => {
     const childrenPositions = Array.from(container.children).map(
       (child) => child[offsetAxis]
     );
+
+    console.log(container[scrollAxis]);
+    console.log(container[childrenPositions]);
 
     // Find the index of the last child whose offset value matches the container's current scroll position
     const newIndex = childrenPositions.findLastIndex(
