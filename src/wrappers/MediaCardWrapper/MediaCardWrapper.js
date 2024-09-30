@@ -114,6 +114,10 @@ const MediaCardWrapper = ({
     },
   }));
 
+  // Destructure the settings for the current display mode
+  const { defaultContained, onClick, grabbable, display } =
+    displayModeSettings[displayMode];
+
   // Initialize grab-and-move functionality and determine display mode on component mount
   useEffect(() => {
     initGrabAndMove(mediaCardWrapperRef.current.firstElementChild);
@@ -128,20 +132,11 @@ const MediaCardWrapper = ({
     setDisplayMode(displayModeString);
 
     // Set default view based on the display mode
-    if (isActiveSection) {
-      setIsContainedView(
-        displayModeSettings[displayModeString].defaultContained
-      );
-      console.log("là");
-    } else {
-      setIsContainedView(false);
-    }
+    if (isActiveSection) setIsContainedView(defaultContained);
+    else setIsContainedView(false);
     // Control video playback based on the active section and modal visibility
     setShouldPlayVideo(isActiveSection && !isModaleDisplayed);
   }, [childWidth, containerWidth, isActiveSection, isModaleDisplayed]);
-
-  // Destructure the settings for the current display mode
-  const { onClick, grabbable, display } = displayModeSettings[displayMode];
 
   // Event handlers for various user interactions (mouse/touch)
   const eventHandlers = {
