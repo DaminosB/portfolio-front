@@ -1,4 +1,3 @@
-import styles from "./styles.module.css";
 import axios from "axios";
 
 import CoverContainer from "@/components/CoverContainer/CoverContainer";
@@ -9,19 +8,14 @@ import SidePanelNavigation from "@/components/SidePanelNavigation/SidePanelNavig
 import SnapScrollWrapper from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
 import ProjectsContainer from "@/components/ProjectsContainer/ProjectsContainer";
 import EndScrollPanel from "@/wrappers/EndScrollPanel/EndScrollPanel";
-
-import generateRGBAString from "@/utils/generateRGBAString";
 import Modale from "@/components/Modale/Modale";
+
 export default async function ProjectsIdPage({ params }) {
   const { project, customStyle, relatedProjects } = await fetchData(params.id);
 
   const customColors = {
     mainColor: project.mainColor,
     secondaryColor: project.secondaryColor,
-  };
-
-  const containerInlineStyle = {
-    backgroundColor: generateRGBAString(customColors.mainColor, 0.5),
   };
 
   return (
