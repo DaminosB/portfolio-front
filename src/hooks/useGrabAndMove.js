@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 // This hook enables the user to click and drag an element to move it within its parent container.
 const useGrabAndMove = () => {
@@ -33,104 +33,37 @@ const useGrabAndMove = () => {
   const debounce = useRef(true);
 
   // This function is called on mouse down or touch start events to initiate the grabbing action
-  const startGrab = (e) => {
-    // Checks if the child element overflows its parent. If not, the function stops.
-    const contentOverflows = metrics.containerWidth < metrics.childWidth;
-    if (!contentOverflows) return;
+  const startGrab = useCallback(
+    (e) => {
+      // Checks if the child element overflows its parent. If not, the function stops.
+      const contentOverflows = metrics.containerWidth < metrics.childWidth;
+      if (!contentOverflows) return;
 
-    // Checks and assigns the containerRef if it's not already set
-    if (!containerRef.current) containerRef.current = e.currentTarget;
+      // Checks and assigns the containerRef if it's not already set
+      if (!containerRef.current) containerRef.current = e.currentTarget;
 
-    // Updates the state to indicate that grabbing has started
-    setIsGrabbing(true);
+      // Updates the state to indicate that grabbing has started
+      setIsGrabbing(true);
 
-    // The coordinates of the click or touch differ between mouse and touch events
-    switch (e.type) {
-      case "touchstart":
-        // For touch events, get the clientX from the first touch point
-        previousClickPosition.current = e.targetTouches[0].clientX;
-        break;
-      case "mousedown":
-        // For mouse events, use the clientX of the mouse click
-        previousClickPosition.current = e.clientX;
-        break;
-      default:
-        break;
-    }
-  };
-
-  // This function is called on mouse move and touch move events
-  const grabbing = (e) => {
-    // If the isGrabbing state is false, no action is taken
-    if (!isGrabbing) return;
-
-    // Set the working state to true during the action
-    setIsWorking(true);
-
-    const container = containerRef.current;
-
-    // Determine the current click or touch position based on the event type
-    let currentClickPosition;
-    if (e.type === "touchmove") {
-      // For touch events, get the clientX from the first touch point
-      currentClickPosition = e.targetTouches[0].clientX;
-    } else if (e.type === "mousemove") {
-      // For mouse events, use the clientX of the mouse move
-      currentClickPosition = e.clientX;
-    }
-
-    // Calculate the difference between the current and the previous positions
-    const deltaX = currentClickPosition - previousClickPosition.current;
-    // This gives us the number of pixels the viewer has moved
-
-    // Call the function responsible for moving the element within its parent
-    moveElementInParent(deltaX, container.firstElementChild);
-
-    // Finally, update the refs with the new position and delta values
-    previousClickPosition.current = currentClickPosition;
-    previousDeltaX.current = deltaX;
-  };
-
-  // This function is called on mouse up or touch end events
-  const stopGrab = (e) => {
-    // If the isGrabbing state is false, nothing happens
-    if (!isGrabbing) return;
-
-    const container = containerRef.current;
-
-    // Turn off the isGrabbing state when the user stops dragging
-    setIsGrabbing(false);
-
-    // We create a smooth deceleration effect by using a recursive function
-    // Start by using the last known distance moved
-    let animatedScrollDistance = previousDeltaX.current;
-
-    let animationFrame;
-
-    // This function will be called multiple times to create the sliding effect
-    const step = () => {
-      moveElementInParent(animatedScrollDistance, container.firstElementChild);
-
-      // Reduce the scroll distance by 15% on each call to simulate deceleration
-      animatedScrollDistance /= 1.15;
-
-      // Continue the animation if the remaining distance is significant
-      if (Math.abs(animatedScrollDistance) > 0.1) {
-        animationFrame = requestAnimationFrame(step);
-      } else {
-        // Once the animation is finished, reset the deltaX value
-        previousDeltaX.current = 0;
-        // Indicate that the work is done
-        setIsWorking(false);
+      // The coordinates of the click or touch differ between mouse and touch events
+      switch (e.type) {
+        case "touchstart":
+          // For touch events, get the clientX from the first touch point
+          previousClickPosition.current = e.targetTouches[0].clientX;
+          break;
+        case "mousedown":
+          // For mouse events, use the clientX of the mouse click
+          previousClickPosition.current = e.clientX;
+          break;
+        default:
+          break;
       }
-    };
-
-    // Start the animation loop
-    animationFrame = requestAnimationFrame(step);
-  };
+    },
+    [metrics]
+  );
 
   // This func moves a given element in its parent on its x axis
-  const moveElementInParent = (value, domElement) => {
+  const moveElementInParent = useCallback((value, domElement) => {
     // value: Number. The quantity of pixels the viewer has slided.
     // domElement: the element we want to move.
     // peerElementsIds: Array. With the multi-images-column module, we must move each related sibling together.
@@ -163,13 +96,92 @@ const useGrabAndMove = () => {
       ...prev,
       currentTranslateValue: newTranslateXValue,
     }));
-  };
+  }, []);
+
+  // This function is called on mouse move and touch move events
+  const grabbing = useCallback(
+    (e) => {
+      // If the isGrabbing state is false, no action is taken
+      if (!isGrabbing) return;
+
+      // Set the working state to true during the action
+      setIsWorking(true);
+
+      const container = containerRef.current;
+
+      // Determine the current click or touch position based on the event type
+      let currentClickPosition;
+      if (e.type === "touchmove") {
+        // For touch events, get the clientX from the first touch point
+        currentClickPosition = e.targetTouches[0].clientX;
+      } else if (e.type === "mousemove") {
+        // For mouse events, use the clientX of the mouse move
+        currentClickPosition = e.clientX;
+      }
+
+      // Calculate the difference between the current and the previous positions
+      const deltaX = currentClickPosition - previousClickPosition.current;
+      // This gives us the number of pixels the viewer has moved
+
+      // Call the function responsible for moving the element within its parent
+      moveElementInParent(deltaX, container.firstElementChild);
+
+      // Finally, update the refs with the new position and delta values
+      previousClickPosition.current = currentClickPosition;
+      previousDeltaX.current = deltaX;
+    },
+    [isGrabbing, moveElementInParent]
+  );
+
+  // This function is called on mouse up or touch end events
+  const stopGrab = useCallback(
+    (e) => {
+      // If the isGrabbing state is false, nothing happens
+      if (!isGrabbing) return;
+
+      const container = containerRef.current;
+
+      // Turn off the isGrabbing state when the user stops dragging
+      setIsGrabbing(false);
+
+      // We create a smooth deceleration effect by using a recursive function
+      // Start by using the last known distance moved
+      let animatedScrollDistance = previousDeltaX.current;
+
+      let animationFrame;
+
+      // This function will be called multiple times to create the sliding effect
+      const step = () => {
+        moveElementInParent(
+          animatedScrollDistance,
+          container.firstElementChild
+        );
+
+        // Reduce the scroll distance by 15% on each call to simulate deceleration
+        animatedScrollDistance /= 1.15;
+
+        // Continue the animation if the remaining distance is significant
+        if (Math.abs(animatedScrollDistance) > 0.1) {
+          animationFrame = requestAnimationFrame(step);
+        } else {
+          // Once the animation is finished, reset the deltaX value
+          previousDeltaX.current = 0;
+          // Indicate that the work is done
+          setIsWorking(false);
+        }
+      };
+
+      // Start the animation loop
+      animationFrame = requestAnimationFrame(step);
+    },
+    [isGrabbing, moveElementInParent]
+  );
 
   // The metrics values are only given when the containerRef is filled.
   // Normaly this happens at the first click on the element, but we may want to connect the hook programmaticaly.
-  const initGrabAndMove = (domElement) => {
+  const initGrabAndMove = useCallback((domElement) => {
     if (!containerRef.current) containerRef.current = domElement;
-  };
+  }, []);
 
   // The useEffect declares a resize observer on the ement and its child
   useEffect(() => {
