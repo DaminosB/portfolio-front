@@ -19,7 +19,7 @@ const Carousel = ({ medias, indexStart, customColors }) => {
   // customColors: Object. Custom color scheme applied to carousel elements.
 
   // Hook that tracks scroll position and provides the index of the currently visible media
-  const { scrollTrack, activeChildIndex } = useScrollTracker(true);
+  const { scrollTrack, displayIndex } = useScrollTracker(true);
 
   // Reference to the container holding the media elements
   const sliderRef = useRef(null);
@@ -28,7 +28,7 @@ const Carousel = ({ medias, indexStart, customColors }) => {
   const handleSideButtons = (moveStep) => {
     const slider = sliderRef.current;
     const maxIndex = medias.length - 1;
-    const targetIndex = activeChildIndex + moveStep;
+    const targetIndex = displayIndex + moveStep;
 
     let scrollTarget = 0;
 
@@ -78,7 +78,7 @@ const Carousel = ({ medias, indexStart, customColors }) => {
           const isImageFile = media.provider_metadata.resource_type === "image";
 
           // Only play the video for the currently visible media
-          const shouldPlayVideo = index === activeChildIndex;
+          const shouldPlayVideo = index === displayIndex;
 
           return (
             <div key={media.id}>
@@ -120,7 +120,7 @@ const Carousel = ({ medias, indexStart, customColors }) => {
           <nav style={navInlineStyle}>
             {medias.map((media, index) => {
               // Each media is represented by a dot, which becomes larger when the media is active
-              const isActive = index === activeChildIndex;
+              const isActive = index === displayIndex;
 
               // Handles the click on a dot to jump to the corresponding media
               const handleJumpButtons = () => {

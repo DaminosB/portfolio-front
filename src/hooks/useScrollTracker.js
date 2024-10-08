@@ -16,7 +16,7 @@ const useScrollTracker = (scrollX = false) => {
   const [scrollPosition, setScrollPosition] = useState(0);
 
   // State to store the index of the currently active child element based on scroll position
-  const [activeChildIndex, setActiveChildIndex] = useState(0);
+  const [displayIndex, setDisplayIndex] = useState(0);
 
   // Ref to store the container element being tracked
   const containerRef = useRef(null);
@@ -42,12 +42,11 @@ const useScrollTracker = (scrollX = false) => {
     );
 
     // If a valid index is found and it differs from the current one, update the active child index
-    if (newIndex !== -1 && newIndex !== activeChildIndex)
-      setActiveChildIndex(newIndex);
+    if (newIndex !== -1 && newIndex !== displayIndex) setDisplayIndex(newIndex);
   };
 
   // Return the scroll tracking function, current active child index, and scroll position
-  return { scrollTrack, activeChildIndex, scrollPosition };
+  return { scrollTrack, displayIndex, scrollPosition };
 };
 
 export default useScrollTracker;
