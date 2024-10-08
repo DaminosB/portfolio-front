@@ -16,10 +16,9 @@ const ModuleWrapper = ({ medias, inlineStyle, customColors, children }) => {
   // This state is changed when the viewer clicks the content
   // On false, none of the dragging effects are active
   const [isActiveSection, setIsActiveSection] = useState(false);
-  const { activeCoordinates, openModale, isModaleDisplayed, getSectionCoords } =
+  const { activeCoords, showModale, getSectionCoords, setModaleContent } =
     useContext(LayoutContext);
-  const [activeContainerIndex, activeChildIndex] = activeCoordinates;
-  // const { getSectionCoords } = useContext(SnapScrollerContext);
+  const [activeContainerIndex, activeChildIndex] = activeCoords;
 
   const sectionRef = useRef(null);
 
@@ -31,8 +30,7 @@ const ModuleWrapper = ({ medias, inlineStyle, customColors, children }) => {
 
   const openCarousel = (mediaId) => {
     const mediaIndex = medias.findIndex((media) => media.id === mediaId);
-    openModale(
-      customColors,
+    setModaleContent(
       <Carousel
         medias={medias}
         indexStart={mediaIndex}
@@ -90,14 +88,24 @@ const ModuleWrapper = ({ medias, inlineStyle, customColors, children }) => {
       syncScroll(scrollPosition);
     } else setIsActiveSection(false);
   }, [
-    activeCoordinates,
+    activeCoords,
     activeChildIndex,
     activeContainerIndex,
     getSectionCoords,
     scrollPosition,
   ]);
 
-  const contextValues = { isActiveSection, openCarousel, isModaleDisplayed };
+  const contextValues = { isActiveSection, openCarousel, showModale };
+
+  const handleOnWheel = (e) => {
+    const sectionNode = sectionRef.current;
+
+    const isAtBottom =
+      sectionNode.scrollHeight - (scrollPosition + sectionNode.offsetHeight) <
+      1;
+
+    if (!isAtBottom) e.stopPropagation();
+  };
 
   return (
     <ModuleContext.Provider value={contextValues}>
@@ -106,6 +114,7 @@ const ModuleWrapper = ({ medias, inlineStyle, customColors, children }) => {
         style={inlineStyle}
         ref={sectionRef}
         onScroll={scrollTrack}
+        onWheel={handleOnWheel}
       >
         {children}
       </section>
