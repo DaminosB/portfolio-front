@@ -12,20 +12,51 @@ import useScrollTracker from "@/hooks/useScrollTracker";
 const SnapScrollWrapper = ({ children }) => {
   // The content is shown one section at a time. This state stores the coordinates of the active one (the one currently displayed)
 
-  const { updateContainerPos } = useContext(LayoutContext);
+  const { updateContainerPos, endScrollValue, setEndScrollValue } =
+    useContext(LayoutContext);
   const containerRef = useRef(null);
 
-  const { scrollTrack, activeChildIndex } = useScrollTracker();
+  const {
+    scrollTrack,
+    scrollPosition,
+    displayIndex: activeChildIndex,
+  } = useScrollTracker();
 
+  // At every activeChildIndex change, updates the container position
   useEffect(() => {
+    const slider = containerRef.current;
+    updateContainerPos(slider, activeChildIndex);
+  }, [activeChildIndex, updateContainerPos]);
+
+  // If the user scrolls down while at the bottom of the element, updates the endScrollValue
+  const handleOnWheel = (e) => {
+    const { deltaY } = e;
     const container = containerRef.current;
 
-    updateContainerPos(container, activeChildIndex);
-  }, [activeChildIndex, updateContainerPos]);
+    // Determines if the container is scrolled to the bottom
+    const isAtBottom =
+      scrollPosition === container.scrollHeight - container.offsetHeight;
+
+    // If the container is at the bottom and the scroll event is going downward
+    if (isAtBottom && deltaY > 0) {
+      // Accumulates the downward scroll offset
+      const newEndScrollValue = endScrollValue + deltaY;
+
+      // If the accumulated scroll doesn't exceed the container's height, update the state
+      if (newEndScrollValue <= container.offsetHeight)
+        setEndScrollValue(newEndScrollValue);
+    }
+  };
 
   return (
     // This wrapper acts as a window to display the content. It should not overflow the client's screen
-    <div className={styles.slider} ref={containerRef} onScroll={scrollTrack}>
+    <div
+      className={styles.slider}
+      ref={containerRef}
+      onScroll={scrollTrack}
+      onWheel={handleOnWheel}
+      onTouchMove={(e) => console.log(e)}
+    >
       {children}
     </div>
   );
