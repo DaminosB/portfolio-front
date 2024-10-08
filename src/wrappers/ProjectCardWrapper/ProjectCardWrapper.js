@@ -20,7 +20,6 @@ const ProjectCardWrapper = ({ cardData, children }) => {
   const { activeCard, setActiveCard, filteredProjects } = useContext(
     ProjectsGalleryContext
   );
-  const { linkTo } = useContext(LayoutContext);
 
   // Reference to the DOM element of the card wrapper
   const cardsRef = useRef(null);
@@ -73,22 +72,15 @@ const ProjectCardWrapper = ({ cardData, children }) => {
     }
   }, [activeCard, filteredProjects, gap, id, thumbnailsPerRow]);
 
-  const handleLinkTo = () => {
-    linkTo(link);
-  };
-
   return (
     <div
-      className={`${styles.projectCard} ${
-        cardData.id === "logos-card" ? styles.logoCard : ""
-      }`}
+      className={styles.projectCard}
       style={customStyles}
       ref={cardsRef}
-      onClick={handleLinkTo}
       onMouseEnter={() => setActiveCard(cardData)}
       onMouseLeave={() => setActiveCard(null)}
     >
-      {children}
+      <Link href={link}>{children}</Link>
     </div>
   );
 };
