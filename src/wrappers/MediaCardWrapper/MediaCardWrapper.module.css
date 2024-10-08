@@ -21,6 +21,8 @@
   filter: blur(0px);
   box-shadow: var(--standard-shadow);
   transition: filter var(--normal-transition) var(--default-animation);
+  /* to remove */
+  position: relative;
 }
 
 /* .mediaCardWrapper.underflow > .mediaWindow img , */

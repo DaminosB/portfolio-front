@@ -49,7 +49,7 @@ const MediaCardWrapper = ({
   const { containerWidth, childWidth } = metrics;
 
   // Access context values
-  const { isActiveSection, openCarousel, isModaleDisplayed } =
+  const { isActiveSection, openCarousel, showModale } =
     useContext(ModuleContext);
 
   // Function to open the media carousel modal
@@ -70,12 +70,11 @@ const MediaCardWrapper = ({
   // Toggle between normal and contained views
   const toggleViews = () => {
     if (isWorking || !isActiveSection) return; // Prevent toggling if the grab-and-move hook is active or if the section is not displayed
-
     setIsContainedView((prev) => !prev);
   };
 
   // Display mode configuration based on the calculated mode
-  const displayModeSettings = useMemo(() => ({
+  const displayModeSettings = {
     excess: {
       defaultContained: true, // Contained view by default
       onClick: toggleViews, // Switch between contained and normal views
@@ -112,7 +111,7 @@ const MediaCardWrapper = ({
         background: true, // Background is needed for smaller media
       },
     },
-  }));
+  };
 
   // Destructure the settings for the current display mode
   const { defaultContained, onClick, grabbable, display } =
@@ -135,8 +134,15 @@ const MediaCardWrapper = ({
     if (isActiveSection) setIsContainedView(defaultContained);
     else setIsContainedView(false);
     // Control video playback based on the active section and modal visibility
-    setShouldPlayVideo(isActiveSection && !isModaleDisplayed);
-  }, [childWidth, containerWidth, isActiveSection, isModaleDisplayed]);
+    setShouldPlayVideo(isActiveSection && !showModale);
+  }, [
+    childWidth,
+    containerWidth,
+    isActiveSection,
+    showModale,
+    defaultContained,
+    initGrabAndMove,
+  ]);
 
   // Event handlers for various user interactions (mouse/touch)
   const eventHandlers = {
