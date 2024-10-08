@@ -6,6 +6,7 @@ import Module_MultiImagesColumn from "@/modules/Module_MultiImagesColumn/Module_
 import Module_Container from "@/modules/Module_Container/Module_Container";
 import SidePanelNavigation from "@/components/SidePanelNavigation/SidePanelNavigation";
 import SnapScrollWrapper from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
+import Modale from "@/components/Modale/Modale";
 
 export default async function ProjectsIdPage({ params }) {
   const { page } = await fetchData(params.id);
@@ -59,6 +60,7 @@ export default async function ProjectsIdPage({ params }) {
           }
         })}
       </SnapScrollWrapper>
+      <Modale customColors={customColors} />
       <SidePanelNavigation content={page} customStyle={customColors} />
     </>
   );

@@ -5,7 +5,7 @@ import SnapScrollWrapper from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
 import Module_Fullpage from "@/modules/Module_Fullpage/Module_Fullpage";
 import Module_MultiImagesColumn from "@/modules/Module_MultiImagesColumn/Module_MultiImagesColumn";
 import Module_Container from "@/modules/Module_Container/Module_Container";
-
+import Modale from "@/components/Modale/Modale";
 import SidePanelNavigation from "@/components/SidePanelNavigation/SidePanelNavigation";
 
 export default async function ProjectsIdPage() {
@@ -53,6 +53,7 @@ export default async function ProjectsIdPage() {
           }
         })}
       </SnapScrollWrapper>
+      <Modale customColors={customColors} />
       <SidePanelNavigation content={logos} customStyle={customColors} />
     </>
   );

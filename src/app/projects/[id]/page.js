@@ -6,11 +6,12 @@ import Module_Fullpage from "@/modules/Module_Fullpage/Module_Fullpage";
 import Module_MultiImagesColumn from "@/modules/Module_MultiImagesColumn/Module_MultiImagesColumn";
 import Module_Container from "@/modules/Module_Container/Module_Container";
 import SidePanelNavigation from "@/components/SidePanelNavigation/SidePanelNavigation";
-
 import SnapScrollWrapper from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
 import ProjectsContainer from "@/components/ProjectsContainer/ProjectsContainer";
-import generateRGBAString from "@/utils/generateRGBAString";
+import EndScrollPanel from "@/wrappers/EndScrollPanel/EndScrollPanel";
 
+import generateRGBAString from "@/utils/generateRGBAString";
+import Modale from "@/components/Modale/Modale";
 export default async function ProjectsIdPage({ params }) {
   const { project, customStyle, relatedProjects } = await fetchData(params.id);
 
@@ -19,7 +20,7 @@ export default async function ProjectsIdPage({ params }) {
     secondaryColor: project.secondaryColor,
   };
 
-  const relatedProjectsInlineStyle = {
+  const containerInlineStyle = {
     backgroundColor: generateRGBAString(customColors.mainColor, 0.5),
   };
 
@@ -68,17 +69,15 @@ export default async function ProjectsIdPage({ params }) {
         })}
       </SnapScrollWrapper>
       {relatedProjects && (
-        <div
-          style={relatedProjectsInlineStyle}
-          className={styles.relatedProjects}
-        >
+        <EndScrollPanel customColors={customColors}>
           <ProjectsContainer
             projects={relatedProjects}
             customStyle={customStyle}
             logos={false}
           />
-        </div>
+        </EndScrollPanel>
       )}
+      <Modale customColors={customColors} />
       <SidePanelNavigation content={project} customStyle={customColors} />
     </>
   );
