@@ -14,6 +14,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 import NavSocials from "../NavSocials/NavSocials";
 import ContactForm from "../ContactForm/ContactForm";
+import Link from "next/link";
 
 // This component displays a logo that sends the visitor back to the homepage's cover
 const LogoAndSideMenu = ({ profile, customStyle, pages }) => {
@@ -31,7 +32,7 @@ const LogoAndSideMenu = ({ profile, customStyle, pages }) => {
 
   const cachedPathname = useRef(null);
 
-  const { isModaleDisplayed, openModale, linkTo } = useContext(LayoutContext);
+  const { showModale, setModaleContent } = useContext(LayoutContext);
 
   // This object will be transmitted to the dom in order to display custom colors
   const inlineStyle = {
@@ -49,21 +50,17 @@ const LogoAndSideMenu = ({ profile, customStyle, pages }) => {
     if (pathname !== cachedPathname.current) {
       setShowSidePanel(false);
       cachedPathname.current = pathname;
-    } else if (isModaleDisplayed) {
+    } else if (showModale) {
       setShowSidePanel(false);
     }
-  }, [pathname, targetDom, isModaleDisplayed]);
+  }, [pathname, targetDom, showModale]);
 
   const toggleMenu = () => {
     setShowSidePanel((prev) => !prev);
   };
 
   const openContactForm = () => {
-    const { mainColor, secondaryColor } = customStyle;
-    openModale(
-      { mainColor, secondaryColor },
-      <ContactForm customStyle={customStyle} />
-    );
+    setModaleContent(<ContactForm customStyle={customStyle} />);
   };
 
   return (
@@ -84,19 +81,13 @@ const LogoAndSideMenu = ({ profile, customStyle, pages }) => {
             <FontAwesomeIcon icon={faXmark} />
           </button>
           <nav>
-            {!isOnHomepage && (
-              <button onClick={() => linkTo("/")}>Accueil</button>
-            )}
+            {!isOnHomepage && <Link href={"/"}>Accueil</Link>}
             {/* The pages created by the user are displayed through a .map function */}
             {pages.map((page) => {
-              const handleOnClick = () => {
-                const link = `/user-pages/${page.id}`;
-                linkTo(link);
-              };
               return (
-                <button key={page.id} onClick={handleOnClick}>
+                <Link key={page.id} href={`/user-pages/${page.id}`}>
                   {page.name}
-                </button>
+                </Link>
               );
             })}
             <button onClick={openContactForm}>Contact</button>
