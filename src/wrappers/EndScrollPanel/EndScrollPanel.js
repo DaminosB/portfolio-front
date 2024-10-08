@@ -27,6 +27,9 @@ const EndScrollPanel = ({ customColors, children }) => {
   // Retrieves scroll-related values from the LayoutContext
   const { endScrollValue, setEndScrollValue } = useContext(LayoutContext);
 
+  // Ref to store the previous touch position, used to detect deltaY touch positions
+  const previousTouchYRef = useRef(null);
+
   // Ref to store the previous endScrollValue, used to detect changes
   const cachedScrollUpValue = useRef(0);
 
@@ -39,6 +42,33 @@ const EndScrollPanel = ({ customColors, children }) => {
     if (isAtTop && e.deltaY < 0) setEndScrollValue(0);
   };
 
+  // Handles the touch scroll event, resetting the scroll position if the user scrolls up while the component is fully visible
+  const handleOnTouchMove = (e) => {
+    const { clientY } = e.changedTouches[0];
+    const previousTouchY = previousTouchYRef.current;
+
+    // If it's the first touch, skip this part
+    if (previousTouchY) {
+      const container = containerRef.current;
+
+      const isAtTop = container.scrollTop === 0;
+      const deltaY = previousTouchY - clientY;
+
+      // If the user scrolls up while the component is fully visible, reset the scroll value
+      if (isAtTop && deltaY < 0) setEndScrollValue(0);
+
+      // Reset previousTouchYRef if it's last touch
+      setTimeout(() => {
+        if (clientY === previousTouchYRef.current) {
+          previousTouchYRef.current = null;
+        }
+      }, 500);
+    }
+
+    // Update the ref
+    previousTouchYRef.current = clientY;
+  };
+
   // Sets the portal target and updates the position of the component based on endScrollValue
   useEffect(() => {
     // Initializes the portal target on first render
@@ -48,7 +78,7 @@ const EndScrollPanel = ({ customColors, children }) => {
       const container = containerRef.current;
 
       // If the component is scrolled less than halfway up and more than 0, move it accordingly
-      if (endScrollValue < container.offsetHeight / 2 && endScrollValue > 0) {
+      if (endScrollValue < container.offsetHeight / 2 && endScrollValue !== 0) {
         // Disable transition for smooth movement based on scroll
         container.classList.remove(styles.transition);
 
@@ -87,6 +117,7 @@ const EndScrollPanel = ({ customColors, children }) => {
         ref={containerRef}
         style={containerInlineStyle}
         onWheel={handleOnWheel}
+        onTouchMove={handleOnTouchMove}
       >
         {children}
       </div>,

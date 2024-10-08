@@ -97,7 +97,7 @@ const ModuleWrapper = ({ medias, inlineStyle, customColors, children }) => {
 
   const contextValues = { isActiveSection, openCarousel, showModale };
 
-  const handleOnWheel = (e) => {
+  const handleStopPropagation = (e) => {
     const sectionNode = sectionRef.current;
 
     const isAtBottom =
@@ -114,7 +114,8 @@ const ModuleWrapper = ({ medias, inlineStyle, customColors, children }) => {
         style={inlineStyle}
         ref={sectionRef}
         onScroll={scrollTrack}
-        onWheel={handleOnWheel}
+        onWheel={handleStopPropagation}
+        onTouchMove={handleStopPropagation}
       >
         {children}
       </section>

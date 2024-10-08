@@ -16,11 +16,7 @@ const SnapScrollWrapper = ({ children }) => {
     useContext(LayoutContext);
   const containerRef = useRef(null);
 
-  const {
-    scrollTrack,
-    scrollPosition,
-    displayIndex: activeChildIndex,
-  } = useScrollTracker();
+  const { scrollTrack, displayIndex: activeChildIndex } = useScrollTracker();
 
   // At every activeChildIndex change, updates the container position
   useEffect(() => {
@@ -28,17 +24,16 @@ const SnapScrollWrapper = ({ children }) => {
     updateContainerPos(slider, activeChildIndex);
   }, [activeChildIndex, updateContainerPos]);
 
+  const previousTouchYRef = useRef(null);
+
   // If the user scrolls down while at the bottom of the element, updates the endScrollValue
   const handleOnWheel = (e) => {
-    const { deltaY } = e;
     const container = containerRef.current;
 
-    // Determines if the container is scrolled to the bottom
-    const isAtBottom =
-      scrollPosition === container.scrollHeight - container.offsetHeight;
+    const { deltaY } = e;
 
     // If the container is at the bottom and the scroll event is going downward
-    if (isAtBottom && deltaY > 0) {
+    if (deltaY > 0) {
       // Accumulates the downward scroll offset
       const newEndScrollValue = endScrollValue + deltaY;
 
@@ -48,6 +43,36 @@ const SnapScrollWrapper = ({ children }) => {
     }
   };
 
+  // If the user scrolls on touch down while at the bottom of the element, updates the endScrollValue
+  const handleTouchMove = (e) => {
+    const { clientY } = e.changedTouches[0];
+    const previousTouchY = previousTouchYRef.current;
+
+    // If it's the first touch, skip this part
+    if (previousTouchY) {
+      const container = containerRef.current;
+
+      const deltaY = previousTouchY - clientY;
+
+      // Accumulates the downward scroll offset
+      const newEndScrollValue = endScrollValue + deltaY;
+
+      // If the accumulated scroll doesn't exceed the container's height, update the state
+      if (newEndScrollValue <= container.offsetHeight)
+        setEndScrollValue(newEndScrollValue);
+
+      // Reset previousTouchYRef if it's last touch
+      setTimeout(() => {
+        if (clientY === previousTouchYRef.current) {
+          previousTouchYRef.current = null;
+        }
+      }, 500);
+    }
+
+    // Update the ref
+    previousTouchYRef.current = clientY;
+  };
+
   return (
     // This wrapper acts as a window to display the content. It should not overflow the client's screen
     <div
@@ -55,7 +80,7 @@ const SnapScrollWrapper = ({ children }) => {
       ref={containerRef}
       onScroll={scrollTrack}
       onWheel={handleOnWheel}
-      onTouchMove={(e) => console.log(e)}
+      onTouchMove={handleTouchMove}
     >
       {children}
     </div>
