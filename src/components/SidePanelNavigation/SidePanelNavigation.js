@@ -28,8 +28,9 @@ const SidePanelNavigation = ({ content, customStyle }) => {
   const [isPanelOpen, setIsPanelOpen] = useState(true); // Controls whether the panel is open or collapsed
 
   // Get the current active coordinates from context (active container and child section)
-  const { activeCoordinates, layoutNode } = useContext(LayoutContext);
-  const [activeContainerIndex, activeChildIndex] = activeCoordinates;
+  const { activeCoords, layoutNode, endScrollValue, setEndScrollValue } =
+    useContext(LayoutContext);
+  const [activeContainerIndex, activeChildIndex] = activeCoords;
 
   // Set opacity based on whether the mouse is hovering over the panel
   const panelOpacity = isMouseOver ? 0.66 : 0.33;
@@ -83,10 +84,12 @@ const SidePanelNavigation = ({ content, customStyle }) => {
           const [containerIndex, childIndex] = navItem.coords;
           const isActiveSection =
             containerIndex === activeContainerIndex &&
-            childIndex === activeChildIndex;
+            childIndex === activeChildIndex &&
+            !endScrollValue;
 
           // Function to handle clicks and scroll to the appropriate section
           const handleScrollToSection = () => {
+            setEndScrollValue(0);
             const containers = Array.from(layoutNode.children);
             const targetContainer = containers[containerIndex];
 
@@ -125,6 +128,16 @@ const SidePanelNavigation = ({ content, customStyle }) => {
             </button>
           );
         })}
+        {content.tags && (
+          <button
+            className={
+              endScrollValue ? styles.activeButton : styles.inactiveButton
+            }
+            onClick={() => setEndScrollValue(layoutNode.offsetHeight)}
+          >
+            <FontAwesomeIcon icon={faPaperclip} />
+          </button>
+        )}
       </nav>,
       domTarget
     )
@@ -175,16 +188,16 @@ const createNavigationItems = (content) => {
   });
 
   // If there are related projects or tags, add them to the navigation
-  if (content.tags) {
-    containerIndex++;
-    childIndex = 0; // Reset child index for related projects section
-    navigationItems.push({
-      id: "related-projects",
-      icon: faPaperclip,
-      coords: [containerIndex, childIndex],
-      scrollToChild: false, // No need to scroll inside for tags
-    });
-  }
+  // if (content.tags) {
+  //   containerIndex++;
+  //   childIndex = 0; // Reset child index for related projects section
+  //   navigationItems.push({
+  //     id: "related-projects",
+  //     icon: faPaperclip,
+  //     coords: [containerIndex, childIndex],
+  //     scrollToChild: false, // No need to scroll inside for tags
+  //   });
+  // }
 
   return navigationItems;
 };
