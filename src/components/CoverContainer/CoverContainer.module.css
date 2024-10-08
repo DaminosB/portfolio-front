@@ -1,11 +1,17 @@
-.coverContainer {
-  position: relative;
-  height: 100%;
+div:has(> .coverContainer) {
   will-change: opacity;
+  overflow: hidden;
+  position: relative;
+  z-index: -1;
+}
+.coverContainer {
+  height: 100%;
   display: flex;
   justify-content: center;
+  position: fixed;
+  /* top: 0px; */
+  /* inset: 10px; */
 }
-
 .coverContainer > img {
   max-width: 100%;
   height: 100%;

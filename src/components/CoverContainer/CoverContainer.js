@@ -12,14 +12,14 @@ const CoverContainer = ({ coverUrl, coverAltTxt, customColors }) => {
   const coverRef = useRef(null);
 
   useEffect(() => {
-    const coverElem = coverRef.current;
-    const nextSibling = coverElem.nextSibling;
+    const coverContainer = coverRef.current;
 
-    const offsetRatio = coverElem.offsetTop / nextSibling.offsetTop;
+    const scrollRatio =
+      (layoutScrollPos - coverContainer.offsetTop) /
+      coverContainer.offsetHeight;
 
-    const newOpacity = 1 - offsetRatio;
-
-    coverElem.style.opacity = newOpacity;
+    if (scrollRatio >= 0 && scrollRatio <= 1)
+      coverContainer.style.opacity = 1 - scrollRatio;
   }, [layoutScrollPos]);
 
   const containerInlineStyle = {
@@ -30,16 +30,12 @@ const CoverContainer = ({ coverUrl, coverAltTxt, customColors }) => {
     backgroundImage: `url(${coverUrl})`,
   };
 
-  const title = useRef(null);
-
   return (
-    <div
-      className={styles.coverContainer}
-      ref={coverRef}
-      style={containerInlineStyle}
-    >
-      <div style={backgroundInlineStyle} ref={title}></div>
-      <img src={coverUrl} alt={coverAltTxt} />
+    <div ref={coverRef}>
+      <div className={styles.coverContainer} style={containerInlineStyle}>
+        <div style={backgroundInlineStyle}></div>
+        <img src={coverUrl} alt={coverAltTxt} />
+      </div>
     </div>
   );
 };
