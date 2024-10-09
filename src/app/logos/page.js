@@ -1,5 +1,4 @@
 import axios from "axios";
-import { Suspense } from "react";
 
 import SnapScrollWrapper from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
 import Module_Fullpage from "@/modules/Module_Fullpage/Module_Fullpage";
