@@ -36,7 +36,8 @@ const EndScrollPanel = ({ customColors, children }) => {
   // Handles the scroll wheel event, resetting the scroll position if the user scrolls up while the component is fully visible
   const handleOnWheel = (e) => {
     const container = containerRef.current;
-    const isAtTop = container.scrollTop === 0;
+    const content = container.firstElementChild;
+    const isAtTop = content.scrollTop === 0;
 
     // If the user scrolls up while the component is fully visible, reset the scroll value
     if (isAtTop && e.deltaY < 0) setEndScrollValue(0);
@@ -57,8 +58,9 @@ const EndScrollPanel = ({ customColors, children }) => {
     // If it's the first touch, skip this part
     if (previousTouchY) {
       const container = containerRef.current;
+      const content = container.firstElementChild;
 
-      const isAtTop = container.scrollTop === 0;
+      const isAtTop = content.scrollTop === 0;
       const deltaY = previousTouchY - clientY;
 
       // If the user scrolls up while the component is fully visible, reset the scroll value
