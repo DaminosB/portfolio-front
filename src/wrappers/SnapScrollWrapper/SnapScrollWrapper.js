@@ -59,6 +59,11 @@ const SnapScrollWrapper = ({ children }) => {
     const isAtBottom =
       scrollPosition === container.scrollHeight - container.offsetHeight;
 
+    console.log("-------------------");
+    console.log(isAtBottom);
+    console.log(scrollPosition, container.scrollHeight, container.offsetHeight);
+    console.log("-------------------");
+
     // If the container is not at the bottom, stop the function
     if (!isAtBottom) return;
 
