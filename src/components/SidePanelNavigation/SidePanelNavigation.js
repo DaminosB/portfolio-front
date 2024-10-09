@@ -13,6 +13,7 @@ import { LayoutContext } from "@/wrappers/LayoutWrapper/LayoutWrapper";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
+  faChevronRight,
   faCircle,
   faPanorama,
   faPaperclip,
@@ -65,7 +66,7 @@ const SidePanelNavigation = ({ content, customStyle }) => {
     createPortal(
       <nav
         className={`${styles.sectionNavigation} ${
-          isPanelOpen ? styles.open : ""
+          !isPanelOpen ? styles.close : ""
         }`}
         style={panelStyle}
         onMouseEnter={() => setIsMouseOver(true)}
@@ -76,7 +77,8 @@ const SidePanelNavigation = ({ content, customStyle }) => {
           style={toggleButtonStyle}
           onClick={() => setIsPanelOpen((prev) => !prev)}
         >
-          <FontAwesomeIcon icon={faChevronLeft} />
+          <FontAwesomeIcon icon={faChevronRight} />
+          {/* <FontAwesomeIcon icon={faChevronLeft} /> */}
         </button>
 
         {/* Render each navigation button */}
@@ -186,18 +188,6 @@ const createNavigationItems = (content) => {
       childIndex++;
     }
   });
-
-  // If there are related projects or tags, add them to the navigation
-  // if (content.tags) {
-  //   containerIndex++;
-  //   childIndex = 0; // Reset child index for related projects section
-  //   navigationItems.push({
-  //     id: "related-projects",
-  //     icon: faPaperclip,
-  //     coords: [containerIndex, childIndex],
-  //     scrollToChild: false, // No need to scroll inside for tags
-  //   });
-  // }
 
   return navigationItems;
 };
