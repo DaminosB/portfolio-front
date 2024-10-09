@@ -57,12 +57,7 @@ const SnapScrollWrapper = ({ children }) => {
     const container = containerRef.current;
 
     const isAtBottom =
-      scrollPosition - (container.scrollHeight - container.offsetHeight) < 1;
-
-    console.log("-------------------");
-    console.log(isAtBottom);
-    console.log(scrollPosition, container.scrollHeight, container.offsetHeight);
-    console.log("-------------------");
+      container.scrollHeight - container.offsetHeight - scrollPosition < 1;
 
     // If the container is not at the bottom, stop the function
     if (!isAtBottom) return;
@@ -72,7 +67,7 @@ const SnapScrollWrapper = ({ children }) => {
       const deltaY = previousTouchY - clientY;
 
       // Accumulates the downward scroll offset with a multiplier to facilitate the movement
-      const newEndScrollValue = endScrollValue + deltaY * 1.5;
+      const newEndScrollValue = (endScrollValue + deltaY) * 1.25;
 
       // If the accumulated scroll doesn't exceed the container's height, update the state
       if (newEndScrollValue <= container.offsetHeight && newEndScrollValue >= 0)
