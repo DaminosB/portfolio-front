@@ -40,6 +40,13 @@ const EndScrollPanel = ({ customColors, children }) => {
 
     // If the user scrolls up while the component is fully visible, reset the scroll value
     if (isAtTop && e.deltaY < 0) setEndScrollValue(0);
+    else if (isAtTop) {
+      const newEndScrollValue = endScrollValue + e.deltaY;
+
+      // If the accumulated scroll doesn't exceed the container's height, update the state
+      if (newEndScrollValue <= container.offsetHeight && newEndScrollValue >= 0)
+        setEndScrollValue(newEndScrollValue);
+    }
   };
 
   // Handles the touch scroll event, resetting the scroll position if the user scrolls up while the component is fully visible
@@ -56,6 +63,16 @@ const EndScrollPanel = ({ customColors, children }) => {
 
       // If the user scrolls up while the component is fully visible, reset the scroll value
       if (isAtTop && deltaY < 0) setEndScrollValue(0);
+      else if (isAtTop) {
+        const newEndScrollValue = endScrollValue + e.deltaY;
+
+        // If the accumulated scroll doesn't exceed the container's height, update the state
+        if (
+          newEndScrollValue <= container.offsetHeight &&
+          newEndScrollValue >= 0
+        )
+          setEndScrollValue(newEndScrollValue);
+      }
 
       // Reset previousTouchYRef if it's last touch
       setTimeout(() => {

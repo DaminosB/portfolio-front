@@ -16,7 +16,11 @@ const SnapScrollWrapper = ({ children }) => {
     useContext(LayoutContext);
   const containerRef = useRef(null);
 
-  const { scrollTrack, displayIndex: activeChildIndex } = useScrollTracker();
+  const {
+    scrollTrack,
+    displayIndex: activeChildIndex,
+    scrollPosition,
+  } = useScrollTracker();
 
   // At every activeChildIndex change, updates the container position
   useEffect(() => {
@@ -30,17 +34,19 @@ const SnapScrollWrapper = ({ children }) => {
   const handleOnWheel = (e) => {
     const container = containerRef.current;
 
+    const isAtBottom =
+      scrollPosition === container.scrollHeight - container.offsetHeight;
+
+    // If the container is not at the bottom, stop the function
+    if (!isAtBottom) return;
+
+    // Accumulates the downward scroll offset
     const { deltaY } = e;
+    const newEndScrollValue = endScrollValue + deltaY;
 
-    // If the container is at the bottom and the scroll event is going downward
-    if (deltaY > 0) {
-      // Accumulates the downward scroll offset
-      const newEndScrollValue = endScrollValue + deltaY;
-
-      // If the accumulated scroll doesn't exceed the container's height, update the state
-      if (newEndScrollValue <= container.offsetHeight)
-        setEndScrollValue(newEndScrollValue);
-    }
+    // If the accumulated scroll doesn't exceed the container's height, update the state
+    if (newEndScrollValue <= container.offsetHeight && newEndScrollValue >= 0)
+      setEndScrollValue(newEndScrollValue);
   };
 
   // If the user scrolls on touch down while at the bottom of the element, updates the endScrollValue
@@ -48,17 +54,23 @@ const SnapScrollWrapper = ({ children }) => {
     const { clientY } = e.changedTouches[0];
     const previousTouchY = previousTouchYRef.current;
 
+    const container = containerRef.current;
+
+    const isAtBottom =
+      scrollPosition === container.scrollHeight - container.offsetHeight;
+
+    // If the container is not at the bottom, stop the function
+    if (!isAtBottom) return;
+
     // If it's the first touch, skip this part
     if (previousTouchY) {
-      const container = containerRef.current;
-
       const deltaY = previousTouchY - clientY;
 
-      // Accumulates the downward scroll offset
-      const newEndScrollValue = endScrollValue + deltaY;
+      // Accumulates the downward scroll offset with a multiplier to facilitate the movement
+      const newEndScrollValue = endScrollValue + deltaY * 1.5;
 
       // If the accumulated scroll doesn't exceed the container's height, update the state
-      if (newEndScrollValue <= container.offsetHeight)
+      if (newEndScrollValue <= container.offsetHeight && newEndScrollValue >= 0)
         setEndScrollValue(newEndScrollValue);
 
       // Reset previousTouchYRef if it's last touch
