@@ -1,6 +1,6 @@
 import styles from "./Module_Fullpage.module.css";
 
-import TextContainer from "../../components/TextContainer/TextContainer";
+import TextWrapper from "../../wrappers/TextWrapper/TextWrapper";
 
 import generateCssClasses from "@/utils/generateCssClasses";
 import generateInlineStyle from "@/utils/generateInlineStyle";
@@ -52,7 +52,7 @@ const Module_Fullpage = ({ module, customColors }) => {
             );
           })}
         </div>
-        {text && <TextContainer>{text.text}</TextContainer>}
+        {text && <TextWrapper>{text.text}</TextWrapper>}
       </div>
     </ModuleWrapper>
   );

@@ -1,6 +1,6 @@
 import styles from "./Module_Container.module.css";
 
-import TextContainer from "../../components/TextContainer/TextContainer";
+import TextWrapper from "../../wrappers/TextWrapper/TextWrapper";
 import VideoPlayer from "../../components/VideoPlayer/VideoPlayer";
 
 import generateCssClasses from "@/utils/generateCssClasses";
@@ -60,7 +60,7 @@ const Module_Container = ({ module, customColors }) => {
             })}
           </div>
         </div>
-        {text && <TextContainer>{text.text}</TextContainer>}
+        {text && <TextWrapper>{text.text}</TextWrapper>}
       </div>
     </ModuleWrapper>
   );
