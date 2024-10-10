@@ -18,7 +18,7 @@ import { faExpand } from "@fortawesome/free-solid-svg-icons";
 // Import components
 import SpotlightMarker from "@/components/SpotlightMarker/SpotlightMarker";
 import ZoomButton from "@/components/ZoomButton/ZoomButton";
-import VideoPlayer from "@/components/VideoPlayer/VideoPlayer";
+import VideoPlayer from "@/wrappers/VideoPlayer/VideoPlayer";
 
 // MediaCardWrapper component manages how media (image or video) is displayed
 const MediaCardWrapper = ({

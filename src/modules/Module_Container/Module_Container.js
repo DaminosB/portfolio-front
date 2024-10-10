@@ -1,7 +1,7 @@
 import styles from "./Module_Container.module.css";
 
 import TextWrapper from "../../wrappers/TextWrapper/TextWrapper";
-import VideoPlayer from "../../components/VideoPlayer/VideoPlayer";
+import VideoPlayer from "../../wrappers/VideoPlayer/VideoPlayer";
 
 import generateCssClasses from "@/utils/generateCssClasses";
 import generateInlineStyle from "@/utils/generateInlineStyle";

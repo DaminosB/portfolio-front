@@ -9,7 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import generateRGBAString from "@/utils/generateRGBAString";
 
-import VideoPlayer from "../VideoPlayer/VideoPlayer";
+import VideoPlayer from "../../wrappers/VideoPlayer/VideoPlayer";
 import useScrollTracker from "@/hooks/useScrollTracker";
 
 // Carousel component that displays a series of media (images or videos) with horizontal sliding navigation

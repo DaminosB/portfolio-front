@@ -4,7 +4,7 @@ import TextWrapper from "../../wrappers/TextWrapper/TextWrapper";
 
 import generateCssClasses from "@/utils/generateCssClasses";
 import generateInlineStyle from "@/utils/generateInlineStyle";
-import VideoPlayer from "../../components/VideoPlayer/VideoPlayer";
+import VideoPlayer from "../../wrappers/VideoPlayer/VideoPlayer";
 import MediaCardWrapper from "../../wrappers/MediaCardWrapper/MediaCardWrapper";
 import ModuleWrapper from "../../wrappers/ModuleWrapper/ModuleWrapper";
 
