@@ -4,6 +4,7 @@ import axios from "axios";
 // Components import
 import ProjectsContainer from "@/components/ProjectsContainer/ProjectsContainer";
 import CoverContainer from "@/components/CoverContainer/CoverContainer";
+import Modale from "@/components/Modale/Modale";
 
 export default async function Home() {
   const { profile, projects, customStyle, logos } = await fetchData();
@@ -25,6 +26,8 @@ export default async function Home() {
         customStyle={customStyle}
         logos={logos}
       />
+
+      <Modale customColors={customColors} />
     </>
   );
 }

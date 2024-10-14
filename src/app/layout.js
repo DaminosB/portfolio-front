@@ -15,7 +15,7 @@ config.autoAddCss = false; /* eslint-disable import/first */
 export default async function RootLayout({ children }) {
   const { customStyle, profile, pages } = await fetchData();
 
-  const customStyles = {
+  const bodyStyle = {
     backgroundImage: `url(${customStyle.homePageBackground.url})`,
     fontFamily: customStyle.defaultFont
       .substring(0, customStyle.defaultFont.indexOf("("))
@@ -36,7 +36,7 @@ export default async function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
-      <body className="viewport" style={customStyles}>
+      <body className="viewport" style={bodyStyle}>
         <main>
           <LayoutWrapper>
             <LogoAndSideMenu
@@ -69,6 +69,11 @@ export async function generateMetadata() {
 }
 
 const fetchData = async () => {
+  const response = {
+    customStyle: {},
+    profile: {},
+    pages: {},
+  };
   try {
     // First we call the API to get the data we will need
     const customStyle = await axios.get(
@@ -78,39 +83,46 @@ const fetchData = async () => {
       }
     );
 
+    response.customStyle = {
+      ...customStyle.data.data.attributes,
+      homePageBackground:
+        customStyle.data.data.attributes.homePageBackground.data.attributes,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+
+  try {
     const profile = await axios.get(
       `${process.env.API_URL}/profile?populate=logo,cover,socialURLs.otherURLs.logo`,
       { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
     );
 
+    response.profile = {
+      ...profile.data.data.attributes,
+      logo: profile.data.data.attributes.logo.data.attributes,
+      cover: profile.data.data.attributes.cover.data.attributes,
+      socialURLs: profile.data.data.attributes.socialURLs,
+      otherURLs: profile.data.data.attributes.socialURLs.otherURLs,
+      defaultFont: profile.data.data.attributes.defaultFont,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+
+  try {
     const pages = await axios.get(`${process.env.API_URL}/pages`, {
       headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
     });
 
-    const response = {
-      customStyle: {
-        ...customStyle.data.data.attributes,
-        homePageBackground:
-          customStyle.data.data.attributes.homePageBackground.data.attributes,
-      },
-      profile: {
-        ...profile.data.data.attributes,
-        logo: profile.data.data.attributes.logo.data.attributes,
-        cover: profile.data.data.attributes.cover.data.attributes,
-        socialURLs: profile.data.data.attributes.socialURLs,
-        otherURLs: profile.data.data.attributes.socialURLs.otherURLs,
-        defaultFont: profile.data.data.attributes.defaultFont,
-      },
-      pages: pages.data.data,
-    };
-
+    response.pages = pages.data.data;
     //   Finaly, we clean up the pages key
     response.pages.forEach((page, index) => {
       response.pages[index] = { ...page.attributes, id: page.id };
     });
-
-    return response;
   } catch (error) {
     console.log(error);
   }
+
+  return response;
 };
