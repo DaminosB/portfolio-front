@@ -9,14 +9,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowUpRightFromSquare,
   faCheck,
-  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faCircleCheck,
   faCircleXmark,
 } from "@fortawesome/free-regular-svg-icons";
 
-const ContactForm = ({ profile, customStyle, setShowContactForm }) => {
+const ContactForm = ({ customStyle }) => {
   const [username, setUsername] = useState({
     value: "",
     isValid: false,
@@ -158,7 +157,6 @@ const ContactForm = ({ profile, customStyle, setShowContactForm }) => {
       <label htmlFor="message">
         <textarea
           style={inputStyle}
-          // style={customStyles}
           name="message"
           id="message"
           placeholder="..."
