@@ -1,4 +1,4 @@
-import axios from "axios";
+// import axios from "axios";
 
 import CoverContainer from "@/components/CoverContainer/CoverContainer";
 import Module_Fullpage from "@/modules/Module_Fullpage/Module_Fullpage";
@@ -7,6 +7,8 @@ import Module_Container from "@/modules/Module_Container/Module_Container";
 import SidePanelNavigation from "@/components/SidePanelNavigation/SidePanelNavigation";
 import SnapScrollWrapper from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
 import Modale from "@/components/Modale/Modale";
+
+import handleFetch from "@/utils/handleFetch";
 
 export default async function ProjectsIdPage({ params }) {
   const { page } = await fetchData(params.id);
@@ -67,37 +69,63 @@ export default async function ProjectsIdPage({ params }) {
 }
 
 const fetchData = async (pageId) => {
-  try {
-    const page = await axios.get(
-      `${process.env.API_URL}/pages/${pageId}?populate=cover,modules.medias,modules.backgroundImage,modules.text`,
-      { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
-    );
+  const { data } = await handleFetch(
+    `pages/${pageId}?populate=cover,modules.medias,modules.backgroundImage,modules.text`
+  );
 
-    const response = {
-      page: {
-        ...page.data.data.attributes,
-        cover: page.data.data.attributes.cover.data,
-      },
-    };
-
-    response.page.modules.forEach((module, i) => {
-      response.page.modules[i].backgroundImage = module.backgroundImage
-        ?.data && {
-        ...module.backgroundImage.data.attributes,
-        id: module.backgroundImage.data.id,
-      };
-      response.page.modules[i].medias = [...module.medias.data];
-
-      response.page.modules[i].medias.forEach((media, j) => {
-        response.page.modules[i].medias[j] = {
+  const response = {
+    page: {
+      ...data.attributes,
+      cover: data.attributes.cover.data,
+      modules: data.attributes.modules.map((module) => ({
+        ...module,
+        backgroundImage: module.backgroundImage.data && {
+          ...module.backgroundImage.data.attributes,
+          id: module.backgroundImage.data.id,
+        },
+        medias: module.medias.data.map((media) => ({
           ...media.attributes,
           id: media.id,
-        };
-      });
-    });
+        })),
+      })),
+    },
+  };
 
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
+  return response;
 };
+
+// const fetchData = async (pageId) => {
+//   try {
+//     const page = await axios.get(
+//       `${process.env.API_URL}/pages/${pageId}?populate=cover,modules.medias,modules.backgroundImage,modules.text`,
+//       { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
+//     );
+
+//     const response = {
+//       page: {
+//         ...page.data.data.attributes,
+//         cover: page.data.data.attributes.cover.data,
+//       },
+//     };
+
+//     response.page.modules.forEach((module, i) => {
+//       response.page.modules[i].backgroundImage = module.backgroundImage
+//         ?.data && {
+//         ...module.backgroundImage.data.attributes,
+//         id: module.backgroundImage.data.id,
+//       };
+//       response.page.modules[i].medias = [...module.medias.data];
+
+//       response.page.modules[i].medias.forEach((media, j) => {
+//         response.page.modules[i].medias[j] = {
+//           ...media.attributes,
+//           id: media.id,
+//         };
+//       });
+//     });
+
+//     return response;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };

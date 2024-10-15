@@ -1,9 +1,11 @@
 import "./globals.css";
 
-import axios from "axios";
+// import axios from "axios";
 
 import LogoAndSideMenu from "@/components/LogoAndSideMenu/LogoAndSideMenu";
 import LayoutWrapper from "@/wrappers/LayoutWrapper/LayoutWrapper";
+
+import handleFetch from "@/utils/handleFetch";
 
 // The following import prevents a Font Awesome icon server-side rendering bug,
 // where the icons flash from a very large icon down to a properly sized one:
@@ -53,76 +55,120 @@ export default async function RootLayout({ children }) {
 }
 
 export async function generateMetadata() {
-  try {
-    const { data } = await axios.get(`${process.env.API_URL}/site-parameter`, {
-      headers: { authorization: `Bearer ${process.env.API_TOKEN}` },
-    });
-
-    const { pageTitle, pageDescription } = data.data.attributes;
-    return {
-      title: pageTitle,
-      description: pageDescription,
-    };
-  } catch (error) {
-    console.log(error);
-  }
+  const { data } = await handleFetch("site-parameter");
+  return {
+    title: data.attributes.pageTitle,
+    description: data.attributes.pageDescription,
+  };
 }
 
 const fetchData = async () => {
+  // Execute all API requests in parallel using Promise.all() to fetch data for custom styles, profile, and pages
+  const [customStyleResponse, profileResponse, pagesResponse] =
+    await Promise.all([
+      handleFetch("style?populate=homePageBackground"),
+      handleFetch("profile?populate=logo,cover,socialURLs"),
+      handleFetch("pages"),
+    ]);
+
+  // Process and structure the responses into a unified object
   const response = {
-    customStyle: {},
-    profile: {},
-    pages: {},
-  };
-  try {
-    // First we call the API to get the data we will need
-    const customStyle = await axios.get(
-      `${process.env.API_URL}/style?populate=homePageBackground`,
-      {
-        headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
-      }
-    );
-
-    response.customStyle = {
-      ...customStyle.data.data.attributes,
+    // Extract the customStyle data and nested homePageBackground attributes
+    customStyle: {
+      ...customStyleResponse.data.attributes,
       homePageBackground:
-        customStyle.data.data.attributes.homePageBackground.data.attributes,
-    };
-  } catch (error) {
-    console.log(error);
-  }
+        customStyleResponse.data.attributes.homePageBackground.data.attributes,
+    },
+    // Extract the profile data, including logo and cover attributes
+    profile: {
+      ...profileResponse.data.attributes,
+      logo: profileResponse.data.attributes.logo.data.attributes,
+      cover: profileResponse.data.attributes.cover.data.attributes,
+      socialURLs: profileResponse.data.attributes.socialURLs,
+    },
+    // Process each page object, extracting its attributes and adding the id
+    pages: pagesResponse.data.map((page) => ({
+      ...page.attributes,
+      id: page.id,
+    })),
+  };
 
-  try {
-    const profile = await axios.get(
-      `${process.env.API_URL}/profile?populate=logo,cover,socialURLs.otherURLs.logo`,
-      { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
-    );
-
-    response.profile = {
-      ...profile.data.data.attributes,
-      logo: profile.data.data.attributes.logo.data.attributes,
-      cover: profile.data.data.attributes.cover.data.attributes,
-      socialURLs: profile.data.data.attributes.socialURLs,
-      otherURLs: profile.data.data.attributes.socialURLs.otherURLs,
-      defaultFont: profile.data.data.attributes.defaultFont,
-    };
-  } catch (error) {
-    console.log(error);
-  }
-
-  try {
-    const pages = await axios.get(`${process.env.API_URL}/pages`, {
-      headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
-    });
-
-    response.pages = pages.data.data;
-    //   Finaly, we clean up the pages key
-    response.pages.forEach((page, index) => {
-      response.pages[index] = { ...page.attributes, id: page.id };
-    });
-  } catch (error) {
-    console.log(error);
-  }
-
+  // Return the structured response object
   return response;
 };
+
+// export async function generateMetadata() {
+//   try {
+//     const { data } = await axios.get(`${process.env.API_URL}/site-parameter`, {
+//       headers: { authorization: `Bearer ${process.env.API_TOKEN}` },
+//     });
+
+//     const { pageTitle, pageDescription } = data.data.attributes;
+//     return {
+//       title: pageTitle,
+//       description: pageDescription,
+//     };
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+
+// const fetchData = async () => {
+//   const response = {
+//     customStyle: {},
+//     profile: {},
+//     pages: {},
+//   };
+
+//   try {
+//     // First we call the API to get the data we will need
+//     const customStyle = await axios.get(
+//       `${process.env.API_URL}/style?populate=homePageBackground`,
+//       {
+//         headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
+//       }
+//     );
+
+//     response.customStyle = {
+//       ...customStyle.data.data.attributes,
+//       homePageBackground:
+//         customStyle.data.data.attributes.homePageBackground.data.attributes,
+//     };
+//   } catch (error) {
+//     console.log(error);
+//   }
+
+//   try {
+//     const profile = await axios.get(
+//       `${process.env.API_URL}/profile?populate=logo,cover,socialURLs.otherURLs.logo`,
+//       { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
+//     );
+
+//     response.profile = {
+//       ...profile.data.data.attributes,
+//       logo: profile.data.data.attributes.logo.data.attributes,
+//       cover: profile.data.data.attributes.cover.data.attributes,
+//       socialURLs: profile.data.data.attributes.socialURLs,
+//       otherURLs: profile.data.data.attributes.socialURLs.otherURLs,
+//       defaultFont: profile.data.data.attributes.defaultFont,
+//     };
+//   } catch (error) {
+//     console.log(error);
+//   }
+
+//   try {
+//     const pages = await axios.get(`${process.env.API_URL}/pages`, {
+//       headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
+//     });
+
+//     response.pages = pages.data.data;
+//     //   Finaly, we clean up the pages key
+//     response.pages.forEach((page, index) => {
+//       response.pages[index] = { ...page.attributes, id: page.id };
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+
+//   return response;
+// };

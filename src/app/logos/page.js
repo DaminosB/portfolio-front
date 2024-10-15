@@ -1,4 +1,4 @@
-import axios from "axios";
+// import axios from "axios";
 
 import SnapScrollWrapper from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
 import Module_Fullpage from "@/modules/Module_Fullpage/Module_Fullpage";
@@ -6,6 +6,8 @@ import Module_MultiImagesColumn from "@/modules/Module_MultiImagesColumn/Module_
 import Module_Container from "@/modules/Module_Container/Module_Container";
 import Modale from "@/components/Modale/Modale";
 import SidePanelNavigation from "@/components/SidePanelNavigation/SidePanelNavigation";
+
+import handleFetch from "@/utils/handleFetch";
 
 export default async function ProjectsIdPage() {
   const { logos, customStyle } = await fetchData();
@@ -59,38 +61,65 @@ export default async function ProjectsIdPage() {
 }
 
 const fetchData = async () => {
-  const response = { logos: {}, customStyle: {} };
-  try {
-    const logos = await axios.get(
-      `${process.env.API_URL}/logo?populate=thumbnail,modules.medias`,
-      { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
-    );
+  const [logosResponse, customStyleResponse] = await Promise.all([
+    handleFetch("logo?populate=thumbnail,modules.medias"),
+    handleFetch("style"),
+  ]);
 
-    response.logos = { ...logos.data.data.attributes };
-  } catch (error) {
-    console.log(error);
-  }
-
-  try {
-    const customStyle = await axios.get(`${process.env.API_URL}/style`, {
-      headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
-    });
-
-    response.customStyle = { ...customStyle.data.data.attributes };
-  } catch (error) {
-    console.log(error);
-  }
-
-  response.logos.modules.forEach((module, i) => {
-    response.logos.modules[i] = { ...module };
-    response.logos.modules[i].medias = [...module.medias.data];
-    response.logos.modules[i].medias.forEach((media, j) => {
-      response.logos.modules[i].medias[j] = {
-        ...media.attributes,
-        id: media.id,
-      };
-    });
-  });
+  const response = {
+    logos: {
+      ...logosResponse.data.attributes,
+      modules: logosResponse.data.attributes.modules.map((module) => {
+        return {
+          ...module,
+          medias: module.medias.data.map((media) => {
+            return {
+              ...media.attributes,
+              id: media.id,
+            };
+          }),
+        };
+      }),
+    },
+    customStyle: { ...customStyleResponse.data.attributes },
+  };
 
   return response;
 };
+
+// const fetchData = async () => {
+//   const response = { logos: {}, customStyle: {} };
+//   try {
+//     const logos = await axios.get(
+//       `${process.env.API_URL}/logo?populate=thumbnail,modules.medias`,
+//       { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
+//     );
+
+//     response.logos = { ...logos.data.data.attributes };
+//   } catch (error) {
+//     console.log(error);
+//   }
+
+//   try {
+//     const customStyle = await axios.get(`${process.env.API_URL}/style`, {
+//       headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
+//     });
+
+//     response.customStyle = { ...customStyle.data.data.attributes };
+//   } catch (error) {
+//     console.log(error);
+//   }
+
+//   response.logos.modules.forEach((module, i) => {
+//     response.logos.modules[i] = { ...module };
+//     response.logos.modules[i].medias = [...module.medias.data];
+//     response.logos.modules[i].medias.forEach((media, j) => {
+//       response.logos.modules[i].medias[j] = {
+//         ...media.attributes,
+//         id: media.id,
+//       };
+//     });
+//   });
+
+//   return response;
+// };
