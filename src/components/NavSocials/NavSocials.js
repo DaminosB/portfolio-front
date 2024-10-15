@@ -21,15 +21,6 @@ const NavSocials = ({ profile }) => {
       return { name: social[0], url: social[1] };
     });
 
-  // This array will be displayed in another .map function
-  const otherURLsArray = profile.otherURLs.map((entry) => {
-    return {
-      name: entry.name,
-      url: entry.url,
-      iconURL: entry.logo.data.attributes.url,
-    };
-  });
-
   const getSocialIconAndTitle = (name) => {
     switch (name) {
       case "facebook":
