@@ -12,7 +12,6 @@ import { LayoutContext } from "@/wrappers/LayoutWrapper/LayoutWrapper";
 // Import font-awesome icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faChevronLeft,
   faChevronRight,
   faCircle,
   faPanorama,
@@ -23,7 +22,7 @@ import {
 import generateRGBAString from "@/utils/generateRGBAString";
 
 // This component displays a vertical side navigation panel to jump between sections of the page
-const SidePanelNavigation = ({ content, customStyle }) => {
+const SidePanelNavigation = ({ content, showRelatedProject, customStyle }) => {
   const [domTarget, setDomTarget] = useState(null); // Holds the target DOM node for the portal
   const [isMouseOver, setIsMouseOver] = useState(false); // Tracks if the mouse is over the side panel
   const [isPanelOpen, setIsPanelOpen] = useState(true); // Controls whether the panel is open or collapsed
@@ -130,7 +129,7 @@ const SidePanelNavigation = ({ content, customStyle }) => {
             </button>
           );
         })}
-        {content.tags && (
+        {showRelatedProject && (
           <button
             className={
               endScrollValue ? styles.activeButton : styles.inactiveButton
