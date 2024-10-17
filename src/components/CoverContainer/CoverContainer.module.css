@@ -9,6 +9,7 @@ div:has(> .coverContainer) {
   display: flex;
   justify-content: center;
   position: fixed;
+  width: 100%;
   /* top: 0px; */
   /* inset: 10px; */
 }
