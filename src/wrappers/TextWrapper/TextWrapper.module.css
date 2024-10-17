@@ -1,15 +1,26 @@
-/* .textContainer {
-  overflow-y: scroll;
-  scrollbar-width: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-} */
-
-.textContainer {
+.textWrapper {
   will-change: transform;
+  font-size: 20px;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-origin: content-box;
 }
 
-.textContainer p {
-  height: 100%;
+.textWrapper ul,
+.textWrapper ol {
+  list-style-position: inside;
+}
+
+.textWrapper > div {
+  max-height: 100%;
+  width: 100%;
+  padding: var(--logo-height-offset) 30px;
+}
+
+.textWrapper img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
