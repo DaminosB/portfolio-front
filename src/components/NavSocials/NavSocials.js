@@ -24,8 +24,6 @@ const NavSocials = ({ profile }) => {
     });
 
   const getSocialIconAndTitle = (name) => {
-    console.log(name);
-
     switch (name) {
       case "facebook":
         return { icon: faFacebookF, title: "Facebook" };
