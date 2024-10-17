@@ -1,63 +1,78 @@
-// import axios from "axios";
-
-import SnapScrollWrapper from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
 import Module_Fullpage from "@/modules/Module_Fullpage/Module_Fullpage";
 import Module_MultiImagesColumn from "@/modules/Module_MultiImagesColumn/Module_MultiImagesColumn";
 import Module_Container from "@/modules/Module_Container/Module_Container";
+import Module_Text from "@/modules/Module_Text/Module_Text";
+
+import SnapScrollWrapper from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
 import Modale from "@/components/Modale/Modale";
 import SidePanelNavigation from "@/components/SidePanelNavigation/SidePanelNavigation";
+import ErrorComponent from "@/components/ErrorComponent/ErrorComponent";
 
 import handleFetch from "@/utils/handleFetch";
 
 export default async function ProjectsIdPage() {
-  const { logos, customStyle } = await fetchData();
+  const data = await fetchData();
 
-  const customColors = {
-    mainColor: customStyle.mainColor,
-    secondaryColor: customStyle.secondaryColor,
-  };
+  if (!data) return <ErrorComponent type={"error"} />;
+  else {
+    const { logos, customStyle } = data;
 
-  return (
-    <>
-      <SnapScrollWrapper>
-        {logos.modules.map((module, index) => {
-          switch (module.__component) {
-            case "module.pleine-page":
-              return (
-                <Module_Fullpage
-                  key={module.id}
-                  module={module}
-                  customColors={customColors}
-                />
-              );
+    const customColors = {
+      mainColor: customStyle.mainColor,
+      secondaryColor: customStyle.secondaryColor,
+    };
 
-            case "module.colonne-multi-images":
-              return (
-                <Module_MultiImagesColumn
-                  key={module.id}
-                  module={module}
-                  customColors={customColors}
-                />
-              );
+    return (
+      <>
+        <SnapScrollWrapper>
+          {logos.modules.map((module, index) => {
+            switch (module.__component) {
+              case "module.pleine-page":
+                return (
+                  <Module_Fullpage
+                    key={module.id}
+                    module={module}
+                    customColors={customColors}
+                  />
+                );
 
-            case "module.container":
-              return (
-                <Module_Container
-                  key={module.id}
-                  module={module}
-                  customColors={customColors}
-                />
-              );
+              case "module.colonne-multi-images":
+                return (
+                  <Module_MultiImagesColumn
+                    key={module.id}
+                    module={module}
+                    customColors={customColors}
+                  />
+                );
 
-            default:
-              break;
-          }
-        })}
-      </SnapScrollWrapper>
-      <Modale customColors={customColors} />
-      <SidePanelNavigation content={logos} customStyle={customColors} />
-    </>
-  );
+              case "module.container":
+                return (
+                  <Module_Container
+                    key={module.id}
+                    module={module}
+                    customColors={customColors}
+                  />
+                );
+
+              case "module.texte":
+                return (
+                  <Module_Text
+                    key={module.id}
+                    module={module}
+                    customColors={customColors}
+                  />
+                );
+
+              default:
+                break;
+            }
+          })}
+        </SnapScrollWrapper>
+        <Modale customColors={customColors} />
+        <SidePanelNavigation content={logos} customStyle={customColors} />
+      </>
+    );
+  }
 }
 
 const fetchData = async () => {
@@ -65,6 +80,8 @@ const fetchData = async () => {
     handleFetch("logo?populate=thumbnail,modules.medias"),
     handleFetch("style"),
   ]);
+
+  if (!logosResponse.data) return;
 
   const response = {
     logos: {
@@ -86,40 +103,3 @@ const fetchData = async () => {
 
   return response;
 };
-
-// const fetchData = async () => {
-//   const response = { logos: {}, customStyle: {} };
-//   try {
-//     const logos = await axios.get(
-//       `${process.env.API_URL}/logo?populate=thumbnail,modules.medias`,
-//       { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
-//     );
-
-//     response.logos = { ...logos.data.data.attributes };
-//   } catch (error) {
-//     console.log(error);
-//   }
-
-//   try {
-//     const customStyle = await axios.get(`${process.env.API_URL}/style`, {
-//       headers: { Authorization: `Bearer ${process.env.API_TOKEN}` },
-//     });
-
-//     response.customStyle = { ...customStyle.data.data.attributes };
-//   } catch (error) {
-//     console.log(error);
-//   }
-
-//   response.logos.modules.forEach((module, i) => {
-//     response.logos.modules[i] = { ...module };
-//     response.logos.modules[i].medias = [...module.medias.data];
-//     response.logos.modules[i].medias.forEach((media, j) => {
-//       response.logos.modules[i].medias[j] = {
-//         ...media.attributes,
-//         id: media.id,
-//       };
-//     });
-//   });
-
-//   return response;
-// };

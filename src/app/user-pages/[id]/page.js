@@ -1,131 +1,114 @@
-// import axios from "axios";
-
-import CoverContainer from "@/components/CoverContainer/CoverContainer";
 import Module_Fullpage from "@/modules/Module_Fullpage/Module_Fullpage";
 import Module_MultiImagesColumn from "@/modules/Module_MultiImagesColumn/Module_MultiImagesColumn";
 import Module_Container from "@/modules/Module_Container/Module_Container";
+import Module_Text from "@/modules/Module_Text/Module_Text";
+
+import CoverContainer from "@/components/CoverContainer/CoverContainer";
 import SidePanelNavigation from "@/components/SidePanelNavigation/SidePanelNavigation";
 import SnapScrollWrapper from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
 import Modale from "@/components/Modale/Modale";
+import ErrorComponent from "@/components/ErrorComponent/ErrorComponent";
 
 import handleFetch from "@/utils/handleFetch";
 
 export default async function ProjectsIdPage({ params }) {
-  const { page } = await fetchData(params.id);
+  const data = await fetchData(params.id);
 
-  const customColors = {
-    mainColor: page.mainColor,
-    secondaryColor: page.secondaryColor,
-  };
+  if (!data) return <ErrorComponent type={"notFound"} />;
+  else {
+    const { page } = data;
 
-  return (
-    <>
-      {page.cover && (
-        <CoverContainer
-          coverUrl={page.cover.url}
-          coverAltTxt={page.cover.alternativeText}
-          customColors={customColors}
-        />
-      )}
-      <SnapScrollWrapper>
-        {page.modules.map((module, index) => {
-          switch (module.__component) {
-            case "module.pleine-page":
-              return (
-                <Module_Fullpage
-                  key={module.id}
-                  module={module}
-                  customColors={customColors}
-                />
-              );
+    const customColors = {
+      mainColor: page.mainColor,
+      secondaryColor: page.secondaryColor,
+    };
 
-            case "module.colonne-multi-images":
-              return (
-                <Module_MultiImagesColumn
-                  key={module.id}
-                  module={module}
-                  customColors={customColors}
-                />
-              );
+    return (
+      <>
+        {page.cover && (
+          <CoverContainer
+            coverUrl={page.cover.url}
+            coverAltTxt={page.cover.alternativeText}
+            customColors={customColors}
+          />
+        )}
+        <SnapScrollWrapper>
+          {page.modules.map((module, index) => {
+            switch (module.__component) {
+              case "module.pleine-page":
+                return (
+                  <Module_Fullpage
+                    key={module.id}
+                    module={module}
+                    customColors={customColors}
+                  />
+                );
 
-            case "module.container":
-              return (
-                <Module_Container
-                  key={module.id}
-                  module={module}
-                  customColors={customColors}
-                />
-              );
+              case "module.colonne-multi-images":
+                return (
+                  <Module_MultiImagesColumn
+                    key={module.id}
+                    module={module}
+                    customColors={customColors}
+                  />
+                );
 
-            default:
-              break;
-          }
-        })}
-      </SnapScrollWrapper>
-      <Modale customColors={customColors} />
-      <SidePanelNavigation content={page} customStyle={customColors} />
-    </>
-  );
+              case "module.container":
+                return (
+                  <Module_Container
+                    key={module.id}
+                    module={module}
+                    customColors={customColors}
+                  />
+                );
+
+              case "module.texte":
+                return (
+                  <Module_Text
+                    key={module.id}
+                    module={module}
+                    customColors={customColors}
+                  />
+                );
+
+              default:
+                break;
+            }
+          })}
+        </SnapScrollWrapper>
+        <Modale customColors={customColors} />
+        <SidePanelNavigation content={page} customStyle={customColors} />
+      </>
+    );
+  }
 }
 
 const fetchData = async (pageId) => {
-  const { data } = await handleFetch(
+  const page = await handleFetch(
     `pages/${pageId}?populate=cover,modules.medias,modules.backgroundImage,modules.text`
   );
 
+  if (!page.data) return;
+
   const response = {
     page: {
-      ...data.attributes,
-      cover: data.attributes.cover.data,
-      modules: data.attributes.modules.map((module) => ({
+      ...page.data.attributes,
+      cover: page.data.attributes.cover.data,
+      modules: page.data.attributes.modules.map((module) => ({
         ...module,
         backgroundImage: module.backgroundImage.data && {
           ...module.backgroundImage.data.attributes,
           id: module.backgroundImage.data.id,
         },
-        medias: module.medias.data.map((media) => ({
-          ...media.attributes,
-          id: media.id,
-        })),
+        medias: module.medias
+          ? module.medias.data.map((media) => ({
+              ...media.attributes,
+              id: media.id,
+            }))
+          : [],
       })),
     },
   };
 
   return response;
 };
-
-// const fetchData = async (pageId) => {
-//   try {
-//     const page = await axios.get(
-//       `${process.env.API_URL}/pages/${pageId}?populate=cover,modules.medias,modules.backgroundImage,modules.text`,
-//       { headers: { Authorization: `Bearer ${process.env.API_TOKEN}` } }
-//     );
-
-//     const response = {
-//       page: {
-//         ...page.data.data.attributes,
-//         cover: page.data.data.attributes.cover.data,
-//       },
-//     };
-
-//     response.page.modules.forEach((module, i) => {
-//       response.page.modules[i].backgroundImage = module.backgroundImage
-//         ?.data && {
-//         ...module.backgroundImage.data.attributes,
-//         id: module.backgroundImage.data.id,
-//       };
-//       response.page.modules[i].medias = [...module.medias.data];
-
-//       response.page.modules[i].medias.forEach((media, j) => {
-//         response.page.modules[i].medias[j] = {
-//           ...media.attributes,
-//           id: media.id,
-//         };
-//       });
-//     });
-
-//     return response;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };

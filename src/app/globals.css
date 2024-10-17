@@ -51,9 +51,7 @@ address,
 big,
 cite,
 code,
-del,
 dfn,
-em,
 img,
 ins,
 kbd,
@@ -62,13 +60,11 @@ s,
 samp,
 small,
 strike,
-strong,
 sub,
 sup,
 tt,
 var,
 b,
-u,
 i,
 center,
 dl,
@@ -121,6 +117,21 @@ button {
   text-decoration: inherit;
   background: none;
 }
+
+strong,
+em,
+u,
+del {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  color: inherit;
+  background: none;
+}
+
 /* HTML5 display-role reset for older browsers */
 article,
 aside,
@@ -137,10 +148,6 @@ section {
 }
 body {
   line-height: 1;
-}
-ol,
-ul {
-  list-style: none;
 }
 blockquote,
 q {
@@ -176,8 +183,40 @@ html {
   width: 100vw;
 }
 
-body {
-  scrollbar-gutter: stable;
+a {
+  text-decoration: underline;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+h1 {
+  font-size: 4em;
+}
+
+h2 {
+  font-size: 3em;
+}
+
+h3 {
+  font-size: 2.5em;
+}
+
+h4 {
+  font-size: 2em;
+}
+
+h5 {
+  font-size: 1.5em;
+}
+
+h6 {
+  font-size: 1.25em;
+}
+
+p {
+  font-size: 1em;
 }
 
 button:not(.grabbable, .grabbed) {
@@ -187,34 +226,6 @@ button:not(.grabbable, .grabbed) {
 .container {
   margin: 0 auto;
   width: 70%;
-}
-
-.error-component {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  gap: 25px;
-  height: 100%;
-}
-
-.error-component > h2 {
-  font-size: 50px;
-}
-
-.error-component > button,
-.error-component > a {
-  font-size: 30px;
-  border: 1px black solid;
-  padding: 10px;
-  border-radius: var(--small-radius);
-  background-color: rgba(255, 255, 255, 0.5);
-}
-
-.error-component > button:hover > svg,
-.error-component > a:hover > svg {
-  transform: rotate(-360deg);
-  transition: var(--normal-transition) var(--default-animation);
 }
 
 .flex-row {
@@ -238,50 +249,6 @@ button:not(.grabbable, .grabbed) {
   opacity: 0;
 }
 
-.medium {
-  font-size: 30px;
-}
-
-.small {
-  font-size: 15px;
-}
-
-.text-align-center {
-  text-align: center;
-}
-
-.text-align-justify {
-  text-align: justify;
-}
-
-.text-align-left {
-  text-align: left;
-}
-
-.text-align-right {
-  text-align: right;
-}
-
-.text-size-x-small {
-  font-size: 10px;
-}
-
-.text-size-small {
-  font-size: 20px;
-}
-
-.text-size-medium {
-  font-size: 40px;
-}
-
-.text-size-large {
-  font-size: 60px;
-}
-
-.text-size-x-large {
-  font-size: 80px;
-}
-
 .viewport {
   height: 100vh;
 }
@@ -289,10 +256,6 @@ button:not(.grabbable, .grabbed) {
 .viewport > main {
   overflow: hidden;
   height: 100%;
-}
-
-.xLarge {
-  font-size: 100px;
 }
 
 /* The element needs to have a default max-height value in order to be animated properly */
