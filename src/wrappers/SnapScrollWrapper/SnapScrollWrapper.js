@@ -12,8 +12,6 @@ import useScrollTracker from "@/hooks/useScrollTracker";
 const SnapScrollWrapper = ({ children }) => {
   // The content is shown one section at a time. This state stores the coordinates of the active one (the one currently displayed)
 
-  const cachedScrollUpValue = useRef(0);
-
   const { updateContainerPos, endScrollValue, setEndScrollValue } =
     useContext(LayoutContext);
   const containerRef = useRef(null);
@@ -52,6 +50,7 @@ const SnapScrollWrapper = ({ children }) => {
     if (newEndScrollValue <= container.offsetHeight && newEndScrollValue >= 0) {
       setEndScrollValue(newEndScrollValue);
 
+      // Cache the current scroll value
       cachedScrollUpValue.current = endScrollValue;
 
       // If no further scrolling occurs, reset the scroll value after 500ms
@@ -61,6 +60,8 @@ const SnapScrollWrapper = ({ children }) => {
       }, 500);
     }
   };
+
+  const cachedScrollUpValue = useRef(0);
 
   // If the user scrolls on touch down while at the bottom of the element, updates the endScrollValue
   const handleTouchMove = (e) => {

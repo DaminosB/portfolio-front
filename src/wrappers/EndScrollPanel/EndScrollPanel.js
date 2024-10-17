@@ -103,6 +103,9 @@ const EndScrollPanel = ({ customColors, children }) => {
 
         // Move the component by the corresponding scroll offset
         container.style.transform = `translateY(${-endScrollValue}px)`;
+
+        // Cache the current scroll value
+        cachedScrollUpValue.current = endScrollValue;
       } else {
         // If scrolled more than halfway or no scroll, move the component fully up or reset
         container.classList.add(styles.transition);
