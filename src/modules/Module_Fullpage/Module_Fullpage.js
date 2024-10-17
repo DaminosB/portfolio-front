@@ -1,12 +1,12 @@
 import styles from "./Module_Fullpage.module.css";
 
+import MediaCardWrapper from "../../wrappers/MediaCardWrapper/MediaCardWrapper";
+import ModuleWrapper from "../../wrappers/ModuleWrapper/ModuleWrapper";
 import TextWrapper from "../../wrappers/TextWrapper/TextWrapper";
+import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 
 import generateCssClasses from "@/utils/generateCssClasses";
 import generateInlineStyle from "@/utils/generateInlineStyle";
-import VideoPlayer from "../../wrappers/VideoPlayer/VideoPlayer";
-import MediaCardWrapper from "../../wrappers/MediaCardWrapper/MediaCardWrapper";
-import ModuleWrapper from "../../wrappers/ModuleWrapper/ModuleWrapper";
 
 const Module_Fullpage = ({ module, customColors }) => {
   const { medias, text } = module;
@@ -52,7 +52,11 @@ const Module_Fullpage = ({ module, customColors }) => {
             );
           })}
         </div>
-        {text && <TextWrapper>{text.text}</TextWrapper>}
+        {text && (
+          <TextWrapper textModule={text}>
+            <BlocksRenderer content={text.richText} />
+          </TextWrapper>
+        )}
       </div>
     </ModuleWrapper>
   );

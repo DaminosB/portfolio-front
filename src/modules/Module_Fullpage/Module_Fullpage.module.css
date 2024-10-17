@@ -7,6 +7,10 @@
   overflow: visible;
 }
 
+.content > div {
+  flex: 1;
+}
+
 .mediasContainer {
   width: 100%;
   display: flex;
@@ -14,14 +18,14 @@
 }
 
 /* MediasWrapper and TextWrapper (only if there is a TextWrapper) */
-.content:has(> div:nth-of-type(2)) > div {
+/* .content:has(> div:nth-of-type(2)) > div {
   width: 50%;
   flex: 1;
 }
 
 .content > div:nth-of-type(2) {
   padding: var(--logo-height-offset) 0px;
-}
+} */
 
 .mediasContainer img {
   height: 100%;

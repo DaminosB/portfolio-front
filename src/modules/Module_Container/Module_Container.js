@@ -1,12 +1,12 @@
 import styles from "./Module_Container.module.css";
 
+import MediaCardWrapper from "../../wrappers/MediaCardWrapper/MediaCardWrapper";
+import ModuleWrapper from "@/wrappers/ModuleWrapper/ModuleWrapper";
 import TextWrapper from "../../wrappers/TextWrapper/TextWrapper";
-import VideoPlayer from "../../wrappers/VideoPlayer/VideoPlayer";
+import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 
 import generateCssClasses from "@/utils/generateCssClasses";
 import generateInlineStyle from "@/utils/generateInlineStyle";
-import MediaCardWrapper from "../../wrappers/MediaCardWrapper/MediaCardWrapper";
-import ModuleWrapper from "@/wrappers/ModuleWrapper/ModuleWrapper";
 
 const Module_Container = ({ module, customColors }) => {
   const { medias, text } = module;
@@ -59,8 +59,12 @@ const Module_Container = ({ module, customColors }) => {
               );
             })}
           </div>
-        </div>
-        {text && <TextWrapper>{text.text}</TextWrapper>}
+        </div>{" "}
+        {text && (
+          <TextWrapper textModule={text}>
+            <BlocksRenderer content={text.richText} />
+          </TextWrapper>
+        )}
       </div>
     </ModuleWrapper>
   );
