@@ -1,0 +1,24 @@
+.errorComponent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 25px;
+  height: 100%;
+  font-size: 25px;
+}
+
+.errorComponent > button,
+.errorComponent > a {
+  font-size: 30px;
+  border: 1px black solid;
+  padding: 10px;
+  border-radius: var(--small-radius);
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.errorComponent > button:hover > svg,
+.errorComponent > a:hover > svg {
+  transform: rotate(-360deg);
+  transition: var(--normal-transition) var(--default-animation);
+}

@@ -6,7 +6,7 @@ export default function GlobalError({ error, reset }) {
   return (
     <html>
       <body>
-        <ErrorComponent error={error} reset={reset} />
+        <ErrorComponent error={error} reset={reset} type={"error"} />
       </body>
     </html>
   );
