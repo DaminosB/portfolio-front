@@ -49,15 +49,17 @@ const SnapScrollWrapper = ({ children }) => {
     const newEndScrollValue = endScrollValue + deltaY;
 
     // If the accumulated scroll doesn't exceed the container's height, update the state
-    if (newEndScrollValue <= container.offsetHeight && newEndScrollValue >= 0)
+    if (newEndScrollValue <= container.offsetHeight && newEndScrollValue >= 0) {
       setEndScrollValue(newEndScrollValue);
 
-    cachedScrollUpValue.current = endScrollValue;
+      cachedScrollUpValue.current = endScrollValue;
 
-    // If no further scrolling occurs, reset the scroll value after 500ms
-    setTimeout(() => {
-      if (cachedScrollUpValue.current === endScrollValue) setEndScrollValue(0);
-    }, 500);
+      // If no further scrolling occurs, reset the scroll value after 500ms
+      setTimeout(() => {
+        if (cachedScrollUpValue.current === endScrollValue)
+          setEndScrollValue(0);
+      }, 500);
+    }
   };
 
   // If the user scrolls on touch down while at the bottom of the element, updates the endScrollValue
