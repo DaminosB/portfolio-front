@@ -23,25 +23,6 @@ const NavSocials = ({ profile }) => {
       return { name: social[0], url: social[1] };
     });
 
-  const getSocialIconAndTitle = (name) => {
-    switch (name) {
-      case "facebook":
-        return { icon: faFacebookF, title: "Facebook" };
-      case "twitter":
-        return { icon: faXTwitter, title: "X/Twitter" };
-      case "instagram":
-        return { icon: faInstagram, title: "Instagram" };
-      case "linkedin":
-        return { icon: faLinkedinIn, title: "LinkedIn" };
-      case "github":
-        return { icon: faGithub, title: "GitHub" };
-      case "pinterest":
-        return { icon: faPinterest, title: "Pinterest" };
-      default:
-        break;
-    }
-  };
-
   return (
     <nav>
       {/* We 1st display the default social media */}
@@ -54,17 +35,27 @@ const NavSocials = ({ profile }) => {
           </a>
         );
       })}
-
-      {/* Then the otherURLs the user may have entered */}
-      {/* {otherURLsArray.map((link, index) => {
-        return (
-          <a key={link.name} href={link.url} title={link.name} target="_blank">
-            <img src={link.iconURL} alt={`logo du site ${link.name}`} />
-          </a>
-        );
-      })} */}
     </nav>
   );
 };
 
 export default NavSocials;
+
+const getSocialIconAndTitle = (name) => {
+  switch (name) {
+    case "facebook":
+      return { icon: faFacebookF, title: "Facebook" };
+    case "twitter":
+      return { icon: faXTwitter, title: "X/Twitter" };
+    case "instagram":
+      return { icon: faInstagram, title: "Instagram" };
+    case "linkedin":
+      return { icon: faLinkedinIn, title: "LinkedIn" };
+    case "github":
+      return { icon: faGithub, title: "GitHub" };
+    case "pinterest":
+      return { icon: faPinterest, title: "Pinterest" };
+    default:
+      break;
+  }
+};
