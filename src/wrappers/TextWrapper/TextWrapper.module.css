@@ -17,10 +17,13 @@
   max-height: 100%;
   width: 100%;
   padding: var(--logo-height-offset) 30px;
+  display: flex;
+  flex-direction: column;
 }
 
 .textWrapper img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+  align-self: center;
 }
