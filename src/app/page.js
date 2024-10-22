@@ -1,7 +1,4 @@
-// Packages imports
-// import axios from "axios";
-
-// Components import
+import ErrorComponent from "@/components/ErrorComponent/ErrorComponent";
 import ProjectsContainer from "@/components/ProjectsContainer/ProjectsContainer";
 import CoverContainer from "@/components/CoverContainer/CoverContainer";
 import Modale from "@/components/Modale/Modale";
@@ -9,32 +6,51 @@ import Modale from "@/components/Modale/Modale";
 import handleFetch from "@/utils/handleFetch";
 
 export default async function Home() {
-  const { profile, projects, customStyle, logos } = await fetchData();
+  const data = await fetchData();
 
-  const customColors = {
-    mainColor: customStyle.mainColor,
-    secondaryColor: customStyle.secondaryColor,
-  };
+  if (!data) return <ErrorComponent type={"error"} />;
+  else {
+    const { profile, projects, customStyle, logos } = data;
 
-  return (
-    <>
-      <CoverContainer
-        coverUrl={profile.cover.url}
-        coverAltTxt={profile.cover.alternativeText}
-        customColors={customColors}
-      />
-      <ProjectsContainer
-        projects={projects}
-        customStyle={customStyle}
-        logos={logos}
-      />
+    const customColors = {
+      mainColor: customStyle.mainColor,
+      secondaryColor: customStyle.secondaryColor,
+    };
 
-      <Modale customColors={customColors} />
-    </>
-  );
+    return (
+      <>
+        <CoverContainer
+          coverUrl={profile.cover.url}
+          coverAltTxt={profile.cover.alternativeText}
+          customColors={customColors}
+        />
+        <ProjectsContainer
+          projects={projects}
+          customStyle={customStyle}
+          logos={logos}
+        />
+
+        <Modale customColors={customColors} />
+      </>
+    );
+  }
 }
 
 const fetchData = async () => {
+  let profilePath = "profile?populate=";
+  profilePath += "logo";
+  profilePath += ",cover";
+
+  let stylePath = "style?populate=";
+  stylePath += "*";
+
+  let projectsPath = "projects?populate=";
+  projectsPath += "thumbnail";
+  projectsPath += ",tags";
+
+  let logoPath = "logo?populate=";
+  logoPath += "thumbnail";
+
   // Execute multiple API requests in parallel using Promise.all()
   const [
     profileResponse,
@@ -42,10 +58,10 @@ const fetchData = async () => {
     projectsResponse,
     logosResponse,
   ] = await Promise.all([
-    handleFetch("profile?populate=logo,cover"),
-    handleFetch("style?populate=*"),
-    handleFetch("projects?populate=thumbnail,tags"),
-    handleFetch("logo?populate=thumbnail"),
+    handleFetch(profilePath),
+    handleFetch(stylePath),
+    handleFetch(projectsPath),
+    handleFetch(logoPath),
   ]);
 
   // Structure the response object based on the fetched data

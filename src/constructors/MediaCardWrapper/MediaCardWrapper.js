@@ -22,7 +22,7 @@ import {
 // Import components
 import SpotlightMarker from "@/components/SpotlightMarker/SpotlightMarker";
 import ZoomButton from "@/components/ZoomButton/ZoomButton";
-import VideoPlayer from "@/wrappers/VideoPlayer/VideoPlayer";
+import VideoPlayer from "@/constructors/VideoPlayer/VideoPlayer";
 import generateRGBAString from "@/utils/generateRGBAString";
 
 // MediaCardWrapper component manages how media (image or video) is displayed

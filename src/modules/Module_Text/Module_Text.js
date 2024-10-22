@@ -1,8 +1,8 @@
 import styles from "./Module_Text.module.css";
 
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
-import ModuleWrapper from "@/wrappers/ModuleWrapper/ModuleWrapper";
-import TextWrapper from "@/wrappers/TextWrapper/TextWrapper";
+import ModuleWrapper from "@/constructors/ModuleWrapper/ModuleWrapper";
+import TextWrapper from "@/constructors/TextWrapper/TextWrapper";
 import generateInlineStyle from "@/utils/generateInlineStyle";
 
 const Module_Text = ({ module, customColors }) => {

@@ -1,15 +1,5 @@
-import Module_Fullpage from "@/modules/Module_Fullpage/Module_Fullpage";
-import Module_MultiImagesColumn from "@/modules/Module_MultiImagesColumn/Module_MultiImagesColumn";
-import Module_Container from "@/modules/Module_Container/Module_Container";
-import Module_Text from "@/modules/Module_Text/Module_Text";
-
-import CoverContainer from "@/components/CoverContainer/CoverContainer";
-import SidePanelNavigation from "@/components/SidePanelNavigation/SidePanelNavigation";
-import SnapScrollWrapper from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
-import ProjectsContainer from "@/components/ProjectsContainer/ProjectsContainer";
-import EndScrollPanel from "@/wrappers/EndScrollPanel/EndScrollPanel";
-import Modale from "@/components/Modale/Modale";
 import ErrorComponent from "@/components/ErrorComponent/ErrorComponent";
+import PageBuilder from "@/constructors/PageBuilder/PageBuilder";
 
 import handleFetch from "@/utils/handleFetch";
 
@@ -19,80 +9,13 @@ export default async function ProjectsIdPage({ params }) {
   if (!data) return <ErrorComponent type={"notFound"} />;
   else {
     const { project, customStyle, relatedProjects } = data;
-    const customColors = {
-      mainColor: project.mainColor,
-      secondaryColor: project.secondaryColor,
-    };
 
     return (
-      <>
-        {project.cover && (
-          <CoverContainer
-            coverUrl={project.cover.url}
-            coverAltTxt={project.cover.alternativeText}
-            customColors={customColors}
-          />
-        )}
-        <SnapScrollWrapper>
-          {project.modules.map((module, index) => {
-            switch (module.__component) {
-              case "module.pleine-page":
-                return (
-                  <Module_Fullpage
-                    key={module.id}
-                    module={module}
-                    customColors={customColors}
-                  />
-                );
-
-              case "module.colonne-multi-images":
-                return (
-                  <Module_MultiImagesColumn
-                    key={module.id}
-                    module={module}
-                    customColors={customColors}
-                  />
-                );
-
-              case "module.container":
-                return (
-                  <Module_Container
-                    key={module.id}
-                    module={module}
-                    customColors={customColors}
-                  />
-                );
-
-              case "module.texte":
-                return (
-                  <Module_Text
-                    key={module.id}
-                    module={module}
-                    customColors={customColors}
-                  />
-                );
-
-              default:
-                break;
-            }
-          })}
-        </SnapScrollWrapper>
-        {relatedProjects && (
-          <EndScrollPanel customColors={customColors}>
-            <ProjectsContainer
-              projects={relatedProjects}
-              customStyle={customStyle}
-              logos={false}
-            />
-          </EndScrollPanel>
-        )}
-        <Modale customColors={customColors} />
-        <SidePanelNavigation
-          content={project}
-          customStyle={customColors}
-          showRelatedProject={relatedProjects ? true : false}
-        />
-      </>
+      <PageBuilder
+        content={project}
+        customStyle={customStyle}
+        relatedProjects={relatedProjects}
+      />
     );
   }
 }
@@ -126,7 +49,6 @@ const fetchData = async (projectId) => {
   // Construction of the project's path string
   let projectPath = `projects/${projectId}?populate=`;
   projectPath += "cover";
-  projectPath += ",modules.medias";
   projectPath += ",modules.mediaBlocks.mediaAsset";
   projectPath += ",modules.backgroundImage";
   projectPath += ",modules.text";
@@ -165,12 +87,6 @@ const fetchData = async (projectId) => {
               id: module.backgroundImage.data.id,
             }
           : null,
-        medias: module.medias
-          ? module.medias.data.map((media) => ({
-              ...media.attributes,
-              id: media.id,
-            }))
-          : [],
         mediaBlocks: module.mediaBlocks
           ? module.mediaBlocks.map(({ mediaAsset, ...restOfMediaBlock }) => ({
               ...restOfMediaBlock,

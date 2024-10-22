@@ -7,7 +7,7 @@ import { useContext, useRef, useEffect } from "react";
 
 // Context import
 import { ProjectsGalleryContext } from "../ProjectsGallery/ProjectsGallery";
-import { LayoutContext } from "../LayoutWrapper/LayoutWrapper";
+import { LayoutContext } from "@/wrappers/LayoutWrapper/LayoutWrapper";
 
 import Link from "next/link";
 

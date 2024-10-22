@@ -3,8 +3,8 @@ import styles from "./ModuleWrapper.module.css";
 
 // React hooks imports
 import { useState, useContext, useEffect, useRef, createContext } from "react";
-import { LayoutContext } from "../LayoutWrapper/LayoutWrapper";
-import { SnapScrollerContext } from "../SnapScrollWrapper/SnapScrollWrapper";
+import { LayoutContext } from "@/wrappers/LayoutWrapper/LayoutWrapper";
+import { SnapScrollerContext } from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
 
 export const ModuleContext = createContext();
 

@@ -1,7 +1,7 @@
 import styles from "./Module_MultiImagesColumn.module.css";
 
-import ModuleWrapper from "@/wrappers/ModuleWrapper/ModuleWrapper";
-import MediaCardWrapper from "@/wrappers/MediaCardWrapper/MediaCardWrapper";
+import ModuleWrapper from "@/constructors/ModuleWrapper/ModuleWrapper";
+import MediaCardWrapper from "@/constructors/MediaCardWrapper/MediaCardWrapper";
 import populateMediasArray from "@/utils/populateMediasArray";
 
 const Module_MultiImagesColumn = ({ module, customColors }) => {

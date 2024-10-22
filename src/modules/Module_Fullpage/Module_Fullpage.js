@@ -1,8 +1,8 @@
 import styles from "./Module_Fullpage.module.css";
 
-import MediaCardWrapper from "../../wrappers/MediaCardWrapper/MediaCardWrapper";
-import ModuleWrapper from "../../wrappers/ModuleWrapper/ModuleWrapper";
-import TextWrapper from "../../wrappers/TextWrapper/TextWrapper";
+import MediaCardWrapper from "@/constructors/MediaCardWrapper/MediaCardWrapper";
+import ModuleWrapper from "@/constructors/ModuleWrapper/ModuleWrapper";
+import TextWrapper from "@/constructors/TextWrapper/TextWrapper";
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 
 import generateCssClasses from "@/utils/generateCssClasses";

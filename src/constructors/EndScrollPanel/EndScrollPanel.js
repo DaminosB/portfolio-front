@@ -5,7 +5,7 @@ import styles from "./EndScrollPanel.module.css";
 // Hooks import
 import { useState, useEffect, useContext, useRef } from "react";
 import { createPortal } from "react-dom";
-import { LayoutContext } from "../LayoutWrapper/LayoutWrapper";
+import { LayoutContext } from "@/wrappers/LayoutWrapper/LayoutWrapper";
 
 // Utils import
 import generateRGBAString from "@/utils/generateRGBAString";

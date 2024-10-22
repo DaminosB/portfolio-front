@@ -1,8 +1,8 @@
 import styles from "./ProjectsContainer.module.css";
 
 // Components imports
-import ProjectsGallery from "../../wrappers/ProjectsGallery/ProjectsGallery";
-import ProjectCardWrapper from "@/wrappers/ProjectCardWrapper/ProjectCardWrapper";
+import ProjectsGallery from "@/constructors/ProjectsGallery/ProjectsGallery";
+import ProjectCardWrapper from "@/constructors/ProjectCardWrapper/ProjectCardWrapper";
 
 const ProjectsContainer = ({ projects, customStyle, logos }) => {
   const projectsCards = populateProjectsCards(projects, customStyle, logos);

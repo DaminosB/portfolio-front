@@ -8,7 +8,7 @@ import { useEffect, useRef, useState, createContext } from "react";
 export const ProjectsGalleryContext = createContext();
 
 // Components import
-import TagsContainer from "../../components/TagsContainer/TagsContainer";
+import TagsContainer from "@/components/TagsContainer/TagsContainer";
 
 // This component wraps the project cards and handles the filtering logic
 const ProjectsGallery = ({ customStyle, projectsCards, children }) => {
