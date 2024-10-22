@@ -167,14 +167,17 @@ const createNavigationItems = (content) => {
   content.modules.forEach((module) => {
     // For multi-image columns, add each image as a separate item
     if (module.__component === "module.colonne-multi-images") {
-      module.medias.forEach((media) => {
-        navigationItems.push({
-          id: media.id,
-          icon: faCircle,
-          coords: [containerIndex, childIndex],
-          scrollToChild: true, // Scroll inside the container to the specific media
-        });
-        childIndex++;
+      module.mediaBlocks.forEach((media) => {
+        if (media.provider_metadata.resource_type === "image") {
+          navigationItems.push({
+            id: media.id,
+            icon: faCircle,
+            coords: [containerIndex, childIndex],
+            scrollToChild: true, // Scroll inside the container to the specific media
+          });
+
+          childIndex++;
+        }
       });
     } else {
       // For other modules, add them directly
