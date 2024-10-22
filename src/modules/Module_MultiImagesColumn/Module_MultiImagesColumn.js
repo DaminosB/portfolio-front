@@ -2,15 +2,23 @@ import styles from "./Module_MultiImagesColumn.module.css";
 
 import ModuleWrapper from "@/wrappers/ModuleWrapper/ModuleWrapper";
 import MediaCardWrapper from "@/wrappers/MediaCardWrapper/MediaCardWrapper";
+import populateMediasArray from "@/utils/populateMediasArray";
 
 const Module_MultiImagesColumn = ({ module, customColors }) => {
-  const { medias } = module;
+  const { mediaBlocks } = module;
 
-  const cardsIdsArray = medias.map(
+  // This module doesn't handle video files
+  const mediasDisplay = mediaBlocks.filter(
+    (mediaBlock) => mediaBlock.provider_metadata.resource_type === "image"
+  );
+
+  const cardsIdsArray = mediasDisplay.map(
     (media) => `section-${module.id}-media-card-${media.id}`
   );
 
-  return medias.map((media, index) => {
+  const mediasArray = populateMediasArray(mediaBlocks);
+
+  return mediasDisplay.map((media, index) => {
     const mediaCardId = cardsIdsArray[index];
 
     const relatedSiblings = cardsIdsArray.filter(
@@ -18,7 +26,11 @@ const Module_MultiImagesColumn = ({ module, customColors }) => {
     );
 
     return (
-      <ModuleWrapper key={media.id} customColors={customColors} medias={medias}>
+      <ModuleWrapper
+        key={media.id}
+        customColors={customColors}
+        medias={mediasArray}
+      >
         <div className={styles.mediaContainer}>
           <MediaCardWrapper
             customColors={customColors}

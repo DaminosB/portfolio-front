@@ -7,22 +7,25 @@ import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 
 import generateCssClasses from "@/utils/generateCssClasses";
 import generateInlineStyle from "@/utils/generateInlineStyle";
+import populateMediasArray from "@/utils/populateMediasArray";
 
 const Module_Container = ({ module, customColors }) => {
-  const { medias, text } = module;
+  const { mediaBlocks, text } = module;
 
   const contentDivClasses = generateCssClasses(module);
 
   const { sectionStyle, contentDivStyle, mediasContainerStyle } =
     generateInlineStyle(module);
 
-  const mediasArray = populateMediasArray(medias, module.imagesPerRow);
+  const mediasDisplay = populateMediasDisplay(mediaBlocks, module.imagesPerRow);
+
+  const mediasArray = populateMediasArray(mediaBlocks);
 
   return (
     <ModuleWrapper
       inlineStyle={sectionStyle}
       customColors={customColors}
-      medias={medias}
+      medias={mediasArray}
     >
       <div
         className={`container ${styles.content} ${contentDivClasses}`}
@@ -30,7 +33,7 @@ const Module_Container = ({ module, customColors }) => {
       >
         <div className={styles.mediasFrame}>
           <div className={styles.mediasContainer} style={mediasContainerStyle}>
-            {mediasArray.map((mediasLine, index) => {
+            {mediasDisplay.map((mediasLine, index) => {
               return (
                 <div key={index} style={mediasContainerStyle}>
                   {mediasLine.map((media) => {
@@ -70,7 +73,7 @@ const Module_Container = ({ module, customColors }) => {
   );
 };
 
-const populateMediasArray = (array, chunkSize) => {
+const populateMediasDisplay = (array, chunkSize) => {
   const result = [];
   for (let i = 0; i < array.length; i += chunkSize) {
     result.push(array.slice(i, i + chunkSize));

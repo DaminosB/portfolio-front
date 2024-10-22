@@ -7,46 +7,47 @@ import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 
 import generateCssClasses from "@/utils/generateCssClasses";
 import generateInlineStyle from "@/utils/generateInlineStyle";
+import populateMediasArray from "@/utils/populateMediasArray";
 
 const Module_Fullpage = ({ module, customColors }) => {
-  const { medias, text } = module;
+  const { mediaBlocks, text } = module;
 
   const contentDivClasses = generateCssClasses(module);
 
   const { sectionStyle, contentDivStyle, mediasContainerStyle } =
     generateInlineStyle(module);
 
-  const hasMultipleChildren = medias.length > 1;
+  const mediasArray = populateMediasArray(mediaBlocks);
 
   return (
     <ModuleWrapper
       inlineStyle={sectionStyle}
       customColors={customColors}
-      medias={medias}
+      medias={mediasArray}
     >
       <div
         className={`${styles.content} ${contentDivClasses}`}
         style={contentDivStyle}
       >
         <div className={styles.mediasContainer} style={mediasContainerStyle}>
-          {medias.map((media) => {
+          {mediaBlocks.map((mediaBlock) => {
             const isImageFile =
-              media.provider_metadata.resource_type === "image";
+              mediaBlock.provider_metadata.resource_type === "image";
 
             return (
               <MediaCardWrapper
-                key={media.id}
+                key={mediaBlock.id}
                 customColors={customColors}
-                media={media}
+                media={mediaBlock}
               >
                 {isImageFile ? (
                   <img
                     draggable={false}
-                    src={media.url}
-                    alt={media.alternativeText}
+                    src={mediaBlock.url}
+                    alt={mediaBlock.alternativeText}
                   />
                 ) : (
-                  <source src={media.url} />
+                  <source src={mediaBlock.url} />
                 )}
               </MediaCardWrapper>
             );
