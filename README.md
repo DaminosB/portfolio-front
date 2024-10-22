@@ -12,6 +12,7 @@ For details on the back-end, refer to the Strapi Back-End README.
 - [Data Fetching](#data-fetching)
 - [Components Overview](#components-overview)
 - [Hooks](#hooks)
+- [Constructors](#constructors)
 - [Modules](#modules)
 - [Utilities](#utilities)
 - [Wrappers](#wrappers)
@@ -44,12 +45,13 @@ Then, open [http://localhost:3000](http://localhost:3000) in your browser to vie
 
 ```bash
 src/
-├── app         # Main application structure
-├── components  # UI components
-├── hooks       # Custom hooks for state management
-├── modules     # Modular components for rendering pages
-├── utils       # Utility functions
-└── wrappers    # Components that encapsulate other elements
+├── app           # Main application structure
+├── components    # UI components
+├── constructors  # Elements used to build the pages
+├── hooks         # Custom hooks for state management
+├── modules       # Modular components for rendering pages
+├── utils         # Utility functions
+└── wrappers      # Components that encapsulate other elements
 ```
 
 ### App Directory
@@ -139,75 +141,24 @@ Allows users to move images that overflow their container by dragging them withi
 
 Tracks the scroll position of elements to trigger UI updates.
 
-## Modules
-
-The `modules/` directory contains modular components that render content based on back-end configurations.
-
-```bash
-modules/
-├── Module_Container
-├── Module_Fullpage
-└── Module_MultiImagesColumn
-```
-
-### Key Modules
-
-- **Module_Container**: Displays text and media in a grid or container format.
-- **Module_Fullpage**: Renders content that spans the full page width.
-- **Module_MultiImagesColumn**: Displays a tall image by combining multiple smaller images.
-
-## Utilities
-
-Utility functions help generate CSS classes and inline styles dynamically.
-
-```bash
-utils/
-├── generateCssClasses.js
-├── generateInlineStyle.js
-└── generateRGBAString.js
-```
-
-- `generateCssClasses.js`: Generates CSS classes dynamically
-- `generateInlineStyle.js`: Creates inline styles based on back-end data
-- `generateRGBAString.js`: Converts color data to RGBA format
-
-## Wrappers
-
-Wrapper components encapsulate content and manage context within the application.
+## Constructors
 
 ```bash
 wrappers/
-├── LayoutWrapper       # Main layout wrapper
-├── SnapScrollWrapper   # Scroll-snap effect for modules
-├── ModuleWrapper       # Wraps each module for sync scrolling
-├── MediaCardWrapper    # Handles media card display logic
-├── TextWrapper         # Wraps text elements in modules
-├── VideoPlayer         # Renders video content
-├── EndScrollPanel      # Panel revealed at end of page scrolling
-└── ProjectsGallery     # Displays project cards and tag filtering
+├── PageBuilder
+├── ModuleWrapper
+├── MediaCardWrapper
+├── TextWrapper
+├── VideoPlayer
+├── EndScrollPanel
+├── ProjectCardWrapper
+├── ProjectsGallery
+└── ProjectCardsWrapper
 ```
 
-### LayoutWrapper
+### PageBuilder
 
-Wraps all the app content and provides a shared context for all its child components. It manages navigation states to enable a smooth user experience, particularly for scrolling and section transitions.
-
-#### Navigation States
-
-1. **ActiveCoords**
-
-   The application uses a full-page snapping effect, where each section is shown one at a time as the user scrolls. The `ActiveCoords` state keeps track of the coordinates of each section. The first index represents the section's parent within `LayoutWrapper`, and the second index represents the section's position within its parent.
-
-2. **containersPositions**
-
-   Each container inside the `LayoutWrapper` has one or more child components. This state tracks the positions of all containers, even those that aren't currently displayed on the screen.
-
-3. **endScrollValue**
-
-   If the user continues scrolling past the last section of the page, an end scroll panel is revealed. The `endScrollValue` stores the cumulative `deltaY` scroll movement, which triggers the reveal of this panel.
-
-### SnapScrollWrapper
-
-Encapsulates all the modules and applies a scroll-snap effect. This wrapper ensures that as users scroll through the modules, the content snaps into place, creating a smooth and controlled browsing experience.
+This component is called at the page level to display all the content of the page according to its `content` prop.
 
 ### ModuleWrapper
 
@@ -240,9 +191,71 @@ This panel is revealed at the bottom of the page if the user continues to scroll
 
 Displays a collection of project thumbnails through the `ProjectCards` and `TagsContainer` components. This gallery allows users to browse through available projects and filter them using tags for easier navigation.
 
-### ProjectCards
+### ProjectCardsWrapper
 
 Each `ProjectCard` represents a single project with a thumbnail image. Clicking on a card directs the user to a dedicated page for the project, displaying more detailed information and media related to it.
+
+## Modules
+
+The `modules/` directory contains modular components that render content based on back-end configurations.
+
+```bash
+modules/
+├── Module_Container
+├── Module_Fullpage
+└── Module_MultiImagesColumn
+```
+
+- **Module_Container**: Displays text and media in a grid or container format.
+- **Module_Fullpage**: Renders content that spans the full page width.
+- **Module_MultiImagesColumn**: Displays a tall image by combining multiple smaller images.
+
+## Utilities
+
+Utility functions help generate CSS classes and inline styles dynamically.
+
+```bash
+utils/
+├── generateCssClasses.js
+├── generateInlineStyle.js
+└── generateRGBAString.js
+```
+
+- `generateCssClasses.js`: Generates CSS classes dynamically
+- `generateInlineStyle.js`: Creates inline styles based on back-end data
+- `generateRGBAString.js`: Converts color data to RGBA format
+
+## Wrappers
+
+Wrapper components encapsulate content and manage context within the application.
+
+```bash
+wrappers/
+├── LayoutWrapper       # Main layout wrapper
+└── SnapScrollWrapper   # Scroll-snap effect for modules
+```
+
+### LayoutWrapper
+
+Wraps all the app content and provides a shared context for all its child components. It manages navigation states to enable a smooth user experience, particularly for scrolling and section transitions.
+
+#### Navigation States
+
+1. **ActiveCoords**
+
+   The application uses a full-page snapping effect, where each section is shown one at a time as the user scrolls. The `ActiveCoords` state keeps track of the coordinates of each section. The first index represents the section's parent within `LayoutWrapper`, and the second index represents the section's position within its parent.
+
+2. **containersPositions**
+
+   Each container inside the `LayoutWrapper` has one or more child components. This state tracks the positions of all containers, even those that aren't currently displayed on the screen.
+
+3. **endScrollValue**
+
+   If the user continues scrolling past the last section of the page, an end scroll panel is revealed. The `endScrollValue` stores the cumulative `deltaY` scroll movement, which triggers the reveal of this panel.
+
+### SnapScrollWrapper
+
+Encapsulates all the modules and applies a scroll-snap effect. This wrapper ensures that as users scroll through the modules, the content snaps into place, creating a smooth and controlled browsing experience.
 
 ## Environment Variables
 
