@@ -26,18 +26,20 @@ const fetchData = async (pageId) => {
   pagePath += ",modules.backgroundImage";
   pagePath += ",modules.text";
 
-  const page = await handleFetch(pagePath);
+  const pageResponse = await handleFetch(pagePath);
 
-  if (!page.data) return;
+  if (!pageResponse.data) return;
 
   const response = {
     page: {
-      ...page.data.attributes,
-      cover: {
-        ...page.data.attributes.cover.data.attributes,
-        id: page.data.attributes.cover.data.id,
-      },
-      modules: page.data.attributes.modules.map((module) => ({
+      ...pageResponse.data.attributes,
+      cover: pageResponse.data.attributes.cover.data
+        ? {
+            ...pageResponse.data.attributes.cover.data.attributes,
+            id: pageResponse.data.attributes.cover.data.id,
+          }
+        : null,
+      modules: pageResponse.data.attributes.modules.map((module) => ({
         ...module,
         backgroundImage: module.backgroundImage.data && {
           ...module.backgroundImage.data.attributes,
