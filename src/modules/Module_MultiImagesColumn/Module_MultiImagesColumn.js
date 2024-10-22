@@ -11,12 +11,13 @@ const Module_MultiImagesColumn = ({ module, customColors }) => {
   const mediasDisplay = mediaBlocks.filter(
     (mediaBlock) => mediaBlock.provider_metadata.resource_type === "image"
   );
+  const mediasArray = populateMediasArray(mediaBlocks).filter(
+    (media) => media.provider_metadata.resource_type === "image"
+  );
 
   const cardsIdsArray = mediasDisplay.map(
     (media) => `section-${module.id}-media-card-${media.id}`
   );
-
-  const mediasArray = populateMediasArray(mediaBlocks);
 
   return mediasDisplay.map((media, index) => {
     const mediaCardId = cardsIdsArray[index];
