@@ -19,7 +19,6 @@ export default async function ProjectsIdPage({ params }) {
   if (!data) return <ErrorComponent type={"notFound"} />;
   else {
     const { project, customStyle, relatedProjects } = data;
-
     const customColors = {
       mainColor: project.mainColor,
       secondaryColor: project.secondaryColor,
@@ -124,11 +123,22 @@ export async function generateMetadata({ params }) {
 }
 
 const fetchData = async (projectId) => {
+  // Construction of the project's path string
+  let projectPath = `projects/${projectId}?populate=`;
+  projectPath += "cover";
+  projectPath += ",modules.medias";
+  projectPath += ",modules.mediaBlocks.mediaAsset";
+  projectPath += ",modules.backgroundImage";
+  projectPath += ",modules.text";
+  projectPath += ",tags.projects.thumbnail";
+
+  // Construction of the style's path string
+  let stylePath = "style?populate=";
+  stylePath += "*";
+
   const [projectResponse, customStyleResponse] = await Promise.all([
-    handleFetch(
-      `projects/${projectId}?populate=cover,modules.medias,modules.backgroundImage,modules.text,tags.projects.thumbnail`
-    ),
-    handleFetch("style?populate=*"),
+    handleFetch(projectPath),
+    handleFetch(stylePath),
   ]);
 
   if (!projectResponse.data) return;
@@ -161,6 +171,13 @@ const fetchData = async (projectId) => {
               id: media.id,
             }))
           : [],
+        mediaBlocks: module.mediaBlocks
+          ? module.mediaBlocks.map(({ mediaAsset, ...restOfMediaBlock }) => ({
+              ...restOfMediaBlock,
+              ...mediaAsset.data.attributes,
+              mediaId: mediaAsset.data.id,
+            }))
+          : null,
       })),
     },
     customStyle: { ...customStyleResponse.data.attributes },

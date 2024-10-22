@@ -84,9 +84,14 @@ export default async function ProjectsIdPage({ params }) {
 }
 
 const fetchData = async (pageId) => {
-  const page = await handleFetch(
-    `pages/${pageId}?populate=cover,modules.medias,modules.backgroundImage,modules.text`
-  );
+  let pagePath = `pages/${pageId}?populate=`;
+  pagePath += "cover";
+  pagePath += ",modules.medias";
+  pagePath += ",modules.mediaBlocks.mediaAsset";
+  pagePath += ",modules.backgroundImage";
+  pagePath += ",modules.text";
+
+  const page = await handleFetch(pagePath);
 
   if (!page.data) return;
 
@@ -106,6 +111,13 @@ const fetchData = async (pageId) => {
               id: media.id,
             }))
           : [],
+        mediaBlocks: module.mediaBlocks
+          ? module.mediaBlocks.map(({ mediaAsset, ...restOfMediaBlock }) => ({
+              ...restOfMediaBlock,
+              ...mediaAsset.data.attributes,
+              mediaId: mediaAsset.data.id,
+            }))
+          : null,
       })),
     },
   };

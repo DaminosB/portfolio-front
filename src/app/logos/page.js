@@ -76,8 +76,12 @@ export default async function ProjectsIdPage() {
 }
 
 const fetchData = async () => {
+  let logoPath = "logo?populate=";
+  logoPath += "thumbnail";
+  logoPath += ",modules.medias";
+  logoPath += ",modules.mediaBlocks.mediaAsset";
   const [logosResponse, customStyleResponse] = await Promise.all([
-    handleFetch("logo?populate=thumbnail,modules.medias"),
+    handleFetch(logoPath),
     handleFetch("style"),
   ]);
 
@@ -95,6 +99,13 @@ const fetchData = async () => {
               id: media.id,
             };
           }),
+          mediaBlocks: module.mediaBlocks
+            ? module.mediaBlocks.map(({ mediaAsset, ...restOfMediaBlock }) => ({
+                ...restOfMediaBlock,
+                ...mediaAsset.data.attributes,
+                mediaId: mediaAsset.data.id,
+              }))
+            : null,
         };
       }),
     },
