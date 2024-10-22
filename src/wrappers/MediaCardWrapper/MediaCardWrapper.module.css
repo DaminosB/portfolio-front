@@ -1,5 +1,6 @@
 .mediaCardWrapper {
   display: flex;
+  flex-direction: column;
   align-items: center;
   overflow: hidden;
   position: relative;
@@ -16,24 +17,41 @@
   position: relative;
 }
 
+.mediaWindow > div {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  padding: 3px 5px;
+  font-size: 15px;
+  border-radius: var(--small-radius);
+  z-index: 1;
+  user-select: none;
+}
+
 .mediaWindow img {
   will-change: transform;
   filter: blur(0px);
-  box-shadow: var(--standard-shadow);
-  transition: filter var(--normal-transition) var(--default-animation);
-  /* to remove */
-  position: relative;
+  transition: filter var(--normal-transition) var(--default-animation),
+    box-shadow var(--normal-transition) var(--default-animation);
 }
 
-/* .mediaCardWrapper.underflow > .mediaWindow img , */
 .mediaCardWrapper.contained > .mediaWindow img {
   filter: var(--default-blur);
+  box-shadow: var(--standard-shadow);
+}
+
+.labelBlock {
+  position: relative;
+  margin: 15px 0;
+  z-index: 1;
+  font-size: 25px;
+  text-align: center;
 }
 
 .buttonsContainer {
   position: absolute;
   z-index: 1;
-  right: 25px;
+  top: 25px;
   width: 50px;
   height: 50px;
   font-size: 50px;
@@ -44,11 +62,11 @@
 }
 
 .buttonsContainer:nth-of-type(2) {
-  bottom: 25px;
+  right: 25px;
 }
 
 .buttonsContainer:nth-of-type(3) {
-  top: 25px;
+  right: 80px;
 }
 
 .mediaCardWrapper > img:hover ~ .buttonsContainer {
@@ -110,16 +128,15 @@
   .buttonsContainer {
     width: 35px;
     height: 35px;
-    bottom: 10px;
-    right: 10px;
     font-size: 35px;
+    top: 10px;
   }
 
   .buttonsContainer:nth-of-type(2) {
-    bottom: 10px;
+    right: 10px;
   }
 
   .buttonsContainer:nth-of-type(3) {
-    top: 10px;
+    right: 50px;
   }
 }

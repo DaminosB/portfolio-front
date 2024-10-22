@@ -13,12 +13,17 @@ import { ModuleContext } from "../ModuleWrapper/ModuleWrapper";
 
 // Import FontAwesome icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExpand } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowUpRightFromSquare,
+  faExpand,
+  faLink,
+} from "@fortawesome/free-solid-svg-icons";
 
 // Import components
 import SpotlightMarker from "@/components/SpotlightMarker/SpotlightMarker";
 import ZoomButton from "@/components/ZoomButton/ZoomButton";
 import VideoPlayer from "@/wrappers/VideoPlayer/VideoPlayer";
+import generateRGBAString from "@/utils/generateRGBAString";
 
 // MediaCardWrapper component manages how media (image or video) is displayed
 const MediaCardWrapper = ({
@@ -95,7 +100,7 @@ const MediaCardWrapper = ({
     },
     none: {
       defaultContained: false, // No need for contained view
-      onClick: handleOpenCarousel, // Open the carousel for media
+      onClick: media.addToCarousel ? handleOpenCarousel : null, // Open the carousel for media
       grabbable: false, // No grab-and-move required
       display: {
         allowContainedView: false, // The media is already contained
@@ -104,7 +109,7 @@ const MediaCardWrapper = ({
     },
     underflow: {
       defaultContained: false,
-      onClick: handleOpenCarousel,
+      onClick: media.addToCarousel ? handleOpenCarousel : null,
       grabbable: false,
       display: {
         allowContainedView: false,
@@ -157,10 +162,17 @@ const MediaCardWrapper = ({
   };
 
   // Inline styles for custom colors
-  const altDisplayInlineStyle = { color: customColors.secondaryColor };
-  const expandButtonInlineStyle = {
+  const containerInlineStyle = {
     color: customColors.secondaryColor,
+  };
+  const expandButtonInlineStyle = {
     backgroundColor: customColors.mainColor,
+  };
+  const captionInlineStyle = {
+    backgroundColor: generateRGBAString(customColors.mainColor, 0.5),
+  };
+  const labelBlockInlineStyle = {
+    color: media.labelColor ? media.labelColor : customColors.secondaryColor,
   };
 
   return (
@@ -168,6 +180,7 @@ const MediaCardWrapper = ({
       className={`${styles.mediaCardWrapper} ${
         isContainedView ? styles.contained : ""
       }`}
+      style={containerInlineStyle}
       ref={mediaCardWrapperRef}
       id={cardId ? cardId : `media-card-${media.id}`}
     >
@@ -183,7 +196,23 @@ const MediaCardWrapper = ({
         onClick={handleEvents}
       >
         {isImageFile ? (
-          children
+          <>
+            {children}
+            {media.caption && (
+              <div
+                style={captionInlineStyle}
+                onTouchStart={handleStopPropagation}
+                onMouseDown={handleStopPropagation}
+                onMouseMove={handleStopPropagation}
+                onTouchMove={handleStopPropagation}
+                onMouseUp={handleStopPropagation}
+                onMouseLeave={handleStopPropagation}
+                onTouchEnd={handleStopPropagation}
+              >
+                <span>{media.caption}</span>
+              </div>
+            )}
+          </>
         ) : (
           <VideoPlayer
             video={media}
@@ -216,22 +245,36 @@ const MediaCardWrapper = ({
           </div>
         </div>
       )}
-      <div className={styles.buttonsContainer}>
-        <button style={expandButtonInlineStyle} onClick={handleOpenCarousel}>
-          <FontAwesomeIcon icon={faExpand} />
-        </button>
-      </div>
+      {media.addToCarousel && (
+        <div className={styles.buttonsContainer}>
+          <button style={expandButtonInlineStyle} onClick={handleOpenCarousel}>
+            <FontAwesomeIcon icon={faExpand} />
+          </button>
+        </div>
+      )}
+
+      {/* --------------------------------------------------- */}
+      {/* ------------------- LABEL BLOCK ------------------- */}
+      {/* --------------------------------------------------- */}
+      {/* Text displayed under the media */}
+      {media.label && (
+        <div className={styles.labelBlock} style={labelBlockInlineStyle}>
+          {media.link ? (
+            <a href={media.link} target="_blank" rel="noopener noreferrer">
+              {media.label}
+            </a>
+          ) : (
+            <span>{media.label}</span>
+          )}
+        </div>
+      )}
 
       {/* --------------------------------------------------- */}
       {/* ------------------- ALT DISPLAY ------------------- */}
       {/* --------------------------------------------------- */}
       {/* Alternative display for contained view */}
       {isImageFile && display.allowContainedView && (
-        <div
-          className={styles.altDisplay}
-          style={altDisplayInlineStyle}
-          onClick={toggleViews}
-        >
+        <div className={styles.altDisplay} onClick={toggleViews}>
           {children}
         </div>
       )}
@@ -240,7 +283,7 @@ const MediaCardWrapper = ({
       {/* -------------------- BACKGROUND ------------------- */}
       {/* --------------------------------------------------- */}
       {/* Background for underflow display mode */}
-      {isImageFile && display.background && (
+      {isImageFile && media.addToCarousel && display.background && (
         <div className={styles.background} onClick={handleOpenCarousel}>
           {children}
         </div>
@@ -248,6 +291,8 @@ const MediaCardWrapper = ({
     </div>
   );
 };
+
+export default MediaCardWrapper;
 
 // Dispatch event to related sibling elements
 const dispatchEventToSiblings = (originalEvent, relatedSiblings) => {
@@ -270,5 +315,3 @@ const dispatchEventToSiblings = (originalEvent, relatedSiblings) => {
 
 // Prevent event propagation
 const handleStopPropagation = (e) => e.stopPropagation();
-
-export default MediaCardWrapper;
