@@ -11,7 +11,7 @@
 .slider > section {
   height: 100%;
   width: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   position: relative;
   scrollbar-gutter: stable;
