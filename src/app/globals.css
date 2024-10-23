@@ -293,7 +293,7 @@ button:not(.grabbable, .grabbed) {
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   :root {
     --logo-height: 45px;
   }

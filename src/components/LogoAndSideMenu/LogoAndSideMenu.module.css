@@ -87,7 +87,7 @@
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .sidePanel {
     min-width: 50%;
   }

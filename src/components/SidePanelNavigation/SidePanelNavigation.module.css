@@ -60,7 +60,7 @@
   opacity: 0.67;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .sectionNavigation {
     padding: 5px;
     padding-top: 10px;
