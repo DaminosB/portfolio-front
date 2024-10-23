@@ -30,7 +30,6 @@ div:has(> .coverContainer) {
   background-position: center center;
   background-size: cover;
   z-index: -1;
-  overflow: scroll;
 }
 
 .coverContainer > div > p {
