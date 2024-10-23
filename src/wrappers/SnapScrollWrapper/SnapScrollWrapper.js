@@ -55,8 +55,12 @@ const SnapScrollWrapper = ({ children }) => {
 
       // If no further scrolling occurs, reset the scroll value after 500ms
       setTimeout(() => {
-        if (cachedScrollUpValue.current === endScrollValue)
+        if (
+          cachedScrollUpValue.current === endScrollValue &&
+          endScrollValue < container.offsetHeight / 2
+        ) {
           setEndScrollValue(0);
+        }
       }, 500);
     }
   };
