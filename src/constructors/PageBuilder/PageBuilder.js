@@ -9,6 +9,7 @@ import SnapScrollWrapper from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
 import ProjectsContainer from "@/components/ProjectsContainer/ProjectsContainer";
 import EndScrollPanel from "@/constructors/EndScrollPanel/EndScrollPanel";
 import Modale from "@/components/Modale/Modale";
+import generateDynamicStyle from "@/utils/generateDynamicStyle";
 
 const PageBuilder = ({ content, customStyle, relatedProjects }) => {
   const customColors = {
@@ -84,6 +85,7 @@ const PageBuilder = ({ content, customStyle, relatedProjects }) => {
         customStyle={customColors}
         showRelatedProject={relatedProjects ? true : false}
       />
+      <style>{generateDynamicStyle(customColors)}</style>
     </>
   );
 };

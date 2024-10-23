@@ -12,6 +12,7 @@ import handleFetch from "@/utils/handleFetch";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 // Prevent fontawesome from adding its CSS since we did it manually above:
 import { config } from "@fortawesome/fontawesome-svg-core";
+import generateDynamicStyle from "@/utils/generateDynamicStyle";
 config.autoAddCss = false; /* eslint-disable import/first */
 
 export default async function RootLayout({ children }) {
@@ -22,6 +23,11 @@ export default async function RootLayout({ children }) {
     fontFamily: customStyle.defaultFont
       .substring(0, customStyle.defaultFont.indexOf("("))
       .trim(),
+  };
+
+  const customColors = {
+    mainColor: customStyle.mainColor,
+    secondaryColor: customStyle.secondaryColor,
   };
 
   return (
@@ -37,6 +43,15 @@ export default async function RootLayout({ children }) {
           href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Caveat:wght@400..700&family=Dancing+Script:wght@400..700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Pacifico&family=Permanent+Marker&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Saira+Condensed:wght@100;200;300;400;500;600;700;800;900&family=Satisfy&display=swap"
           rel="stylesheet"
         />
+        <style>
+          {generateDynamicStyle(customColors)}
+          {/* {`
+            pre {
+              background-color: ${customStyle.mainColor};
+              color: ${customStyle.secondaryColor};
+            }
+          `} */}
+        </style>
       </head>
       <body className="viewport" style={bodyStyle}>
         <main>
