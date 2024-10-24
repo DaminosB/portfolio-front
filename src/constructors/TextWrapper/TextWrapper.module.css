@@ -16,7 +16,7 @@
 .textWrapper > div {
   max-height: 100%;
   width: 100%;
-  padding: var(--logo-height-offset) 30px;
+  padding: 0 30px;
   display: flex;
   flex-direction: column;
 }
