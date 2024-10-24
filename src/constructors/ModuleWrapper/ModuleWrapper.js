@@ -52,6 +52,14 @@ const ModuleWrapper = ({ medias, inlineStyle, customColors, children }) => {
 
     if (!allElementsAligned || movableElements.length === 1) return;
 
+    const tallestElemIndex = movableElements
+      .map((element) => element.scrollHeight)
+      .reduce(
+        (maxIndex, currentValue, currentIndex, scrollHeights) =>
+          currentValue > scrollHeights[maxIndex] ? currentIndex : maxIndex,
+        0
+      );
+
     movableElements.forEach((element, i) => {
       const translateValue = movableElemPositions.current[i] || 0;
 
@@ -59,8 +67,8 @@ const ModuleWrapper = ({ medias, inlineStyle, customColors, children }) => {
         translateValue + (element.scrollHeight - scrollPosition);
 
       if (
-        elemBottomPosition < element.offsetHeight &&
-        sectionNode.scrollHeight > element.scrollHeight
+        elemBottomPosition < sectionNode.offsetHeight &&
+        i !== tallestElemIndex
       ) {
         const newTranslateValue =
           scrollPosition + (element.offsetHeight - element.scrollHeight);
