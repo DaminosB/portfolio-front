@@ -28,7 +28,7 @@ const SidePanelNavigation = ({ content, showRelatedProject, customStyle }) => {
   const [isPanelOpen, setIsPanelOpen] = useState(true); // Controls whether the panel is open or collapsed
 
   // Get the current active coordinates from context (active container and child section)
-  const { activeCoords, layoutNode, endScrollValue, setEndScrollValue } =
+  const { activeCoords, layoutNode, showEndScrollPanel, setEndScrollValue } =
     useContext(LayoutContext);
   const [activeContainerIndex, activeChildIndex] = activeCoords;
 
@@ -86,7 +86,7 @@ const SidePanelNavigation = ({ content, showRelatedProject, customStyle }) => {
           const isActiveSection =
             containerIndex === activeContainerIndex &&
             childIndex === activeChildIndex &&
-            !endScrollValue;
+            !showEndScrollPanel;
 
           // Function to handle clicks and scroll to the appropriate section
           const handleScrollToSection = () => {
@@ -132,7 +132,7 @@ const SidePanelNavigation = ({ content, showRelatedProject, customStyle }) => {
         {showRelatedProject && (
           <button
             className={
-              endScrollValue ? styles.activeButton : styles.inactiveButton
+              showEndScrollPanel ? styles.activeButton : styles.inactiveButton
             }
             onClick={() => setEndScrollValue(layoutNode.offsetHeight)}
           >
