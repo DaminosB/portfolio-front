@@ -1,9 +1,8 @@
 "use client";
+
 import styles from "./ContactForm.module.css";
 
-import { useEffect, useState, useRef } from "react";
-
-import axios from "axios";
+import { useEffect, useState } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -61,12 +60,21 @@ const ContactForm = ({ customStyle }) => {
 
     try {
       if (username.isValid && email.isValid && message.isValid) {
-        await axios.post("/api/new-message", {
-          recipientEmail: "damien.bourcheix@gmail.com",
-          name: username.value,
-          email: email.value,
-          message: message.value,
+        const response = await fetch("/api/new-message", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: username.value,
+            email: email.value,
+            message: message.value,
+          }),
         });
+
+        if (!response.ok) {
+          throw new Error("Failed to send message");
+        }
 
         const resetValue = (func) => {
           func((prev) => {
@@ -79,6 +87,7 @@ const ContactForm = ({ customStyle }) => {
         resetValue(setUsername);
         resetValue(setEmail);
         resetValue(setMessage);
+
         setConfirmationMessage({
           formIsSent: true,
           message: "Votre message a bien été envoyé.",
@@ -88,7 +97,7 @@ const ContactForm = ({ customStyle }) => {
       console.log(error);
       setConfirmationMessage({
         formIsSent: false,
-        message: "Une erreur s'est produite. Veuillez recommencer",
+        message: "Une erreur s'est produite. Veuillez recommencer.",
       });
     }
 

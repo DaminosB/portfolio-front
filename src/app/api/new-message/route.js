@@ -10,7 +10,7 @@ export const GET = (request) => {
 export const POST = async (request) => {
   try {
     const body = await request.json();
-    const { recipientEmail, name, email, message } = body;
+    const { name, email, message } = body;
 
     // ==+> utilisation de Mailgun
     const mailgun = new Mailgun(formData);
@@ -22,7 +22,7 @@ export const POST = async (request) => {
 
     const messageData = {
       from: process.env.MAILGUN_SENDING_DOMAIN,
-      to: recipientEmail,
+      to: process.env.MAILGUN_RECIPIENT_EMAIL,
       subject: "Message depuis charlinevolfart.fr",
       text: `${message}\n${name}\n${email}`,
     };
