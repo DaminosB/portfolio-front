@@ -25,7 +25,8 @@ const EndScrollPanel = ({ customColors, children }) => {
   const containerRef = useRef(null);
 
   // Retrieves scroll-related values from the LayoutContext
-  const { endScrollValue, setEndScrollValue } = useContext(LayoutContext);
+  const { endScrollValue, setEndScrollValue, setShowEndScrollPanel } =
+    useContext(LayoutContext);
 
   // Ref to store the previous touch position, used to detect deltaY touch positions
   const previousTouchYRef = useRef(null);
@@ -106,13 +107,26 @@ const EndScrollPanel = ({ customColors, children }) => {
 
         // Cache the current scroll value
         cachedScrollUpValue.current = endScrollValue;
+
+        // If no further scrolling occurs, reset the scroll value after 500ms
+        setTimeout(() => {
+          if (cachedScrollUpValue.current === endScrollValue) {
+            setEndScrollValue(0);
+          }
+        }, 500);
       } else {
         // If scrolled more than halfway or no scroll, move the component fully up or reset
         container.classList.add(styles.transition);
 
-        // Set the component's position based on scroll value
-        const newTranslateValue =
-          endScrollValue === 0 ? 0 : container.offsetHeight;
+        let newTranslateValue;
+
+        if (endScrollValue === 0) {
+          newTranslateValue = 0;
+          setShowEndScrollPanel(false);
+        } else {
+          newTranslateValue = container.offsetHeight;
+          setShowEndScrollPanel(true);
+        }
 
         container.style.transform = `translateY(${-newTranslateValue}px)`;
         cachedScrollUpValue.current = newTranslateValue;

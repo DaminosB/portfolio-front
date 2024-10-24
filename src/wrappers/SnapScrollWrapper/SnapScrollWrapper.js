@@ -12,8 +12,12 @@ import useScrollTracker from "@/hooks/useScrollTracker";
 const SnapScrollWrapper = ({ children }) => {
   // The content is shown one section at a time. This state stores the coordinates of the active one (the one currently displayed)
 
-  const { updateContainerPos, endScrollValue, setEndScrollValue } =
-    useContext(LayoutContext);
+  const {
+    updateContainerPos,
+    endScrollValue,
+    setEndScrollValue,
+    showEndScrollPanel,
+  } = useContext(LayoutContext);
   const containerRef = useRef(null);
 
   const {
@@ -47,25 +51,11 @@ const SnapScrollWrapper = ({ children }) => {
     const newEndScrollValue = endScrollValue + deltaY;
 
     // If the accumulated scroll doesn't exceed the container's height, update the state
-    if (newEndScrollValue <= container.offsetHeight && newEndScrollValue >= 0) {
+    if (newEndScrollValue <= container.offsetHeight && newEndScrollValue >= 0)
       setEndScrollValue(newEndScrollValue);
-
-      // Cache the current scroll value
-      cachedScrollUpValue.current = endScrollValue;
-
-      // If no further scrolling occurs, reset the scroll value after 500ms
-      setTimeout(() => {
-        if (
-          cachedScrollUpValue.current === endScrollValue &&
-          endScrollValue < container.offsetHeight / 2
-        ) {
-          setEndScrollValue(0);
-        }
-      }, 500);
-    }
+    else if (endScrollValue >= container.offsetHeight && !showEndScrollPanel)
+      setEndScrollValue(0);
   };
-
-  const cachedScrollUpValue = useRef(0);
 
   // If the user scrolls on touch down while at the bottom of the element, updates the endScrollValue
   const handleTouchMove = (e) => {
@@ -92,6 +82,8 @@ const SnapScrollWrapper = ({ children }) => {
       // If the accumulated scroll doesn't exceed the container's height, update the state
       if (newEndScrollValue <= container.offsetHeight && newEndScrollValue >= 0)
         setEndScrollValue(newEndScrollValue);
+      else if (endScrollValue >= container.offsetHeight && !showEndScrollPanel)
+        setEndScrollValue(0);
 
       // Reset previousTouchYRef if it's last touch
       setTimeout(() => {

@@ -19,7 +19,8 @@ const LayoutWrapper = ({ children }) => {
   const [containersPositions, setContainersPositions] = useState([]);
 
   // Controls the visibility of the bottom panel and manages popups/modals
-  const [endScrollValue, setEndScrollValue] = useState(false);
+  const [endScrollValue, setEndScrollValue] = useState(0);
+  const [showEndScrollPanel, setShowEndScrollPanel] = useState(false);
   const [modaleContent, setModaleContent] = useState(null);
 
   // Custom hook to track the scroll position and determine which section is in view
@@ -88,6 +89,8 @@ const LayoutWrapper = ({ children }) => {
     getSectionCoords,
     endScrollValue,
     setEndScrollValue,
+    showEndScrollPanel,
+    setShowEndScrollPanel,
     modaleContent,
     setModaleContent,
   };
