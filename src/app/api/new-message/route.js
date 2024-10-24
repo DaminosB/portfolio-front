@@ -24,7 +24,7 @@ export const POST = async (request) => {
       from: process.env.MAILGUN_SENDING_DOMAIN,
       to: recipientEmail,
       subject: "Message depuis charlinevolfart.fr",
-      text: `${message}\n${name}`,
+      text: `${message}\n${name}\n${email}`,
     };
 
     const response = await client.messages.create(
