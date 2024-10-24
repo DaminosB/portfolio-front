@@ -21,7 +21,7 @@ export const POST = async (request) => {
     });
 
     const messageData = {
-      from: `${name} ${email}`,
+      from: process.env.MAILGUN_SENDING_DOMAIN,
       to: recipientEmail,
       subject: "Message depuis charlinevolfart.fr",
       text: `${message}\n${name}`,
