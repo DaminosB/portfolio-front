@@ -72,7 +72,10 @@ const LayoutWrapper = ({ children }) => {
     // On page change, resets state and clears bottom panel and modal
     if (pathname !== cachedPathname.current) {
       cachedPathname.current = pathname;
-      const childrenArray = Array.from(layoutNode.children);
+      const childrenArray = Array.from(layoutNode.children).filter(
+        (child) => child.tagName !== "STYLE"
+      );
+
       setContainersPositions(() => childrenArray.map(() => 0));
       setEndScrollValue(0);
       setModaleContent(null);
