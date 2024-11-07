@@ -1,15 +1,13 @@
 .layoutContainer {
-  overflow-y: scroll;
+  overflow: hidden;
   will-change: scroll-position;
-  scroll-snap-type: y mandatory;
   height: 100%;
-  position: relative;
   scrollbar-width: none;
 }
 
 .layoutContainer > div {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+  position: sticky;
+  top: 0px;
   height: 100%;
   width: 100%;
 }
