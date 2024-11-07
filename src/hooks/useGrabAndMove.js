@@ -63,7 +63,7 @@ const useGrabAndMove = () => {
   );
 
   // This func moves a given element in its parent on its x axis
-  const moveElementInParent = useCallback((value, domElement) => {
+  const moveElementInParent = useCallback((value, domElement, e) => {
     // value: Number. The quantity of pixels the viewer has slided.
     // domElement: the element we want to move.
     // peerElementsIds: Array. With the multi-images-column module, we must move each related sibling together.
@@ -74,7 +74,7 @@ const useGrabAndMove = () => {
     // It checks the transform css property value. If undefined, the value is 0.
 
     // The new amount of translated pixels equals the previous value + the quantity of pixels the viewer has slided.
-    let newTranslateXValue = currentTranslateValue + value;
+    const newTranslateXValue = currentTranslateValue + value;
 
     // The parent's width will give us the min and max translation values
     const parentWidth = domElement.parentNode.offsetWidth;
@@ -83,19 +83,19 @@ const useGrabAndMove = () => {
     const translateXValueMax = widthDifference / 2;
     const translateXValueMin = -translateXValueMax;
 
-    // If the newTranslateValue is over or under its min and max values, we give it these values.
-    if (newTranslateXValue > translateXValueMax) {
-      newTranslateXValue = translateXValueMax;
-    } else if (newTranslateXValue < translateXValueMin) {
-      newTranslateXValue = translateXValueMin;
+    if (
+      newTranslateXValue <= translateXValueMax &&
+      newTranslateXValue >= translateXValueMin
+    ) {
+      domElement.style.transform = `translateX(${newTranslateXValue}px)`;
+
+      setMetrics((prev) => ({
+        ...prev,
+        currentTranslateValue: newTranslateXValue,
+      }));
+
+      e.stopPropagation();
     }
-
-    domElement.style.transform = `translateX(${newTranslateXValue}px)`;
-
-    setMetrics((prev) => ({
-      ...prev,
-      currentTranslateValue: newTranslateXValue,
-    }));
   }, []);
 
   // This function is called on mouse move and touch move events
@@ -124,7 +124,7 @@ const useGrabAndMove = () => {
       // This gives us the number of pixels the viewer has moved
 
       // Call the function responsible for moving the element within its parent
-      moveElementInParent(deltaX, container.firstElementChild);
+      moveElementInParent(deltaX, container.firstElementChild, e);
 
       // Finally, update the refs with the new position and delta values
       previousClickPosition.current = currentClickPosition;
@@ -148,13 +148,12 @@ const useGrabAndMove = () => {
       // Start by using the last known distance moved
       let animatedScrollDistance = previousDeltaX.current;
 
-      let animationFrame;
-
       // This function will be called multiple times to create the sliding effect
       const step = () => {
         moveElementInParent(
           animatedScrollDistance,
-          container.firstElementChild
+          container.firstElementChild,
+          e
         );
 
         // Reduce the scroll distance by 15% on each call to simulate deceleration
@@ -162,7 +161,7 @@ const useGrabAndMove = () => {
 
         // Continue the animation if the remaining distance is significant
         if (Math.abs(animatedScrollDistance) > 0.1) {
-          animationFrame = requestAnimationFrame(step);
+          requestAnimationFrame(step);
         } else {
           // Once the animation is finished, reset the deltaX value
           previousDeltaX.current = 0;
@@ -172,7 +171,7 @@ const useGrabAndMove = () => {
       };
 
       // Start the animation loop
-      animationFrame = requestAnimationFrame(step);
+      requestAnimationFrame(step);
     },
     [isGrabbing, moveElementInParent]
   );
