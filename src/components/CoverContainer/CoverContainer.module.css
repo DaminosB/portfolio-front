@@ -1,18 +1,12 @@
-div:has(> .coverContainer) {
+.coverContainer {
   will-change: opacity;
   overflow: hidden;
-  position: relative;
-  z-index: -1;
-}
-.coverContainer {
+  width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
-  position: fixed;
-  width: 100%;
-  /* top: 0px; */
-  /* inset: 10px; */
 }
+
 .coverContainer > img {
   max-width: 100%;
   height: 100%;
@@ -30,33 +24,4 @@ div:has(> .coverContainer) {
   background-position: center center;
   background-size: cover;
   z-index: -1;
-}
-
-.coverContainer > div > p {
-  width: 25%;
-}
-
-.altCover {
-  display: none;
-}
-
-@media (max-width: 768px) {
-  div > section.coverContainer > img {
-    filter: var(--default-blur);
-  }
-
-  .altCover {
-    display: flex;
-    position: absolute;
-    top: 0px;
-    height: 100%;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .altCover > img {
-    width: 95%;
-    box-shadow: 0px 0px 100px 25px;
-  }
 }
