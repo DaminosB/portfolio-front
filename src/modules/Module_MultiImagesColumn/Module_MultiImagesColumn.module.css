@@ -1,8 +1,17 @@
+div:has(> .mediaContainer) {
+  height: 100%;
+  width: 100%;
+}
+
 .mediaContainer {
   flex-shrink: 0;
   height: 100%;
   width: 100%;
   display: flex;
+}
+
+.mediaContainer > div {
+  width: 100%;
 }
 
 .mediaContainer img {

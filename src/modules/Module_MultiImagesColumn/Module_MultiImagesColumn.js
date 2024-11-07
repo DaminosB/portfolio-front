@@ -2,49 +2,61 @@ import styles from "./Module_MultiImagesColumn.module.css";
 
 import ModuleWrapper from "@/constructors/ModuleWrapper/ModuleWrapper";
 import MediaCardWrapper from "@/constructors/MediaCardWrapper/MediaCardWrapper";
-import populateMediasArray from "@/utils/populateMediasArray";
+import MediasGallery from "@/constructors/MediasGallery/MediasGallery";
+import populateCardsIdsArray from "@/utils/populateCardsIdsArray";
+import ModuleColumn from "@/constructors/ModuleColumn/ModuleColumn";
 
 const Module_MultiImagesColumn = ({ module, customColors }) => {
   const { mediaBlocks } = module;
 
   // This module doesn't handle video files
-  const mediasDisplay = mediaBlocks.filter(
-    (mediaBlock) => mediaBlock.provider_metadata.resource_type === "image"
-  );
-  const mediasArray = populateMediasArray(mediaBlocks).filter(
-    (media) => media.provider_metadata.resource_type === "image"
-  );
+  const filteredMediaBlocks = mediaBlocks.map((mediaBlock) => ({
+    ...mediaBlock,
+    mediaAssets: mediaBlock.mediaAssets.filter(
+      (mediaAsset) => mediaAsset.provider_metadata.resource_type === "image"
+    ),
+  }));
 
-  const cardsIdsArray = mediasDisplay.map(
-    (media) => `section-${module.id}-media-card-${media.id}`
-  );
+  module.mediaBlocks = filteredMediaBlocks;
 
-  return mediasDisplay.map((media, index) => {
-    const mediaCardId = cardsIdsArray[index];
+  const cardsIdsArray = populateCardsIdsArray(module);
 
-    const relatedSiblings = cardsIdsArray.filter(
-      (cardId) => cardId !== mediaCardId
-    );
-
+  return filteredMediaBlocks.map((mediaBlock, i, array) => {
     return (
       <ModuleWrapper
-        key={media.id}
+        key={mediaBlock.id}
         customColors={customColors}
-        medias={mediasArray}
+        module={module}
       >
         <div className={styles.mediaContainer}>
-          <MediaCardWrapper
+          <MediasGallery
+            key={mediaBlock.id}
+            mediaBlock={mediaBlock}
             customColors={customColors}
-            media={media}
-            cardId={cardsIdsArray[index]}
-            relatedSiblings={relatedSiblings}
           >
-            <img
-              draggable={false}
-              src={media.url}
-              alt={media.alternativeText}
-            />
-          </MediaCardWrapper>
+            {mediaBlock.mediaAssets.map((mediaAsset, j) => {
+              const mediaCardId = cardsIdsArray[i * array.length + j];
+
+              const relatedMedias = cardsIdsArray.filter(
+                (cardId) => cardId !== mediaCardId
+              );
+              return (
+                <MediaCardWrapper
+                  key={mediaAsset.id}
+                  customColors={customColors}
+                  media={mediaAsset}
+                  cardId={mediaCardId}
+                  relatedSiblings={relatedMedias}
+                >
+                  <img
+                    draggable={false}
+                    src={mediaAsset.url}
+                    alt={mediaAsset.alternativeText}
+                  />
+                </MediaCardWrapper>
+              );
+            })}
+          </MediasGallery>
         </div>
       </ModuleWrapper>
     );

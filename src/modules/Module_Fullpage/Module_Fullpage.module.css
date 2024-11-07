@@ -1,19 +1,23 @@
 .content {
   display: flex;
+  gap: var(--columns-gap);
   justify-content: center;
   height: 100%;
   width: 100%;
 }
 
 .content > div {
+  height: 100%;
   flex: 1;
+  max-width: 100%;
   overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .mediasContainer {
   width: 100%;
+  height: 100%;
   display: flex;
-  will-change: transform;
 }
 
 .mediasContainer img {
@@ -24,23 +28,16 @@
   flex: 1;
 }
 
-@media (max-width: 768px) {
-  .content {
-    position: relative;
-    height: auto;
-  }
+.textContainer {
+  margin: var(--logo-height-offset) auto;
+}
 
-  .mediasContainer:has(> div:nth-of-type(2)) {
+@media (max-width: 768px) {
+  .mediasContainer {
     flex-direction: column;
   }
 
-  /* MediasWrapper and TextWrapper (only if there is a TextWrapper) */
-  .content:has(> div:nth-of-type(2)) > div {
-    width: 100%;
-    flex: 1;
-  }
-
-  .content > div:has(> :nth-child(2)) .mediaCard > img {
-    width: 100%;
+  .mediasContainer > div {
+    height: 100%;
   }
 }
