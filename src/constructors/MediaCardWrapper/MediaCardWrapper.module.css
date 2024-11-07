@@ -40,14 +40,6 @@
   box-shadow: var(--standard-shadow);
 }
 
-.labelBlock {
-  position: relative;
-  margin: 15px 0;
-  z-index: 1;
-  font-size: 25px;
-  text-align: center;
-}
-
 .buttonsContainer {
   position: absolute;
   z-index: 1;

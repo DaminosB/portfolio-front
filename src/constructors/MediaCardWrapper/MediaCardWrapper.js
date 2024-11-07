@@ -13,11 +13,7 @@ import { ModuleContext } from "../ModuleWrapper/ModuleWrapper";
 
 // Import FontAwesome icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowUpRightFromSquare,
-  faExpand,
-  faLink,
-} from "@fortawesome/free-solid-svg-icons";
+import { faExpand } from "@fortawesome/free-solid-svg-icons";
 
 // Import components
 import SpotlightMarker from "@/components/SpotlightMarker/SpotlightMarker";
@@ -98,7 +94,7 @@ const MediaCardWrapper = ({
         background: false,
       },
     },
-    none: {
+    fit: {
       defaultContained: false, // No need for contained view
       onClick: media.addToCarousel ? handleOpenCarousel : null, // Open the carousel for media
       grabbable: false, // No grab-and-move required
@@ -129,7 +125,7 @@ const MediaCardWrapper = ({
     // Determine the display mode based on element sizes
     let displayModeString;
     if (childWidth < containerWidth) displayModeString = "underflow";
-    else if (childWidth === containerWidth) displayModeString = "none";
+    else if (childWidth === containerWidth) displayModeString = "fit";
     else if (childWidth / containerWidth > 2) displayModeString = "excess";
     else displayModeString = "overflow";
 
@@ -165,14 +161,11 @@ const MediaCardWrapper = ({
   const containerInlineStyle = {
     color: customColors.secondaryColor,
   };
-  const expandButtonInlineStyle = {
+  const mainColorBackground = {
     backgroundColor: customColors.mainColor,
   };
   const captionInlineStyle = {
     backgroundColor: generateRGBAString(customColors.mainColor, 0.5),
-  };
-  const labelBlockInlineStyle = {
-    color: media.labelColor ? media.labelColor : customColors.secondaryColor,
   };
 
   return (
@@ -247,25 +240,9 @@ const MediaCardWrapper = ({
       )}
       {media.addToCarousel && (
         <div className={styles.buttonsContainer}>
-          <button style={expandButtonInlineStyle} onClick={handleOpenCarousel}>
+          <button style={mainColorBackground} onClick={handleOpenCarousel}>
             <FontAwesomeIcon icon={faExpand} />
           </button>
-        </div>
-      )}
-
-      {/* --------------------------------------------------- */}
-      {/* ------------------- LABEL BLOCK ------------------- */}
-      {/* --------------------------------------------------- */}
-      {/* Text displayed under the media */}
-      {media.label && (
-        <div className={styles.labelBlock} style={labelBlockInlineStyle}>
-          {media.link ? (
-            <a href={media.link} target="_blank" rel="noopener noreferrer">
-              {media.label}
-            </a>
-          ) : (
-            <span>{media.label}</span>
-          )}
         </div>
       )}
 
@@ -306,9 +283,13 @@ const dispatchEventToSiblings = (originalEvent, relatedSiblings) => {
 
     // Dispatch the cloned event to each sibling
     relatedSiblings.forEach((siblingId) => {
-      const siblingTarget =
-        document.getElementById(siblingId).firstElementChild;
-      siblingTarget.dispatchEvent(clonedEvent);
+      const siblingElement = document.getElementById(siblingId);
+
+      // Vérifie que l'élément et son firstElementChild existent
+      if (siblingElement && siblingElement.firstElementChild) {
+        const siblingTarget = siblingElement.firstElementChild;
+        siblingTarget.dispatchEvent(clonedEvent);
+      }
     });
   }
 };
