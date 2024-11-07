@@ -31,13 +31,12 @@ const useScrollTracker = (scrollX = false) => {
     setScrollPosition(container[scrollAxis]);
 
     // Get the offsetTop or offsetLeft of each child element within the container
-    const childrenPositions = Array.from(container.children)
+    const childrenCumulativeHeights = Array.from(container.children)
       .filter((child) => child.tagName !== "STYLE")
-      .map((child) => child[offsetAxis]);
+      .map((child, index) => container.offsetHeight * index);
 
     // Find the index of the last child whose offset value matches the container's current scroll position
-    const newIndex = childrenPositions.findLastIndex(
-      // Sticky elements may have the same offset value, so `findLastIndex` ensures the last matching element is selected
+    const newIndex = childrenCumulativeHeights.findIndex(
       (position) => position === Math.round(container[scrollAxis])
     );
 
