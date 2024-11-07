@@ -1,9 +1,13 @@
-.moduleWrapper {
-  box-sizing: content-box;
+.moduleWrapper > nav {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-.moduleWrapper > div > div {
-  /* will-change: transform; */
-  /* transition: var(--fast-transition); */
-  transition: var(--fastest-transition);
+.content {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow-y: auto;
 }
