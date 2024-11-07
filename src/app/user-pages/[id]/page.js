@@ -1,6 +1,11 @@
 import ErrorComponent from "@/components/ErrorComponent/ErrorComponent";
-import PageBuilder from "@/constructors/PageBuilder/PageBuilder";
-
+import SnapScrollWrapper from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
+import ModulesDisplayer from "@/constructors/ModulesDisplayer/ModulesDisplayer";
+import CoverContainer from "@/components/CoverContainer/CoverContainer";
+import SidePanelNavigation from "@/components/SidePanelNavigation/SidePanelNavigation";
+import ProjectsContainer from "@/components/ProjectsContainer/ProjectsContainer";
+import Modale from "@/components/Modale/Modale";
+import generateDynamicStyle from "@/utils/generateDynamicStyle";
 import handleFetch from "@/utils/handleFetch";
 
 export default async function ProjectsIdPage({ params }) {
@@ -15,14 +20,38 @@ export default async function ProjectsIdPage({ params }) {
       secondaryColor: page.secondaryColor,
     };
 
-    return <PageBuilder content={page} />;
+    // return <ModulesDisplayer content={page} />;
+    return (
+      <>
+        {page.cover && (
+          <CoverContainer
+            coverUrl={page.cover.url}
+            coverAltTxt={page.cover.alternativeText}
+            customColors={customColors}
+          />
+        )}
+        <SnapScrollWrapper>
+          <ModulesDisplayer
+            modules={page.modules}
+            customColors={customColors}
+          />
+        </SnapScrollWrapper>
+        <Modale customColors={customColors} />
+        <SidePanelNavigation
+          content={page}
+          customStyle={customColors}
+          showRelatedProject={false}
+        />
+        <style>{generateDynamicStyle(customColors)}</style>
+      </>
+    );
   }
 }
 
 const fetchData = async (pageId) => {
   let pagePath = `pages/${pageId}?populate=`;
   pagePath += "cover";
-  pagePath += ",modules.mediaBlocks.mediaAsset";
+  pagePath += ",modules.mediaBlocks.mediaAssets";
   pagePath += ",modules.backgroundImage";
   pagePath += ",modules.text";
 
@@ -46,12 +75,15 @@ const fetchData = async (pageId) => {
           id: module.backgroundImage.data.id,
         },
         mediaBlocks: module.mediaBlocks
-          ? module.mediaBlocks.map(({ mediaAsset, ...restOfMediaBlock }) => ({
-              ...restOfMediaBlock,
-              ...mediaAsset.data.attributes,
-              mediaId: mediaAsset.data.id,
+          ? module.mediaBlocks.map((mediaBlock) => ({
+              ...mediaBlock,
+              mediaAssets: mediaBlock.mediaAssets.data.map((mediaAsset) => ({
+                ...mediaAsset.attributes,
+                addToCarousel: mediaBlock.addToCarousel,
+                id: mediaAsset.id,
+              })),
             }))
-          : null,
+          : [],
       })),
     },
   };

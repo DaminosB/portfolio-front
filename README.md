@@ -145,7 +145,7 @@ Tracks the scroll position of elements to trigger UI updates.
 
 ```bash
 wrappers/
-├── PageBuilder
+├── ModulesDisplayer
 ├── ModuleWrapper
 ├── MediaCardWrapper
 ├── TextWrapper
@@ -156,7 +156,7 @@ wrappers/
 └── ProjectCardsWrapper
 ```
 
-### PageBuilder
+### ModulesDisplayer
 
 This component is called at the page level to display all the content of the page according to its `content` prop.
 

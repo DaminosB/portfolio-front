@@ -1,5 +1,12 @@
 import ErrorComponent from "@/components/ErrorComponent/ErrorComponent";
-import PageBuilder from "@/constructors/PageBuilder/PageBuilder";
+import SnapScrollWrapper from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
+import ModulesDisplayer from "@/constructors/ModulesDisplayer/ModulesDisplayer";
+import CoverContainer from "@/components/CoverContainer/CoverContainer";
+import SidePanelNavigation from "@/components/SidePanelNavigation/SidePanelNavigation";
+import ProjectsContainer from "@/components/ProjectsContainer/ProjectsContainer";
+import Modale from "@/components/Modale/Modale";
+import generateDynamicStyle from "@/utils/generateDynamicStyle";
+import generateRGBAString from "@/utils/generateRGBAString";
 
 import handleFetch from "@/utils/handleFetch";
 
@@ -10,12 +17,47 @@ export default async function ProjectsIdPage({ params }) {
   else {
     const { project, customStyle, relatedProjects } = data;
 
+    const customColors = {
+      mainColor: project.mainColor,
+      secondaryColor: project.secondaryColor,
+    };
+
+    const inlineStyle = {
+      backgroundColor: generateRGBAString(customColors.mainColor, 0.5),
+    };
+
     return (
-      <PageBuilder
-        content={project}
-        customStyle={customStyle}
-        relatedProjects={relatedProjects}
-      />
+      <>
+        {project.cover && (
+          <CoverContainer
+            coverUrl={project.cover.url}
+            coverAltTxt={project.cover.alternativeText}
+            customColors={customColors}
+          />
+        )}
+        <SnapScrollWrapper>
+          <ModulesDisplayer
+            modules={project.modules}
+            customColors={customColors}
+          />
+        </SnapScrollWrapper>
+        {relatedProjects && (
+          <div style={inlineStyle}>
+            <ProjectsContainer
+              projects={relatedProjects}
+              customStyle={customStyle}
+              logos={false}
+            />
+          </div>
+        )}
+        <Modale customColors={customColors} />
+        <SidePanelNavigation
+          content={project}
+          customStyle={customColors}
+          showRelatedProject={relatedProjects ? true : false}
+        />
+        <style>{generateDynamicStyle(customColors)}</style>
+      </>
     );
   }
 }
@@ -49,7 +91,7 @@ const fetchData = async (projectId) => {
   // Construction of the project's path string
   let projectPath = `projects/${projectId}?populate=`;
   projectPath += "cover";
-  projectPath += ",modules.mediaBlocks.mediaAsset";
+  projectPath += ",modules.mediaBlocks.mediaAssets";
   projectPath += ",modules.backgroundImage";
   projectPath += ",modules.text";
   projectPath += ",tags.projects.thumbnail";
@@ -88,12 +130,15 @@ const fetchData = async (projectId) => {
             }
           : null,
         mediaBlocks: module.mediaBlocks
-          ? module.mediaBlocks.map(({ mediaAsset, ...restOfMediaBlock }) => ({
-              ...restOfMediaBlock,
-              ...mediaAsset.data.attributes,
-              mediaId: mediaAsset.data.id,
+          ? module.mediaBlocks.map((mediaBlock) => ({
+              ...mediaBlock,
+              mediaAssets: mediaBlock.mediaAssets.data.map((mediaAsset) => ({
+                ...mediaAsset.attributes,
+                addToCarousel: mediaBlock.addToCarousel,
+                id: mediaAsset.id,
+              })),
             }))
-          : null,
+          : [],
       })),
     },
     customStyle: { ...customStyleResponse.data.attributes },

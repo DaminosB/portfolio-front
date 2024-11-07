@@ -1,6 +1,9 @@
 import ErrorComponent from "@/components/ErrorComponent/ErrorComponent";
-import PageBuilder from "@/constructors/PageBuilder/PageBuilder";
-
+import SnapScrollWrapper from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
+import ModulesDisplayer from "@/constructors/ModulesDisplayer/ModulesDisplayer";
+import SidePanelNavigation from "@/components/SidePanelNavigation/SidePanelNavigation";
+import Modale from "@/components/Modale/Modale";
+import generateDynamicStyle from "@/utils/generateDynamicStyle";
 import handleFetch from "@/utils/handleFetch";
 
 export default async function ProjectsIdPage() {
@@ -13,7 +16,28 @@ export default async function ProjectsIdPage() {
     logos.mainColor = customStyle.mainColor;
     logos.secondaryColor = customStyle.secondaryColor;
 
-    return <PageBuilder content={logos} />;
+    const customColors = {
+      mainColor: customStyle.mainColor,
+      secondaryColor: customStyle.secondaryColor,
+    };
+
+    return (
+      <>
+        <SnapScrollWrapper>
+          <ModulesDisplayer
+            modules={logos.modules}
+            customColors={customColors}
+          />
+        </SnapScrollWrapper>
+        <Modale customColors={customColors} />
+        <SidePanelNavigation
+          content={project}
+          customStyle={customColors}
+          showRelatedProject={relatedProjects ? true : false}
+        />
+        <style>{generateDynamicStyle(customColors)}</style>
+      </>
+    );
   }
 }
 
@@ -22,7 +46,7 @@ const fetchData = async () => {
   logoPath += "thumbnail";
   logoPath += ",modules.backgroundImage";
   logoPath += ",modules.text";
-  logoPath += ",modules.mediaBlocks.mediaAsset";
+  logoPath += ",modules.mediaBlocks.mediaAssets";
   const [logosResponse, customStyleResponse] = await Promise.all([
     handleFetch(logoPath),
     handleFetch("style"),
@@ -42,12 +66,15 @@ const fetchData = async () => {
             }
           : null,
         mediaBlocks: module.mediaBlocks
-          ? module.mediaBlocks.map(({ mediaAsset, ...restOfMediaBlock }) => ({
-              ...restOfMediaBlock,
-              ...mediaAsset.data.attributes,
-              mediaId: mediaAsset.data.id,
+          ? module.mediaBlocks.map((mediaBlock) => ({
+              ...mediaBlock,
+              mediaAssets: mediaBlock.mediaAssets.data.map((mediaAsset) => ({
+                ...mediaAsset.attributes,
+                addToCarousel: mediaBlock.addToCarousel,
+                id: mediaAsset.id,
+              })),
             }))
-          : null,
+          : [],
       })),
     },
     customStyle: { ...customStyleResponse.data.attributes },
