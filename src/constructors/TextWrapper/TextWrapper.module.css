@@ -4,8 +4,6 @@
   min-height: 100%;
   height: fit-content;
   width: 100%;
-  display: flex;
-  align-items: center;
 }
 
 .textWrapper ul,
@@ -16,7 +14,6 @@
 .textWrapper > div {
   max-height: 100%;
   width: 100%;
-  padding: 0 30px;
   display: flex;
   flex-direction: column;
 }
@@ -26,4 +23,10 @@
   max-height: 100%;
   object-fit: contain;
   align-self: center;
+}
+
+@media (max-width: 768px) {
+  .textWrapper {
+    font-size: 15px;
+  }
 }
