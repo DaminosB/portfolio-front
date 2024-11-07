@@ -9,6 +9,8 @@
   --logo-height: 60px;
   --logo-height-offset: calc(var(--logo-position) * 2 + var(--logo-height));
 
+  --columns-gap: 15px;
+
   --small-radius: 3px;
 
   --default-blur: blur(15px);
@@ -180,7 +182,8 @@ textarea {
 
 html {
   overflow: hidden;
-  width: 100vw;
+  width: 100%;
+  height: 100%;
 }
 
 a {
@@ -223,6 +226,7 @@ pre {
   border-radius: var(--small-radius);
   padding: 5px;
   min-height: fit-content;
+  text-align: left;
   overflow-x: auto;
   font-family: "Courier New", monospace;
 }
@@ -243,9 +247,14 @@ button:not(.grabbable, .grabbed) {
   cursor: pointer;
 }
 
+#layout-container {
+  height: 100%;
+  position: relative;
+}
+
 .container {
   margin: 0 auto;
-  width: 70%;
+  width: 80%;
 }
 
 .flex-row {
@@ -270,21 +279,12 @@ button:not(.grabbable, .grabbed) {
 }
 
 .viewport {
-  height: 100vh;
+  height: 100%;
 }
 
 .viewport > main {
   overflow: hidden;
   height: 100%;
-}
-
-/* The element needs to have a default max-height value in order to be animated properly */
-.zero-height {
-  max-height: 0% !important;
-}
-
-.zero-width {
-  width: 0px !important;
 }
 
 @media (max-width: 1023px) {
