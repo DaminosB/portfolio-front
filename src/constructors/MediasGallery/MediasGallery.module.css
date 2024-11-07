@@ -1,0 +1,30 @@
+.mediasGallery {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  gap: 10px;
+}
+
+.mediasGallery > div:first-child {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.slider {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  transition: var(--normal-transition) var(--default-animation);
+}
+
+.slider > div {
+  flex-shrink: 0;
+}
+
+.labelBlock {
+  z-index: 1;
+  font-size: 25px;
+  text-align: center;
+}
