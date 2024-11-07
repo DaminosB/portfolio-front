@@ -6,7 +6,6 @@ const generateInlineStyle = (module) => {
   // Then we prepare the object we will return
   const response = {
     sectionStyle: {},
-    contentDivStyle: {},
     mediasContainerStyle: {},
   };
 
