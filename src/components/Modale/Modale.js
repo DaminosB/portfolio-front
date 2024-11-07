@@ -29,7 +29,9 @@ const Modale = ({ customColors }) => {
 
   useEffect(() => {
     const modale = modaleRef.current;
-    setTargetDom(document.body);
+
+    const layoutContainer = document.getElementById("layout-container");
+    setTargetDom(layoutContainer);
 
     if (modale && modaleContent)
       requestAnimationFrame(() => modale.classList.remove("hidden"));
