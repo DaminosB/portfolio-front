@@ -13,8 +13,8 @@ import VideoPlayer from "@/constructors/VideoPlayer/VideoPlayer";
 import useScrollTracker from "@/hooks/useScrollTracker";
 
 // Carousel component that displays a series of media (images or videos) with horizontal sliding navigation
-const Carousel = ({ medias, indexStart, customColors }) => {
-  // medias: Array. List of media objects (with URLs and alternative texts) to display.
+const Carousel = ({ mediasToDisplay, indexStart, customColors }) => {
+  // mediasToDisplay: Array. List of media objects (with URLs and alternative texts) to display.
   // indexStart: Number. The initial position of the carousel on mount.
   // customColors: Object. Custom color scheme applied to carousel elements.
 
@@ -27,7 +27,7 @@ const Carousel = ({ medias, indexStart, customColors }) => {
   // Function to handle clicks on left/right navigation buttons
   const handleSideButtons = (moveStep) => {
     const slider = sliderRef.current;
-    const maxIndex = medias.length - 1;
+    const maxIndex = mediasToDisplay.length - 1;
     const targetIndex = displayIndex + moveStep;
 
     let scrollTarget = 0;
@@ -50,6 +50,7 @@ const Carousel = ({ medias, indexStart, customColors }) => {
   // Effect to set the initial scroll position based on indexStart when the component mounts
   useEffect(() => {
     const slider = sliderRef.current;
+
     const scrollTarget = slider.children[indexStart || 0].offsetLeft;
     slider.scrollTo({ left: scrollTarget, behavior: "instant" });
   }, []);
@@ -65,7 +66,7 @@ const Carousel = ({ medias, indexStart, customColors }) => {
   };
 
   // Check if there are multiple media items to display navigation controls
-  const hasMultipleMedias = medias.length > 1;
+  const hasMultipleMedias = mediasToDisplay.length > 1;
 
   return (
     <div
@@ -73,7 +74,7 @@ const Carousel = ({ medias, indexStart, customColors }) => {
       onClick={(e) => e.stopPropagation()}
     >
       <div className={styles.slider} ref={sliderRef} onScroll={scrollTrack}>
-        {medias.map((media, index) => {
+        {mediasToDisplay.map((media, index) => {
           // Determine whether the current media is an image or a video
           const isImageFile = media.provider_metadata.resource_type === "image";
 
@@ -118,7 +119,7 @@ const Carousel = ({ medias, indexStart, customColors }) => {
 
           {/* Navigation dots */}
           <nav style={navInlineStyle}>
-            {medias.map((media, index) => {
+            {mediasToDisplay.map((media, index) => {
               // Each media is represented by a dot, which becomes larger when the media is active
               const isActive = index === displayIndex;
 
