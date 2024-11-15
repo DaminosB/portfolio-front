@@ -35,7 +35,8 @@ const ProjectCardWrapper = ({ cardData, children }) => {
     );
 
     // If the card should be displayed and its index has changed
-    if (cardIndex !== -1 && cachedCardIndex.current !== cardIndex) {
+    if (cardIndex !== -1) {
+      // if (cardIndex !== -1 && cachedCardIndex.current !== cardIndex) {
       cachedCardIndex.current = cardIndex;
 
       // Make the card visible
@@ -52,9 +53,38 @@ const ProjectCardWrapper = ({ cardData, children }) => {
       const rowIndex = Math.floor(cardIndex / thumbnailsPerRow);
       const columnIndex = cardIndex % thumbnailsPerRow;
 
+      const projectsLength = filteredProjects.length;
+
       // Calculate the top and left positions based on card size and gap
       const topPosition = rowIndex * cardSize.height + rowIndex * gap;
-      const leftPosition = columnIndex * cardSize.width + columnIndex * gap;
+      let leftPosition = columnIndex * cardSize.width + columnIndex * gap;
+
+      // Check if the card must be centered on the x axis
+      const lastRowIndex =
+        Math.ceil(filteredProjects.length / thumbnailsPerRow) - 1;
+
+      const isAltProjectsCardDisplayed =
+        filteredProjects[projectsLength - 1].id === "logos-card";
+
+      const modulo = projectsLength % thumbnailsPerRow;
+
+      const shouldCenterCard =
+        lastRowIndex === rowIndex && // The card is on the last row
+        !isAltProjectsCardDisplayed && // The alt projects card is not displayed
+        modulo > 0; // The number of projects doesn't divide evenly into thumbnailsPerRow
+
+      if (shouldCenterCard) {
+        // Calculate the total width of the last row content
+        const lastRowContentWidth =
+          modulo * cardSize.width + (modulo - 1) * gap;
+        // Calculate the empty space on the left side for centering
+        const leftOffset =
+          (thumbnailsPerRow * cardSize.width +
+            (thumbnailsPerRow - 1) * gap -
+            lastRowContentWidth) /
+          2;
+        leftPosition += leftOffset;
+      }
 
       // Apply the calculated position using CSS transform
       cardDiv.style.transform = `translate(${leftPosition}px, ${topPosition}px)`;

@@ -34,7 +34,7 @@ const ProjectsContainer = ({ projects, customStyle, logos }) => {
 
 // This function populates the projectsCards array for display
 const populateProjectsCards = (projects, customStyle, logos) => {
-  const { gap, thumbnailsPerRow } = customStyle;
+  const { gap, thumbnailsPerRow, thumbnailsRatio } = customStyle;
 
   // Calculate the total width of gaps in a row or column
   const totalGapWidth = (thumbnailsPerRow - 1) * gap;
@@ -51,6 +51,7 @@ const populateProjectsCards = (projects, customStyle, logos) => {
     gridConfig: { gap, thumbnailsPerRow },
     customStyles: {
       width: projectCardWidthStr,
+      aspectRatio: thumbnailsRatio,
     },
   }));
 
@@ -63,6 +64,10 @@ const populateProjectsCards = (projects, customStyle, logos) => {
     // Generate the CSS width string for the logo card
     const logoCardWidthStr = `calc(${cardSpace} * (100% - ${gapFraction}px) / ${thumbnailsPerRow})`;
 
+    const [widthScale, heightScale] = thumbnailsRatio
+      .split("/")
+      .map(parseFloat);
+
     // Add the logo card entry to the array
     response.push({
       id: "logos-card",
@@ -73,7 +78,7 @@ const populateProjectsCards = (projects, customStyle, logos) => {
       customStyles: {
         backgroundColor: logos.thumbnailColor,
         width: logoCardWidthStr,
-        aspectRatio: `${4 * cardSpace}/5`,
+        aspectRatio: `${widthScale * cardSpace}/${heightScale}`,
       },
     });
   }

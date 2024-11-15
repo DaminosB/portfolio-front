@@ -4,9 +4,6 @@
   transition: var(--normal-transition) var(--default-animation);
 }
 
-.projectCard:not(.projectCard.logoCard) {
-  aspect-ratio: 4/5;
-}
 .projectCard.transparent {
   opacity: 0.25;
 }
@@ -14,9 +11,5 @@
 .projectCard img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-}
-
-.projectCard.logoCard img {
   object-fit: contain;
 }
