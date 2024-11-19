@@ -1,0 +1,7 @@
+.active {
+  scale: 1.33;
+}
+
+.inactive {
+  opacity: 0.67;
+}

@@ -1,0 +1,54 @@
+.scrollBarContainer {
+  position: absolute;
+  height: 100%;
+  left: 0px;
+  top: 0px;
+  padding: var(--logo-height-offset) 0px;
+  font-size: 20px;
+  transition: var(--normal-transition) var(--default-animation);
+  opacity: 0.5;
+}
+
+.scrollBarContainer:hover {
+  opacity: 1;
+}
+
+.scrollBarContainer > div {
+  height: 100%;
+  position: relative;
+  padding: 20px 0px;
+}
+
+.scrollBarContainer button {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.scrollBarContainer button:first-of-type {
+  top: 0px;
+}
+
+.scrollBarContainer button:last-of-type {
+  bottom: 0px;
+}
+
+.track {
+  height: 100%;
+  cursor: pointer;
+  position: relative;
+}
+
+.thumb {
+  padding: 0 10px;
+  height: 0%;
+  transition: height var(--normal-transition) var(--default-animation);
+  will-change: transform;
+}
+
+.marker {
+  width: 10px;
+  height: 100%;
+  margin: 0 auto;
+  border-radius: var(--small-radius);
+}
