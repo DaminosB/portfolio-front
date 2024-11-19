@@ -22,7 +22,7 @@ import {
 import generateRGBAString from "@/utils/generateRGBAString";
 
 // This component displays a vertical side navigation panel to jump between sections of the page
-const SidePanelNavigation = ({ content, showRelatedProject, customStyle }) => {
+const SidePanelNavigation = ({ content, customColors }) => {
   const [domTarget, setDomTarget] = useState(null); // Holds the target DOM node for the portal
   const [isMouseOver, setIsMouseOver] = useState(false); // Tracks if the mouse is over the side panel
   const [isPanelOpen, setIsPanelOpen] = useState(true); // Controls whether the panel is open or collapsed
@@ -40,8 +40,8 @@ const SidePanelNavigation = ({ content, showRelatedProject, customStyle }) => {
 
   // Set the inline style for the panel background and text color
   const panelStyle = {
-    backgroundColor: generateRGBAString(customStyle.mainColor, panelOpacity),
-    color: customStyle.secondaryColor,
+    backgroundColor: generateRGBAString(customColors.mainColor, panelOpacity),
+    color: customColors.secondaryColor,
   };
 
   // Create a portal to attach this component to the body element on mount
@@ -53,10 +53,10 @@ const SidePanelNavigation = ({ content, showRelatedProject, customStyle }) => {
 
   // Inline style for the panel toggle button
   const toggleButtonStyle = {
-    borderColor: customStyle.mainColor,
-    color: customStyle.mainColor,
+    borderColor: customColors.mainColor,
+    color: customColors.mainColor,
     backgroundColor: generateRGBAString(
-      customStyle.secondaryColor,
+      customColors.secondaryColor,
       panelOpacity
     ),
   };
@@ -131,16 +131,6 @@ const SidePanelNavigation = ({ content, showRelatedProject, customStyle }) => {
             </button>
           );
         })}
-        {showRelatedProject && (
-          <button
-            className={
-              showEndScrollPanel ? styles.activeButton : styles.inactiveButton
-            }
-            onClick={() => setEndScrollValue(layoutNode.offsetHeight)}
-          >
-            <FontAwesomeIcon icon={faPaperclip} />
-          </button>
-        )}
       </nav>,
       domTarget
     )
@@ -170,7 +160,6 @@ const createNavigationItems = (content) => {
     // For multi-image columns, add each image as a separate item
     if (module.__component === "module.colonne-multi-images") {
       module.mediaBlocks.forEach((mediaBlock) => {
-        // if (mediaBlock.provider_metadata.resource_type === "image") {
         navigationItems.push({
           id: `section-${module.__component}-${mediaBlock.id}`,
           icon: faCircle,
@@ -179,7 +168,6 @@ const createNavigationItems = (content) => {
         });
 
         childIndex++;
-        // }
       });
     } else {
       // For other modules, add them directly
@@ -194,6 +182,23 @@ const createNavigationItems = (content) => {
     }
   });
 
+  if (content.tags) {
+    const hasRelatedProjects = content.tags.some((tag) =>
+      tag.projects.some((project) => project.id !== content.id)
+    );
+
+    if (hasRelatedProjects) {
+      containerIndex++;
+      childIndex = 0;
+
+      navigationItems.push({
+        id: "related-projects",
+        icon: faPaperclip,
+        coords: [containerIndex, childIndex],
+        scrollToChild: true, // Scroll inside the container to the module
+      });
+    }
+  }
   return navigationItems;
 };
 
