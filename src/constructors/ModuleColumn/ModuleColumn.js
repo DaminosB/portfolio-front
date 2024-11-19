@@ -1,7 +1,8 @@
 "use client";
+import { ModuleContext } from "../ModuleWrapper/ModuleWrapper";
 import styles from "./ModuleColumn.module.css";
 
-import { useRef, useEffect } from "react";
+import { useRef, useContext, useEffect } from "react";
 
 const ModuleColumn = ({ children }) => {
   const columnRef = useRef(null);
@@ -9,6 +10,8 @@ const ModuleColumn = ({ children }) => {
   // Store the previous touch position and delta for touch events
   const previousTouchPositionsRef = useRef({ x: 0, y: 0 });
   const previousDeltaY = useRef(0);
+
+  const { updateScrollMetrics } = useContext(ModuleContext);
 
   // Controls the scrolling behavior of sibling columns and the parent element
   const handleScrollControl = (column, deltaX, deltaY, e) => {
@@ -115,6 +118,9 @@ const ModuleColumn = ({ children }) => {
 
   useEffect(() => {
     const column = columnRef.current;
+
+    updateScrollMetrics(column, 0);
+
     column.addEventListener("wheel", handleWheelEvent, { passive: false });
     column.addEventListener("touchstart", handleTouchEvent, { passive: false });
     column.addEventListener("touchmove", handleTouchEvent, { passive: false });
@@ -134,8 +140,13 @@ const ModuleColumn = ({ children }) => {
     };
   }, []);
 
+  const handleOnScroll = () => {
+    const column = columnRef.current;
+    updateScrollMetrics(column, column.scrollTop);
+  };
+
   return (
-    <div className={styles.column} ref={columnRef}>
+    <div className={styles.column} ref={columnRef} onScroll={handleOnScroll}>
       {children}
     </div>
   );
