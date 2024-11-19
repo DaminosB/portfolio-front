@@ -19,6 +19,7 @@ const ScrollBar = ({
 
   // Caches the Y-coordinate of the last click
   const previousClickYPositionRef = useRef(null);
+  const previousDeltaYRef = useRef(null);
 
   // Inline styles for custom colors
   const containerInlineStyle = { color: customColors.secondaryColor };
@@ -32,13 +33,14 @@ const ScrollBar = ({
       case "mousedown":
         // Store the Y-coordinate of the initial click
         previousClickYPositionRef.current = clientY;
+        // previousDeltaYRef.current = 0;
         break;
 
       case "touchmove":
       case "mousemove":
         // Only proceed if the thumb is being dragged (mousedown was triggered)
         const previousClickYPosition = previousClickYPositionRef.current;
-        if (previousClickYPosition === null) return;
+        if (previousClickYPosition === null || e.buttons === 0) return;
 
         const thumb = thumbRef.current;
         const track = thumb.parentNode;
@@ -52,13 +54,40 @@ const ScrollBar = ({
 
         // Update the cached mouse position
         previousClickYPositionRef.current = clientY;
+        previousDeltaYRef.current = deltaY;
         break;
 
       case "touchend":
       case "mouseup":
       case "mouseleave":
-        // Reset the cached position on click release
+        if (
+          previousClickYPositionRef.current === null ||
+          previousDeltaYRef.current === null
+        ) {
+          return;
+        }
+
+        let animatedScrollDistance = previousDeltaYRef.current;
+
+        // Reset the cached click position and deltaX values
         previousClickYPositionRef.current = null;
+        previousDeltaYRef.current = null;
+
+        // This function will be called multiple times to create the sliding effect
+        const step = () => {
+          grabbingFunction(animatedScrollDistance);
+
+          // Reduce the scroll distance by 15% on each call to simulate deceleration
+          animatedScrollDistance /= 1.05;
+
+          // Continue the animation if the remaining distance is significant
+          if (Math.abs(animatedScrollDistance) > 0.1) {
+            requestAnimationFrame(step);
+          }
+        };
+
+        // Start the animation loop
+        requestAnimationFrame(step);
         break;
 
       case "click":
