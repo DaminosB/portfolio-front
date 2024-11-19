@@ -3,7 +3,6 @@ import SnapScrollWrapper from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
 import ModulesDisplayer from "@/constructors/ModulesDisplayer/ModulesDisplayer";
 import CoverContainer from "@/components/CoverContainer/CoverContainer";
 import SidePanelNavigation from "@/components/SidePanelNavigation/SidePanelNavigation";
-import ProjectsContainer from "@/components/ProjectsContainer/ProjectsContainer";
 import Modale from "@/components/Modale/Modale";
 import generateDynamicStyle from "@/utils/generateDynamicStyle";
 import handleFetch from "@/utils/handleFetch";

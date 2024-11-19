@@ -41,7 +41,7 @@ export default async function ProjectsIdPage({ params }) {
             customColors={customColors}
           />
         </SnapScrollWrapper>
-        {relatedProjects && (
+        {relatedProjects.length > 0 && (
           <div style={inlineStyle}>
             <ProjectsContainer
               projects={relatedProjects}
@@ -53,7 +53,7 @@ export default async function ProjectsIdPage({ params }) {
         <Modale customColors={customColors} />
         <SidePanelNavigation
           content={project}
-          customStyle={customColors}
+          customColors={customColors}
           showRelatedProject={relatedProjects ? true : false}
         />
         <style>{generateDynamicStyle(customColors)}</style>
