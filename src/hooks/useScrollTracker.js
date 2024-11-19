@@ -7,10 +7,10 @@ const useScrollTracker = (scrollX = false) => {
 
   // Maps scroll-related properties based on the chosen axis (X or Y)
   const scrollProps = {
-    offsetAxis: scrollX ? "offsetLeft" : "offsetTop", // Position of each child relative to the container
     scrollAxis: scrollX ? "scrollLeft" : "scrollTop", // Scroll position of the container
+    offsetDimension: scrollX ? "offsetWidth" : "offsetHeight", // Dimensions of the container
   };
-  const { offsetAxis, scrollAxis } = scrollProps;
+  const { offsetDimension, scrollAxis } = scrollProps;
 
   // State to store the current scroll position (scrollTop or scrollLeft)
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -31,12 +31,12 @@ const useScrollTracker = (scrollX = false) => {
     setScrollPosition(container[scrollAxis]);
 
     // Get the offsetTop or offsetLeft of each child element within the container
-    const childrenCumulativeHeights = Array.from(container.children)
+    const cumulativeDimensions = Array.from(container.children)
       .filter((child) => child.tagName !== "STYLE")
-      .map((child, index) => container.offsetHeight * index);
+      .map((child, index) => container[offsetDimension] * index);
 
     // Find the index of the last child whose offset value matches the container's current scroll position
-    const newIndex = childrenCumulativeHeights.findIndex(
+    const newIndex = cumulativeDimensions.findIndex(
       (position) => position === Math.round(container[scrollAxis])
     );
 
