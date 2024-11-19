@@ -195,7 +195,7 @@ const createNavigationItems = (content) => {
         id: "related-projects",
         icon: faPaperclip,
         coords: [containerIndex, childIndex],
-        scrollToChild: true, // Scroll inside the container to the module
+        scrollToChild: false, // Scroll inside the container to the module
       });
     }
   }
