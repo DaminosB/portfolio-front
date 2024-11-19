@@ -1,16 +1,18 @@
 import styles from "./Carousel.module.css";
 
 import { useEffect, useRef } from "react";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
   faChevronRight,
-  faCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import generateRGBAString from "@/utils/generateRGBAString";
 
 import VideoPlayer from "@/constructors/VideoPlayer/VideoPlayer";
 import useScrollTracker from "@/hooks/useScrollTracker";
+import DotButton from "../DotButton/DotButton";
+
+import generateRGBAString from "@/utils/generateRGBAString";
 
 // Carousel component that displays a series of media (images or videos) with horizontal sliding navigation
 const Carousel = ({ mediasToDisplay, indexStart, customColors }) => {
@@ -131,13 +133,11 @@ const Carousel = ({ mediasToDisplay, indexStart, customColors }) => {
               };
 
               return (
-                <button
+                <DotButton
                   key={media.id}
-                  className={isActive ? styles.active : ""}
-                  onClick={handleJumpButtons}
-                >
-                  <FontAwesomeIcon icon={faCircle} />
-                </button>
+                  isActive={isActive}
+                  onClickFunction={handleJumpButtons}
+                />
               );
             })}
           </nav>

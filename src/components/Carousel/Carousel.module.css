@@ -72,22 +72,15 @@
 .carouselContainer > nav {
   display: flex;
   justify-content: center;
-  gap: 15px;
-  height: 30px;
+  gap: 10px;
   width: fit-content;
   padding: 10px;
   border-radius: var(--small-radius);
+  font-size: 20px;
 }
 
 .carouselContainer > nav > button {
-  display: flex;
-  align-items: center;
-  font-size: 10px;
   transition: var(--normal-transition) var(--default-animation);
-}
-
-.carouselContainer > nav > button.active {
-  scale: 1.5;
 }
 
 @media (max-width: 768px) {
