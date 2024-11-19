@@ -25,7 +25,7 @@ const ScrollBar = ({
   const markerInlineStyle = { backgroundColor: customColors.secondaryColor };
 
   // Manages mouse events on the thumb for grabbing and dragging
-  const handleThumbMouseEvents = (e) => {
+  const handleThumbEvents = (e) => {
     const clientY = e.clientY || e.changedTouches[0].clientY;
     switch (e.type) {
       case "touchstart":
@@ -126,14 +126,14 @@ const ScrollBar = ({
           {/* Draggable thumb */}
           <div
             className={`${styles.thumb} grabbable`}
-            onMouseDown={handleThumbMouseEvents}
-            onMouseMove={handleThumbMouseEvents}
-            onMouseUp={handleThumbMouseEvents}
-            onMouseLeave={handleThumbMouseEvents}
-            onTouchStart={handleThumbMouseEvents}
-            onTouchMove={handleThumbMouseEvents}
-            onTouchEnd={handleThumbMouseEvents}
-            onClick={handleThumbMouseEvents}
+            onMouseDown={handleThumbEvents}
+            onMouseMove={handleThumbEvents}
+            onMouseUp={handleThumbEvents}
+            onMouseLeave={handleThumbEvents}
+            onTouchStart={handleThumbEvents}
+            onTouchMove={handleThumbEvents}
+            onTouchEnd={handleThumbEvents}
+            onClick={handleThumbEvents}
             ref={thumbRef}
           >
             {/* Visual marker for the thumb */}
