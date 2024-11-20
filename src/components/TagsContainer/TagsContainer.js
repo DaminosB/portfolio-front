@@ -51,7 +51,21 @@ const TagsContainer = ({
 
         const handleHoverEvent = (e) => {
           const newTab = [...isHovered];
-          newTab[i] = e.type === "mouseenter" ? true : false;
+
+          // console.log(e);
+
+          switch (e.type) {
+            case "pointerenter":
+              if (e.pointerType === "mouse") newTab[i] = true;
+              break;
+
+            case "pointerleave":
+              if (e.pointerType === "mouse") newTab[i] = false;
+              break;
+
+            default:
+              break;
+          }
 
           setIsHovered(newTab);
         };
@@ -61,8 +75,8 @@ const TagsContainer = ({
             key={tag.id}
             style={inlineStyle}
             onClick={() => toggleFilter(tag.id)}
-            onMouseEnter={handleHoverEvent}
-            onMouseLeave={handleHoverEvent}
+            onPointerEnter={handleHoverEvent}
+            onPointerLeave={handleHoverEvent}
           >
             {tag.name}
           </button>

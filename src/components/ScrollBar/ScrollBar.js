@@ -27,17 +27,13 @@ const ScrollBar = ({
 
   // Manages mouse events on the thumb for grabbing and dragging
   const handleThumbEvents = (e) => {
-    const clientY = e.clientY || e.changedTouches[0].clientY;
     switch (e.type) {
-      case "touchstart":
-      case "mousedown":
+      case "pointerdown":
         // Store the Y-coordinate of the initial click
-        previousClickYPositionRef.current = clientY;
-        // previousDeltaYRef.current = 0;
+        previousClickYPositionRef.current = e.clientY;
         break;
 
-      case "touchmove":
-      case "mousemove":
+      case "pointermove":
         // Only proceed if the thumb is being dragged (mousedown was triggered)
         const previousClickYPosition = previousClickYPositionRef.current;
         if (previousClickYPosition === null || e.buttons === 0) return;
@@ -46,20 +42,19 @@ const ScrollBar = ({
         const track = thumb.parentNode;
 
         // Calculate the movement of the mouse relative to its last position
-        const deltaY = clientY - previousClickYPosition;
+        const deltaY = e.clientY - previousClickYPosition;
 
         // Scale the movement to match the scroll ratio
         const multiplier = track.offsetHeight / thumb.offsetHeight;
         grabbingFunction(multiplier * deltaY);
 
         // Update the cached mouse position
-        previousClickYPositionRef.current = clientY;
+        previousClickYPositionRef.current = e.clientY;
         previousDeltaYRef.current = deltaY;
         break;
 
-      case "touchend":
-      case "mouseup":
-      case "mouseleave":
+      case "pointerup":
+      case "pointerleave":
         if (
           previousClickYPositionRef.current === null ||
           previousDeltaYRef.current === null
@@ -155,13 +150,10 @@ const ScrollBar = ({
           {/* Draggable thumb */}
           <div
             className={`${styles.thumb} grabbable`}
-            onMouseDown={handleThumbEvents}
-            onMouseMove={handleThumbEvents}
-            onMouseUp={handleThumbEvents}
-            onMouseLeave={handleThumbEvents}
-            onTouchStart={handleThumbEvents}
-            onTouchMove={handleThumbEvents}
-            onTouchEnd={handleThumbEvents}
+            onPointerDown={handleThumbEvents}
+            onPointerMove={handleThumbEvents}
+            onPointerUp={handleThumbEvents}
+            onPointerLeave={handleThumbEvents}
             onClick={handleThumbEvents}
             ref={thumbRef}
           >

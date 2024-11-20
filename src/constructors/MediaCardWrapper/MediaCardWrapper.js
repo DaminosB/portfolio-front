@@ -147,13 +147,9 @@ const MediaCardWrapper = ({
 
   // Event handlers for various user interactions (mouse/touch)
   const eventHandlers = {
-    touchstart: grabbable ? startGrab : null,
-    mousedown: grabbable ? startGrab : null,
-    touchmove: grabbable ? grabbing : null,
-    mousemove: grabbable ? grabbing : null,
-    touchend: grabbable ? stopGrab : null,
-    mouseup: grabbable ? stopGrab : null,
-    mouseleave: grabbable ? stopGrab : null,
+    pointerdown: grabbable ? startGrab : null,
+    pointermove: grabbable ? grabbing : null,
+    pointerup: grabbable ? stopGrab : null,
     click: onClick,
   };
 
@@ -179,13 +175,9 @@ const MediaCardWrapper = ({
     >
       <div
         className={`${styles.mediaWindow} ${grabbable ? "grabbable" : ""}`}
-        onTouchStart={handleEvents}
-        onMouseDown={handleEvents}
-        onMouseMove={handleEvents}
-        onTouchMove={handleEvents}
-        onMouseUp={handleEvents}
-        onMouseLeave={handleEvents}
-        onTouchEnd={handleEvents}
+        onPointerDown={handleEvents}
+        onPointerMove={handleEvents}
+        onPointerUp={handleEvents}
         onClick={handleEvents}
       >
         {isImageFile ? (
@@ -194,13 +186,9 @@ const MediaCardWrapper = ({
             {media.caption && (
               <div
                 style={captionInlineStyle}
-                onTouchStart={handleStopPropagation}
-                onMouseDown={handleStopPropagation}
-                onMouseMove={handleStopPropagation}
-                onTouchMove={handleStopPropagation}
-                onMouseUp={handleStopPropagation}
-                onMouseLeave={handleStopPropagation}
-                onTouchEnd={handleStopPropagation}
+                onPointerDown={handleStopPropagation}
+                onPointerMove={handleStopPropagation}
+                onPointerUp={handleStopPropagation}
               >
                 <span>{media.caption}</span>
               </div>

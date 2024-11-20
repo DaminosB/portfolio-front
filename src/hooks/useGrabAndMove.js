@@ -45,19 +45,7 @@ const useGrabAndMove = () => {
       // Updates the state to indicate that grabbing has started
       setIsGrabbing(true);
 
-      // The coordinates of the click or touch differ between mouse and touch events
-      switch (e.type) {
-        case "touchstart":
-          // For touch events, get the clientX from the first touch point
-          previousClickPosition.current = e.targetTouches[0].clientX;
-          break;
-        case "mousedown":
-          // For mouse events, use the clientX of the mouse click
-          previousClickPosition.current = e.clientX;
-          break;
-        default:
-          break;
-      }
+      previousClickPosition.current = e.clientX;
     },
     [metrics]
   );
@@ -109,15 +97,7 @@ const useGrabAndMove = () => {
 
       const container = containerRef.current;
 
-      // Determine the current click or touch position based on the event type
-      let currentClickPosition;
-      if (e.type === "touchmove") {
-        // For touch events, get the clientX from the first touch point
-        currentClickPosition = e.targetTouches[0].clientX;
-      } else if (e.type === "mousemove") {
-        // For mouse events, use the clientX of the mouse move
-        currentClickPosition = e.clientX;
-      }
+      const currentClickPosition = e.clientX;
 
       // Calculate the difference between the current and the previous positions
       const deltaX = currentClickPosition - previousClickPosition.current;
