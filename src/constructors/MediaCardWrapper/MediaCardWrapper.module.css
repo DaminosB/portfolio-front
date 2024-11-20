@@ -15,6 +15,7 @@
   display: flex;
   justify-content: center;
   position: relative;
+  touch-action: pan-y;
 }
 
 .mediaWindow > div {
@@ -43,7 +44,8 @@
 .buttonsContainer {
   position: absolute;
   z-index: 1;
-  top: 25px;
+  /* top: 25px; */
+  right: 25px;
   width: 50px;
   height: 50px;
   font-size: 50px;
@@ -54,11 +56,13 @@
 }
 
 .buttonsContainer:nth-of-type(2) {
-  right: 25px;
+  /* right: 25px; */
+  top: 25px;
 }
 
 .buttonsContainer:nth-of-type(3) {
-  right: 80px;
+  bottom: 80px;
+  /* right: 80px; */
 }
 
 .mediaCardWrapper > img:hover ~ .buttonsContainer {
@@ -121,14 +125,14 @@
     width: 35px;
     height: 35px;
     font-size: 35px;
-    top: 10px;
-  }
-
-  .buttonsContainer:nth-of-type(2) {
     right: 10px;
   }
 
+  .buttonsContainer:nth-of-type(2) {
+    top: 10px;
+  }
+
   .buttonsContainer:nth-of-type(3) {
-    right: 50px;
+    bottom: 10px;
   }
 }
