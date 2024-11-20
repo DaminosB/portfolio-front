@@ -52,9 +52,7 @@ const useGrabAndMove = () => {
   );
 
   // This func moves a given element in its parent on its x axis
-  const moveElementInParent = useCallback((value, domElement, e) => {
-    // console.log(e);
-
+  const moveElementInParent = useCallback((value, domElement) => {
     // value: Number. The quantity of pixels the viewer has slided.
     // domElement: the element we want to move.
     // peerElementsIds: Array. With the multi-images-column module, we must move each related sibling together.
@@ -107,7 +105,7 @@ const useGrabAndMove = () => {
       // This gives us the number of pixels the viewer has moved
 
       // Call the function responsible for moving the element within its parent
-      moveElementInParent(deltaX, container.firstElementChild, e);
+      moveElementInParent(deltaX, container.firstElementChild);
 
       // Finally, update the refs with the new position and delta values
       previousClickPosition.current = currentClickPosition;
@@ -130,8 +128,7 @@ const useGrabAndMove = () => {
       const handleMoveElementInParent = (animatedScrollDistance) => {
         moveElementInParent(
           animatedScrollDistance,
-          container.firstElementChild,
-          e
+          container.firstElementChild
         );
       };
 
