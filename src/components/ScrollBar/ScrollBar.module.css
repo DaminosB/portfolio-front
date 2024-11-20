@@ -5,7 +5,7 @@
   top: 0px;
   padding: var(--logo-height-offset) 0px;
   font-size: 20px;
-  transition: var(--normal-transition) var(--default-animation);
+  transition: var(--fast-transition) var(--default-animation);
   opacity: 0.5;
 }
 
@@ -44,6 +44,7 @@
   height: 0%;
   transition: height var(--normal-transition) var(--default-animation);
   will-change: transform;
+  touch-action: none;
 }
 
 .marker {
