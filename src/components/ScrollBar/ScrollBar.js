@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import runRecursiveAction from "@/utils/runRecursiveAction";
 
 // Displays a custom scroll bar when the module's content overflows vertically
 const ScrollBar = ({
@@ -61,28 +62,11 @@ const ScrollBar = ({
         ) {
           return;
         }
-
-        let animatedScrollDistance = previousDeltaYRef.current;
+        runRecursiveAction(grabbingFunction, previousDeltaYRef.current, 0.95);
 
         // Reset the cached click position and deltaX values
         previousClickYPositionRef.current = null;
         previousDeltaYRef.current = null;
-
-        // This function will be called multiple times to create the sliding effect
-        const step = () => {
-          grabbingFunction(animatedScrollDistance);
-
-          // Reduce the scroll distance by 15% on each call to simulate deceleration
-          animatedScrollDistance /= 1.05;
-
-          // Continue the animation if the remaining distance is significant
-          if (Math.abs(animatedScrollDistance) > 0.1) {
-            requestAnimationFrame(step);
-          }
-        };
-
-        // Start the animation loop
-        requestAnimationFrame(step);
         break;
 
       case "click":

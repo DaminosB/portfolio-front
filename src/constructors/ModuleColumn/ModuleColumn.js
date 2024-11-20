@@ -1,4 +1,5 @@
 "use client";
+import runRecursiveAction from "@/utils/runRecursiveAction";
 import { ModuleContext } from "../ModuleWrapper/ModuleWrapper";
 import styles from "./ModuleColumn.module.css";
 
@@ -94,21 +95,16 @@ const ModuleColumn = ({ children }) => {
         // After touch end, apply a decelerating scroll effect
         const siblingColumns = Array.from(column.parentNode.children);
 
-        // Start with the last scroll distance and reduce gradually
-        let animatedScrollDistance = previousDeltaY.current;
-
-        // Continuously scroll siblings with diminishing distance for a smooth deceleration
-        const step = () => {
+        const handleScrollSiblingColumns = (animatedScrollDistance) => {
           scrollSiblingColumns(siblingColumns, animatedScrollDistance);
-          animatedScrollDistance /= 1.1;
-          // animatedScrollDistance /= 1.15;
-          if (Math.abs(animatedScrollDistance) > 0.1) {
-            requestAnimationFrame(step);
-          } else {
-            previousDeltaY.current = 0;
-          }
         };
-        requestAnimationFrame(step);
+
+        runRecursiveAction(
+          handleScrollSiblingColumns,
+          previousDeltaY.current,
+          0.9
+        );
+        previousDeltaY.current = 0;
         break;
 
       default:

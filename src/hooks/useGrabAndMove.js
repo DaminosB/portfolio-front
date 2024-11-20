@@ -1,3 +1,4 @@
+import runRecursiveAction from "@/utils/runRecursiveAction";
 import { useState, useRef, useEffect, useCallback } from "react";
 
 // This hook enables the user to click and drag an element to move it within its parent container.
@@ -52,6 +53,8 @@ const useGrabAndMove = () => {
 
   // This func moves a given element in its parent on its x axis
   const moveElementInParent = useCallback((value, domElement, e) => {
+    // console.log(e);
+
     // value: Number. The quantity of pixels the viewer has slided.
     // domElement: the element we want to move.
     // peerElementsIds: Array. With the multi-images-column module, we must move each related sibling together.
@@ -82,7 +85,7 @@ const useGrabAndMove = () => {
         currentTranslateValue: newTranslateXValue,
       }));
 
-      e.stopPropagation();
+      // e.stopPropagation();
     }
   }, []);
 
@@ -124,34 +127,27 @@ const useGrabAndMove = () => {
       // Turn off the isGrabbing state when the user stops dragging
       setIsGrabbing(false);
 
-      // We create a smooth deceleration effect by using a recursive function
-      // Start by using the last known distance moved
-      let animatedScrollDistance = previousDeltaX.current;
-
-      // This function will be called multiple times to create the sliding effect
-      const step = () => {
+      const handleMoveElementInParent = (animatedScrollDistance) => {
         moveElementInParent(
           animatedScrollDistance,
           container.firstElementChild,
           e
         );
-
-        // Reduce the scroll distance by 15% on each call to simulate deceleration
-        animatedScrollDistance /= 1.15;
-
-        // Continue the animation if the remaining distance is significant
-        if (Math.abs(animatedScrollDistance) > 0.1) {
-          requestAnimationFrame(step);
-        } else {
-          // Once the animation is finished, reset the deltaX value
-          previousDeltaX.current = 0;
-          // Indicate that the work is done
-          setIsWorking(false);
-        }
       };
 
-      // Start the animation loop
-      requestAnimationFrame(step);
+      runRecursiveAction(
+        handleMoveElementInParent,
+        previousDeltaX.current,
+        0.85
+      );
+
+      // Once the animation is finished, reset the deltaX value
+      previousDeltaX.current = 0;
+
+      // Indicate that the work is done
+      requestAnimationFrame(() => {
+        setIsWorking(false);
+      });
     },
     [isGrabbing, moveElementInParent]
   );
