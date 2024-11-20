@@ -3,7 +3,7 @@
 import styles from "./SidePanelNavigation.module.css";
 
 // Import React hooks
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useMemo } from "react";
 import { createPortal } from "react-dom";
 
 // Import Contexts
@@ -36,7 +36,10 @@ const SidePanelNavigation = ({ content, customColors }) => {
   const panelOpacity = isMouseOver ? 0.66 : 0.33;
 
   // Prepare the navigation array using the content prop
-  const navigationItems = createNavigationItems(content);
+  const navigationItems = useMemo(
+    () => createNavigationItems(content),
+    [content]
+  );
 
   // Set the inline style for the panel background and text color
   const panelStyle = {
@@ -195,7 +198,7 @@ const createNavigationItems = (content) => {
         id: "related-projects",
         icon: faPaperclip,
         coords: [containerIndex, childIndex],
-        scrollToChild: false, // Scroll inside the container to the module
+        scrollToChild: false,
       });
     }
   }
