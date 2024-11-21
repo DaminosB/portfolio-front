@@ -48,4 +48,8 @@
   .mediasContainer > div {
     flex-direction: column;
   }
+
+  .ghost {
+    display: none;
+  }
 }
