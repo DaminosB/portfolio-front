@@ -249,7 +249,6 @@ const MediaCardWrapper = ({
       {/* --------------------------------------------------- */}
       {/* Background for underflow display mode */}
       {isImageFile && display.background && (
-        // {isImageFile && media.addToCarousel && display.background && (
         <div className={styles.background} onClick={handleOpenCarousel}>
           {children}
         </div>
