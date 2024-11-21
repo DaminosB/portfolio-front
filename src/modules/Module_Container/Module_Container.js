@@ -37,7 +37,7 @@ const Module_Container = ({ module, customColors }) => {
             {mediaBlocks.map((mediaBlock, i, array) => {
               if (i % module.imagesPerRow === 0) {
                 return (
-                  <div key={mediaBlock.id}>
+                  <div key={mediaBlock.id} style={mediasContainerStyle}>
                     {array
                       .slice(i, i + module.imagesPerRow)
                       .map((subItem, subIndex, subArray) => {
