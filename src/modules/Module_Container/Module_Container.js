@@ -65,22 +65,27 @@ const Module_Container = ({ module, customColors }) => {
                               cardsIdsArray[i * array.length + j];
 
                             return (
-                              <MediaCardWrapper
+                              <div
                                 key={mediaAsset.id}
-                                customColors={customColors}
-                                media={mediaAsset}
-                                cardId={mediaCardId}
+                                className={styles.mediaCardFrame}
                               >
-                                {isImageFile ? (
-                                  <img
-                                    draggable={false}
-                                    src={mediaAsset.url}
-                                    alt={mediaAsset.alternativeText}
-                                  />
-                                ) : (
-                                  <source src={mediaAsset.url} />
-                                )}
-                              </MediaCardWrapper>
+                                <MediaCardWrapper
+                                  // key={mediaAsset.id}
+                                  customColors={customColors}
+                                  media={mediaAsset}
+                                  cardId={mediaCardId}
+                                >
+                                  {isImageFile ? (
+                                    <img
+                                      draggable={false}
+                                      src={mediaAsset.url}
+                                      alt={mediaAsset.alternativeText}
+                                    />
+                                  ) : (
+                                    <source src={mediaAsset.url} />
+                                  )}
+                                </MediaCardWrapper>
+                              </div>
                             );
                           })}
                         </MediasGallery>

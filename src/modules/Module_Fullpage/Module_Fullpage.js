@@ -41,22 +41,24 @@ const Module_Fullpage = ({ module, customColors }) => {
                     const mediaCardId = cardsIdsArray[i * array.length + j];
 
                     return (
-                      <MediaCardWrapper
-                        key={mediaAsset.id}
-                        customColors={customColors}
-                        media={mediaAsset}
-                        cardId={mediaCardId}
-                      >
-                        {isImageFile ? (
-                          <img
-                            draggable={false}
-                            src={mediaAsset.url}
-                            alt={mediaAsset.alternativeText}
-                          />
-                        ) : (
-                          <source src={mediaAsset.url} />
-                        )}
-                      </MediaCardWrapper>
+                      <div className={styles.mediaCardFrame}>
+                        <MediaCardWrapper
+                          key={mediaAsset.id}
+                          customColors={customColors}
+                          media={mediaAsset}
+                          cardId={mediaCardId}
+                        >
+                          {isImageFile ? (
+                            <img
+                              draggable={false}
+                              src={mediaAsset.url}
+                              alt={mediaAsset.alternativeText}
+                            />
+                          ) : (
+                            <source src={mediaAsset.url} />
+                          )}
+                        </MediaCardWrapper>
+                      </div>
                     );
                   })}
                 </MediasGallery>

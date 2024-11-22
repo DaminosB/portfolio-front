@@ -27,7 +27,7 @@
   height: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   overflow: hidden;
 }
 
@@ -35,8 +35,17 @@
   flex: 1;
 }
 
-.mediasContainer img {
+.mediaCardFrame {
   width: 100%;
+}
+
+.mediaCardFrame > div {
+  margin: 0 auto;
+  width: fit-content;
+}
+
+.mediasContainer img {
+  max-width: 100%;
   object-fit: contain;
 }
 
