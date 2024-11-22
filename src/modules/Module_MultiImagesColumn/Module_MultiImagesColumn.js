@@ -34,12 +34,13 @@ const Module_MultiImagesColumn = ({ module, customColors }) => {
             mediaBlock={mediaBlock}
             customColors={customColors}
           >
-            {mediaBlock.mediaAssets.map((mediaAsset, j) => {
-              const mediaCardId = cardsIdsArray[i * array.length + j];
+            {mediaBlock.mediaAssets.map((mediaAsset, subIndex, subArray) => {
+              const mediaCardId = cardsIdsArray[i * subArray.length + subIndex];
 
               const relatedMedias = cardsIdsArray.filter(
                 (cardId) => cardId !== mediaCardId
               );
+
               return (
                 <MediaCardWrapper
                   key={mediaAsset.id}
