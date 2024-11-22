@@ -5,6 +5,7 @@
   overflow-y: hidden;
   width: 100%;
   gap: 10px;
+  overflow-wrap: anywhere;
 }
 
 .mediasGallery > div:first-child {
