@@ -13,12 +13,12 @@ import { ModuleContext } from "../ModuleWrapper/ModuleWrapper";
 
 // Import FontAwesome icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faExpand } from "@fortawesome/free-solid-svg-icons";
+import { faExpand, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 // Import components
 import SpotlightMarker from "@/components/SpotlightMarker/SpotlightMarker";
-import ZoomButton from "@/components/ZoomButton/ZoomButton";
 import VideoPlayer from "@/constructors/VideoPlayer/VideoPlayer";
+
 import generateRGBAString from "@/utils/generateRGBAString";
 
 // MediaCardWrapper component manages how media (image or video) is displayed
@@ -219,10 +219,9 @@ const MediaCardWrapper = ({
             />
           </div>
           <div className={isContainedView ? styles.active : "hidden"}>
-            <ZoomButton
-              customColors={customColors}
-              onClickFunction={toggleViews}
-            />
+            <button style={mainColorBackground} onClick={toggleViews}>
+              <FontAwesomeIcon icon={faMagnifyingGlass} />
+            </button>
           </div>
         </div>
       )}
