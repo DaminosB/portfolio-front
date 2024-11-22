@@ -41,9 +41,11 @@ const Module_Fullpage = ({ module, customColors }) => {
                     const mediaCardId = cardsIdsArray[i * array.length + j];
 
                     return (
-                      <div className={styles.mediaCardFrame}>
+                      <div
+                        key={mediaAsset.id}
+                        className={styles.mediaCardFrame}
+                      >
                         <MediaCardWrapper
-                          key={mediaAsset.id}
                           customColors={customColors}
                           media={mediaAsset}
                           cardId={mediaCardId}
