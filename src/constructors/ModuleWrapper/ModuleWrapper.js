@@ -236,7 +236,7 @@ const ModuleWrapper = ({ inlineStyle, customColors, module, children }) => {
 
       // Calculate the thumb height based on the percentage of the visible area
       const newThumbHeight =
-        100 / (tallestColumn.scrollHeight / section.offsetHeight);
+        100 / (tallestColumn.scrollHeight / tallestColumn.offsetHeight);
 
       // Calculate the maximum scroll position in the tallest column
       const maxScrollPosition =
@@ -286,21 +286,23 @@ const ModuleWrapper = ({ inlineStyle, customColors, module, children }) => {
         {/* --------------------------------------------------- */}
 
         {maxGalleryIndex > 0 && (
-          <nav style={galleryIndicatorInlineStyle}>
-            {/* Creates a button for each media in the galleries up to the largest gallery index */}
-            {Array.from({ length: maxGalleryIndex + 1 }).map((_, index) => {
-              const handleOnClick = () => {
-                setGalleryIndex(index);
-              };
-              return (
-                <DotButton
-                  key={index}
-                  isActive={index === galleryIndex}
-                  onClickFunction={handleOnClick}
-                />
-              );
-            })}
-          </nav>
+          <div className={styles.navContainer}>
+            <nav style={galleryIndicatorInlineStyle}>
+              {/* Creates a button for each media in the galleries up to the largest gallery index */}
+              {Array.from({ length: maxGalleryIndex + 1 }).map((_, index) => {
+                const handleOnClick = () => {
+                  setGalleryIndex(index);
+                };
+                return (
+                  <DotButton
+                    key={index}
+                    isActive={index === galleryIndex}
+                    onClickFunction={handleOnClick}
+                  />
+                );
+              })}
+            </nav>
+          </div>
         )}
 
         {/* --------------------------------------------------- */}

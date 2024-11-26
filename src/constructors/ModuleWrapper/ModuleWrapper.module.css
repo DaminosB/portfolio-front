@@ -1,19 +1,32 @@
 .moduleWrapper {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-.moduleWrapper > nav {
-  position: absolute;
-  bottom: 0px;
-  left: 50%;
-  transform: translateX(-50%);
+.moduleWrapper > div:not(.navContainer) {
+  flex: 1;
+  overflow: hidden;
+}
+
+.navContainer {
+  width: 100%;
+  display: flex;
+}
+
+.navContainer > nav {
+  width: fit-content;
   display: flex;
   gap: 10px;
   padding: 10px;
   font-size: 20px;
   border-radius: var(--small-radius) var(--small-radius) 0px 0px;
+  border: 1px solid;
+  border-bottom: none;
+  margin: 0 auto;
 }
 
-.moduleWrapper > nav > button {
+.navContainer > nav > button {
   transition: var(--normal-transition) var(--default-animation);
 }
