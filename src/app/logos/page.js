@@ -32,7 +32,7 @@ export default async function ProjectsIdPage() {
         <Modale customColors={customColors} />
         <SidePanelNavigation
           content={project}
-          customStyle={customColors}
+          customColors={customColors}
           showRelatedProject={relatedProjects ? true : false}
         />
         <style>{generateDynamicStyle(customColors)}</style>
