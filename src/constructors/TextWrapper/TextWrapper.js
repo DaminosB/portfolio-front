@@ -28,7 +28,7 @@ const generateTextStyle = (textModule) => {
   if (alignment === "Centré") response.textAlign = "center";
   else if (alignment === "Gauche") response.textAlign = "left";
   else if (alignment === "Droite") response.textAlign = "right";
-  else if (alignment === "Justifié") response.textAlign = "justified";
+  else if (alignment === "Justifié") response.textAlign = "justify";
 
   return response;
 };
