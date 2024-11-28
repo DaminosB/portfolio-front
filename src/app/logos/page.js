@@ -45,8 +45,10 @@ const fetchData = async () => {
   let logoPath = "logo?populate=";
   logoPath += "thumbnail";
   logoPath += ",modules.backgroundImage";
+  logoPath += ",modules.titleBlock";
   logoPath += ",modules.text";
   logoPath += ",modules.mediaBlocks.mediaAssets";
+
   const [logosResponse, customStyleResponse] = await Promise.all([
     handleFetch(logoPath),
     handleFetch("style"),

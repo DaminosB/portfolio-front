@@ -50,6 +50,7 @@ export default async function ProjectsIdPage({ params }) {
 const fetchData = async (pageId) => {
   let pagePath = `pages/${pageId}?populate=`;
   pagePath += "cover";
+  pagePath += ",modules.titleBlock";
   pagePath += ",modules.mediaBlocks.mediaAssets";
   pagePath += ",modules.backgroundImage";
   pagePath += ",modules.text";

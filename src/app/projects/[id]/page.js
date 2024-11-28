@@ -91,6 +91,7 @@ const fetchData = async (projectId) => {
   // Construction of the project's path string
   let projectPath = `projects/${projectId}?populate=`;
   projectPath += "cover";
+  projectPath += ",modules.titleBlock";
   projectPath += ",modules.mediaBlocks.mediaAssets";
   projectPath += ",modules.backgroundImage";
   projectPath += ",modules.text";
