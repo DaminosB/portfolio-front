@@ -5,9 +5,16 @@ import ModuleWrapper from "@/constructors/ModuleWrapper/ModuleWrapper";
 import TextWrapper from "@/constructors/TextWrapper/TextWrapper";
 import generateInlineStyle from "@/utils/generateInlineStyle";
 import ModuleColumn from "@/constructors/ModuleColumn/ModuleColumn";
+import generateTitleInlineStyle from "@/utils/generateTitleInlineStyle";
 
 const Module_Text = ({ module, customColors }) => {
+  const { titleBlock, text } = module;
+
   const { sectionStyle } = generateInlineStyle(module);
+
+  const titleInlineStyle = titleBlock
+    ? generateTitleInlineStyle(titleBlock)
+    : {};
 
   return (
     <ModuleWrapper
@@ -15,12 +22,15 @@ const Module_Text = ({ module, customColors }) => {
       customColors={customColors}
       module={module}
     >
-      <div className={styles.content}>
-        <ModuleColumn>
-          <TextWrapper textModule={module.text}>
-            <BlocksRenderer content={module.text.richText} />
-          </TextWrapper>
-        </ModuleColumn>
+      <div className={`container ${styles.content}`}>
+        {titleBlock && <h2 style={titleInlineStyle}>{titleBlock.title}</h2>}
+        <div>
+          <ModuleColumn>
+            <TextWrapper textModule={text}>
+              <BlocksRenderer content={text.richText} />
+            </TextWrapper>
+          </ModuleColumn>
+        </div>
       </div>
     </ModuleWrapper>
   );

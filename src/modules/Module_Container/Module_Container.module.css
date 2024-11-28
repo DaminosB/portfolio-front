@@ -1,16 +1,29 @@
 .content {
-  padding: var(--logo-height-offset) 0px;
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  align-items: center;
   height: 100%;
-  gap: var(--columns-gap);
+  padding: var(--logo-height-offset) 0px;
+}
+
+.content h2 {
+  width: fit-content;
+  padding: 5px 10px;
+  text-align: center;
 }
 
 .content > div {
+  height: 100%;
+  overflow: hidden;
+}
+
+.content > div > div {
   flex: 1;
   height: 100%;
   overflow-x: hidden;
   display: flex;
+  gap: var(--columns-gap);
 }
 
 .mediasContainer {

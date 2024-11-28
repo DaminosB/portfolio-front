@@ -10,21 +10,32 @@ import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 import generateInlineStyle from "@/utils/generateInlineStyle";
 import populateCardsIdsArray from "@/utils/populateCardsIdsArray";
 import generateCssClasses from "@/utils/generateCssClasses";
+import generateTitleInlineStyle from "@/utils/generateTitleInlineStyle";
 
 const Module_Fullpage = ({ module, customColors }) => {
-  const { mediaBlocks, text } = module;
+  const { titleBlock, mediaBlocks, text } = module;
 
   const { sectionStyle, mediasContainerStyle } = generateInlineStyle(module);
 
   const cardsIdsArray = populateCardsIdsArray(module);
 
   const contentDivClasses = generateCssClasses(module);
+
+  const titleInlineStyle = titleBlock
+    ? generateTitleInlineStyle(titleBlock)
+    : {};
+
   return (
     <ModuleWrapper
       inlineStyle={sectionStyle}
       customColors={customColors}
       module={module}
     >
+      {titleBlock && (
+        <h2 className={styles.title} style={titleInlineStyle}>
+          {titleBlock.title}
+        </h2>
+      )}
       <div className={`${styles.content} ${contentDivClasses}`}>
         <ModuleColumn>
           <div className={styles.mediasContainer} style={mediasContainerStyle}>

@@ -6,6 +6,17 @@
   width: 100%;
 }
 
+.title {
+  position: absolute;
+  top: var(--logo-height-offset);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  width: fit-content;
+  padding: 5px 10px;
+  text-align: center;
+}
+
 .content > div {
   height: 100%;
   flex: 1;
