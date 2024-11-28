@@ -38,7 +38,7 @@
 }
 
 .textContainer {
-  padding: var(--logo-height-offset) 0;
+  padding: var(--logo-height-offset) 30px;
   min-height: 100%;
   display: flex;
   align-items: center;
