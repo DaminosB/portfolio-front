@@ -16,14 +16,14 @@
 .content > div {
   height: 100%;
   overflow: hidden;
+  display: flex;
+  gap: var(--columns-gap);
 }
 
 .content > div > div {
   flex: 1;
   height: 100%;
   overflow-x: hidden;
-  display: flex;
-  gap: var(--columns-gap);
 }
 
 .mediasContainer {
