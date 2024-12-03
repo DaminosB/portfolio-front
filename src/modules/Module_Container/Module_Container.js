@@ -32,12 +32,13 @@ const Module_Container = ({ module, customColors }) => {
       customColors={customColors}
       module={module}
     >
-      <div
-        className={`container ${styles.content} ${contentDivClasses}`}
-        style={contentDivStyle}
-      >
-        {titleBlock && <h2 style={titleInlineStyle}>{titleBlock.title}</h2>}
-        <div>
+      <div className={`container ${styles.content}`}>
+        {titleBlock && (
+          <h2 className={styles.title} style={titleInlineStyle}>
+            {titleBlock.title}
+          </h2>
+        )}
+        <div className={contentDivClasses} style={contentDivStyle}>
           <ModuleColumn>
             <div
               className={styles.mediasContainer}
