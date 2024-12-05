@@ -1,0 +1,4 @@
+.relatedProjects {
+  height: 100%;
+  backdrop-filter: var(--default-blur);
+}
