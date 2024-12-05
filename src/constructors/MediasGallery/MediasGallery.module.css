@@ -19,6 +19,8 @@
   width: 100%;
   display: flex;
   transition: var(--normal-transition) var(--default-animation);
+  overflow-x: hidden;
+  will-change: scroll-position;
 }
 
 .slider > div {

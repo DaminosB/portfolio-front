@@ -8,7 +8,7 @@ import { ModuleContext } from "../ModuleWrapper/ModuleWrapper";
 const MediasGallery = ({ customColors, mediaBlock, children }) => {
   const sliderRef = useRef(null);
 
-  const { galleryIndex } = useContext(ModuleContext);
+  const { sectionXScrollRatio } = useContext(ModuleContext);
 
   const labelBlockInlineStyle = {
     color: mediaBlock.labelColor
@@ -18,14 +18,9 @@ const MediasGallery = ({ customColors, mediaBlock, children }) => {
 
   useEffect(() => {
     const slider = sliderRef.current;
-    const maxIndex = Array.from(slider.children).length - 1;
-
-    if (galleryIndex <= maxIndex) {
-      const translatePercentage = galleryIndex * 100;
-
-      slider.style.transform = `translateX(${-translatePercentage}%)`;
-    }
-  }, [galleryIndex]);
+    const scrollTarget = slider.offsetWidth * sectionXScrollRatio;
+    slider.scrollTo({ left: scrollTarget, behavior: "instant" });
+  }, [sectionXScrollRatio]);
 
   return (
     <div className={styles.mediasGallery}>
