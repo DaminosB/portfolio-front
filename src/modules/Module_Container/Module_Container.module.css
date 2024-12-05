@@ -24,7 +24,7 @@
 .content > div > div {
   flex: 1;
   height: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .mediasContainer {
