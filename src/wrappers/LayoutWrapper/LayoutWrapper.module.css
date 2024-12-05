@@ -1,23 +1,45 @@
-.layoutContainer {
-  overflow: hidden;
-  will-change: scroll-position;
+.layoutScroller {
   height: 100%;
-}
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  position: relative;
+  display: flex;
 
-/* Hide scrollbar for Chrome, Safari and Opera */
-.layoutContainer::-webkit-scrollbar {
-  display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.layoutContainer {
+  /* Hide scrollbar for IE, Edge and Firefox */
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
 
-.layoutContainer > div {
+/* Hide scrollbar for Chrome, Safari and Opera  */
+.layoutScroller::-webkit-scrollbar {
+  display: none;
+}
+
+.pageFrame {
   position: sticky;
   top: 0px;
+  bottom: 0px;
   height: 100%;
   width: 100%;
+  overflow: hidden;
+  flex: 1;
+}
+
+.pageFrame > div {
+  position: sticky;
+  top: 0px;
+}
+
+.ghost {
+  width: 0px;
+  display: flex;
+  flex-direction: column;
+  visibility: hidden;
+}
+
+.ghost > div {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  flex: 1;
 }
