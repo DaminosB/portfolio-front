@@ -24,7 +24,10 @@ const ScrollBar = ({
 
   // Inline styles for custom colors
   const containerInlineStyle = { color: customColors.secondaryColor };
-  const markerInlineStyle = { backgroundColor: customColors.secondaryColor };
+  const markerInlineStyle = {
+    backgroundColor: customColors.secondaryColor,
+    borderColor: customColors.mainColor,
+  };
 
   // Manages mouse events on the thumb for grabbing and dragging
   const handleThumbEvents = (e) => {
@@ -113,7 +116,7 @@ const ScrollBar = ({
 
     // Calculate and apply the thumb's vertical position
     const thumbPosition =
-      (track.offsetHeight - thumb.offsetHeight) * metrics.scrollRatio;
+      (track.offsetHeight - thumb.offsetHeight) * metrics.scrollProgress;
     thumb.style.transform = `translateY(${thumbPosition}px)`;
   }, [metrics]);
 
