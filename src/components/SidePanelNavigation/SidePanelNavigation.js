@@ -28,8 +28,7 @@ const SidePanelNavigation = ({ content, customColors }) => {
   const [isPanelOpen, setIsPanelOpen] = useState(true); // Controls whether the panel is open or collapsed
 
   // Get the current active coordinates from context (active container and child section)
-  const { activeCoords, layoutNode, showEndScrollPanel, setEndScrollValue } =
-    useContext(LayoutContext);
+  const { activeCoords, layoutScroller } = useContext(LayoutContext);
   const [activeContainerIndex, activeChildIndex] = activeCoords;
 
   // Set opacity based on whether the mouse is hovering over the panel
@@ -90,13 +89,13 @@ const SidePanelNavigation = ({ content, customColors }) => {
           const [containerIndex, childIndex] = navItem.coords;
           const isActiveSection =
             containerIndex === activeContainerIndex &&
-            childIndex === activeChildIndex &&
-            !showEndScrollPanel;
+            childIndex === activeChildIndex;
 
           // Function to handle clicks and scroll to the appropriate section
           const handleScrollToSection = () => {
-            setEndScrollValue(0);
-            const containers = Array.from(layoutNode.children);
+            const containers = Array.from(
+              layoutScroller.firstElementChild.children
+            );
             const targetContainer = containers[containerIndex];
 
             // Calculate the total height to scroll to the target container
@@ -105,7 +104,7 @@ const SidePanelNavigation = ({ content, customColors }) => {
               .reduce((acc, container) => acc + container.offsetHeight, 0);
 
             // Scroll to the target container in the layout
-            layoutNode.scrollTo({
+            layoutScroller.scrollTo({
               top: cumulativeHeight,
               behavior: "smooth",
             });
