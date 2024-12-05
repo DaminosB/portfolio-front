@@ -4,7 +4,8 @@
   flex-direction: column;
   align-items: center;
   height: 100%;
-  padding: var(--logo-height-offset) 0px;
+  padding: var(--logo-height-offset);
+  /* padding: var(--logo-height-offset) 0px; */
 }
 
 .title {

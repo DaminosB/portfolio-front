@@ -32,7 +32,7 @@ const Module_Container = ({ module, customColors }) => {
       customColors={customColors}
       module={module}
     >
-      <div className={`container ${styles.content}`}>
+      <div className={styles.content}>
         {titleBlock && (
           <h2 className={styles.title} style={titleInlineStyle}>
             {titleBlock.title}
