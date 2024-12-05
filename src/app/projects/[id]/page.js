@@ -1,3 +1,5 @@
+import styles from "./page.module.css";
+
 import ErrorComponent from "@/components/ErrorComponent/ErrorComponent";
 import SnapScrollWrapper from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
 import ModulesDisplayer from "@/constructors/ModulesDisplayer/ModulesDisplayer";
@@ -42,7 +44,7 @@ export default async function ProjectsIdPage({ params }) {
           />
         </SnapScrollWrapper>
         {relatedProjects.length > 0 && (
-          <div style={inlineStyle}>
+          <div className={styles.relatedProjects} style={inlineStyle}>
             <ProjectsContainer
               projects={relatedProjects}
               customStyle={customStyle}
