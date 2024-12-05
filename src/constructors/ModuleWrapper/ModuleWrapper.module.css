@@ -1,13 +1,43 @@
 .moduleWrapper {
   position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
-.moduleWrapper > div:not(.navContainer) {
+.scroller {
   flex: 1;
+  height: 100%;
+  overflow: auto;
+  scroll-snap-type: x mandatory;
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.scroller > div:first-child {
+  height: 100%;
   overflow: hidden;
+  position: sticky;
+  top: 0px;
+  left: 0px;
+}
+
+.ghost {
+  display: flex;
+  overflow-x: visible;
+}
+
+.ghost > div {
+  flex: 1;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .navContainer {
