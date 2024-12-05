@@ -1,60 +1,80 @@
 "use client";
 import styles from "./ModuleWrapper.module.css";
 
-// React hooks imports
+// React hooks and context
 import { useState, useContext, useEffect, useRef, createContext } from "react";
 import { LayoutContext } from "@/wrappers/LayoutWrapper/LayoutWrapper";
 
-export const ModuleContext = createContext();
-
-// Components imports
+// Components
 import Carousel from "@/components/Carousel/Carousel";
 import DotButton from "@/components/DotButton/DotButton";
 import ScrollBar from "@/components/ScrollBar/ScrollBar";
+import useScrollTracker from "@/hooks/useScrollTracker";
 
-// This component wraps around each module to handle and display the media galleries and scrolling content
+// Create a context to share state and actions with child components
+export const ModuleContext = createContext();
+
 const ModuleWrapper = ({ inlineStyle, customColors, module, children }) => {
-  // State to track whether the module is active (i.e., displayed by the viewer)
-  // When false, no dragging effects are active
-  const [isActiveSection, setIsActiveSection] = useState(false);
-
-  // Ref to store the DOM element of the section
-  const sectionRef = useRef(null);
-
-  // Ref to store the coordinates of the section in the layout
-  const sectionCoordsRef = useRef(null);
-
-  const { activeCoords, showModale, getSectionCoords, setModaleContent } =
-    useContext(LayoutContext);
-  const [activeContainerIndex, activeChildIndex] = activeCoords;
-
-  // State to track the current index of the media gallery being displayed
-  const [galleryIndex, setGalleryIndex] = useState(0);
-
-  // State to store the scroll metrics of each column in the module
-  const [scrollMetrics, setScrollMetrics] = useState([]);
-
-  // State to store the scroll bar's thumb height and its current scroll position ratio
+  // -------------------------------------------------------------------------
+  // States and Refs
+  // -------------------------------------------------------------------------
+  const [isActiveSection, setIsActiveSection] = useState(false); // Tracks if the module is active
+  const [xScrollRatio, setXScrollRatio] = useState(0); // Tracks horizontal scroll ratio
   const [scrollBarMetrics, setScrollBarMetrics] = useState({
     thumbHeight: 0,
-    scrollRatio: 0,
-  });
+    scrollProgress: 0,
+  }); // Scrollbar metrics: thumb height and scroll progress
 
-  // Array of media assets to display in the carousel, filtered by "addToCarousel" flag and duplicates
+  const sectionRef = useRef(null); // Reference to the main section DOM element
+  const ghostRef = useRef(null); // Reference to the "ghost" element
+  const sectionCoordsRef = useRef(null); // Cached section coordinates
+  const scrollableElemsRef = useRef([]); // Stores scrollable child elements
+  const cachedYScrollPosition = useRef(0); // Stores the last Y scroll position
+
+  const {
+    activeCoords: [activeContainerIndex, activeChildIndex],
+    showModale,
+    getSectionCoords,
+    setModaleContent,
+  } = useContext(LayoutContext);
+
+  // -------------------------------------------------------------------------
+  // Scroll Management (X and Y axes)
+  // -------------------------------------------------------------------------
+
+  // A ghost element serves as a placeholder to simulate scrolling.
+  // It dynamically adjusts its width and height to match the total overflow content
+  // (horizontal for media galleries and vertical for overflowing module content).
+  // This allows the scroller to have the proper scroll dimensions without requiring
+  // the actual {children} elements to move, as they remain sticky at top: 0 and left: 0.
+
+  // Handles vertical scrolling for overflowing content
+  const { scrollPosition: yScrollPosition, scrollTrack: yScrollTrack } =
+    useScrollTracker();
+
+  // Handles horizontal scrolling for media galleries
+  const {
+    scrollPosition: xScrollPosition,
+    scrollTrack: xScrollTrack,
+    displayIndex: galleryIndex,
+  } = useScrollTracker(true);
+
+  // Unified scroll handler for both axes
+  const handleOnScroll = (e) => {
+    xScrollTrack(e, [1]); // Track horizontal scroll
+    yScrollTrack(e); // Track vertical scroll
+  };
+
+  // -------------------------------------------------------------------------
+  // Functions: Media handling and scrolling actions
+  // -------------------------------------------------------------------------
+
+  // Filter and deduplicate media assets to display in the carousel
   const mediasToDisplay = module.mediaBlocks
-    ? module.mediaBlocks
-        .flatMap((mediaBlock) =>
-          mediaBlock.mediaAssets.filter(
-            (mediaAsset) => mediaAsset.addToCarousel
-          )
-        )
-        .filter(
-          (mediaAsset, index, array) =>
-            index === array.findIndex((subItem) => subItem.id === mediaAsset.id)
-        )
+    ? populateMediasToDisplay(module.mediaBlocks)
     : null;
 
-  // This function opens the carousel in a modal with the selected media
+  // Opens a carousel modal at the selected media
   const openCarousel = (mediaId) => {
     const mediaIndex = mediasToDisplay.findIndex(
       (media) => media.id === mediaId
@@ -69,204 +89,116 @@ const ModuleWrapper = ({ inlineStyle, customColors, module, children }) => {
     );
   };
 
-  // This function is used by ModuleColumn child components to update their scroll metrics
-  const updateScrollMetrics = (element, scrollPosition) => {
-    // Find the index of the column in its parent container
-    const elementIndex = Array.from(element.parentNode.children).findIndex(
-      (child) => child === element
-    );
-
-    // Update the scrollMetrics state with the new data
-    setScrollMetrics((prev) => {
-      const newTab = [...prev];
-      newTab[elementIndex] = { element, scrollPosition };
-      return newTab;
-    });
+  // Allows child components to register as scrollable elements
+  const addScrollableElem = (element) => {
+    if (!scrollableElemsRef.current.includes(element)) {
+      scrollableElemsRef.current.push(element);
+    }
   };
 
-  // Functions provided to the ScrollBar component for scrolling actions
-
-  // This function is triggered when the arrow buttons are clicked
+  // Scroll-related functions for the ScrollBar component:
+  // Scrolls by a portion of the visible height when arrows are clicked
   const arrowsFunction = (multiplyer) => {
-    // multiplyer: Number. Either 1 or -1, determines the scroll direction
-    const section = sectionRef.current;
-
-    // Scroll by a third of the visible part of the columns when an arrow is clicked
-    const scrollValue = multiplyer * (section.offsetHeight / 3);
-
-    // Apply the scroll value to each column
-    scrollMetrics.forEach((entry) => {
-      entry.element.scrollBy({ top: scrollValue, behavior: "smooth" });
-    });
+    const scroller = sectionRef.current.firstElementChild;
+    const scrollValue = multiplyer * (scroller.offsetHeight / 3);
+    scroller.scrollBy({ top: scrollValue, behavior: "smooth" });
   };
 
-  // This function is triggered when the scroll bar's thumb is grabbed
+  // Scrolls instantly by a given deltaY when the thumb is dragged
   const grabbingFunction = (deltaY) => {
-    // Scroll each column by the value of deltaY
-    scrollMetrics.forEach((entry) => {
-      entry.element.scrollBy({ top: deltaY, behavior: "instant" });
-    });
+    const scroller = sectionRef.current.firstElementChild;
+    scroller.scrollBy({ top: deltaY, behavior: "instant" });
   };
 
-  // This function is called when the track is clicked to scroll to the desired position
+  // Scrolls smoothly to a position determined by the clicked ratio on the scrollbar track
   const scrollToClickPosition = (yRatio) => {
-    // Scroll each column to the position corresponding to the clicked ratio
-    scrollMetrics.forEach((entry) => {
-      const scrollTarget = entry.element.scrollHeight * yRatio;
-      entry.element.scrollTo({ top: scrollTarget, behavior: "smooth" });
-    });
+    const scroller = sectionRef.current.firstElementChild;
+    const scrollTarget = scroller.scrollHeight * yRatio;
+    scroller.scrollTo({ top: scrollTarget, behavior: "smooth" });
   };
 
-  // The largest media gallery determines the maximum gallery index
-  const maxGalleryIndex = module.mediaBlocks.reduce(
-    (maxAssetsCount, mediaBlock) =>
-      Math.max(maxAssetsCount, mediaBlock.mediaAssets.length - 1),
-    0
-  );
-
-  // This function handles the wheel action on the X-axis to change the gallery index
-  const handleOnWheel = (e) => {
-    const { deltaX, deltaY } = e;
-
-    // If the wheel movement is more significant on the Y-axis, ignore the function
-    if (Math.abs(deltaX) < Math.abs(deltaY)) return;
-
-    // Otherwise, stop the event from bubbling up and change the gallery index
-    e.stopPropagation();
-    changeGalleryIndex(deltaX);
-  };
-
-  const previousTouchPositionsRef = useRef({ x: 0, y: 0 });
-
-  // This function handles touch events to change the gallery index on the X-axis
-  const handleTouchEvents = (e) => {
-    switch (e.type) {
-      case "touchstart":
-        // On touch start, cache the initial touch positions
-        previousTouchPositionsRef.current = {
-          x: e.targetTouches[0].clientX,
-          y: e.targetTouches[0].clientY,
-        };
-        break;
-
-      case "touchmove":
-        // On touch move, calculate the movement on X and Y axes
-        const previousTouchPositions = previousTouchPositionsRef.current;
-        const deltaX = previousTouchPositions.x - e.targetTouches[0].clientX;
-        const deltaY = previousTouchPositions.y - e.targetTouches[0].clientY;
-
-        // If the movement is larger on the Y-axis, ignore the function
-        if (Math.abs(deltaX) < Math.abs(deltaY)) return;
-
-        // Otherwise, change the gallery index
-        e.stopPropagation();
-        changeGalleryIndex(deltaX);
-
-        // Update the cached touch position
-        previousTouchPositionsRef.current = {
-          x: e.targetTouches[0].clientX,
-          y: e.targetTouches[0].clientY,
-        };
-        break;
-
-      default:
-        break;
-    }
-  };
-
-  // Debounce mechanism to prevent gallery index changes from happening too often
-  const galleryChangeDebounce = useRef(true);
-
-  // This function changes the gallery index based on the horizontal wheel or touch movement
-  const changeGalleryIndex = (deltaX) => {
-    if (galleryChangeDebounce.current) {
-      galleryChangeDebounce.current = false;
-
-      // If the movement is from right to left, and the galleryIndex is smaller than maxGalleryIndex, increase the index
-      if (deltaX > 0 && galleryIndex < maxGalleryIndex) {
-        setGalleryIndex((prev) => prev + 1);
-      } else if (deltaX < 0 && galleryIndex > 0) {
-        // If the movement is from left to right, and the galleryIndex is not 0, decrease the index
-        setGalleryIndex((prev) => prev - 1);
-      }
-
-      setTimeout(() => {
-        galleryChangeDebounce.current = true;
-      }, 750);
-    }
-  };
-
-  // Inline style for the gallery index indicator
-  const galleryIndicatorInlineStyle = {
-    backgroundColor: customColors.mainColor,
-    color: customColors.secondaryColor,
-  };
-
-  // This effect checks if the module is active based on its coordinates and updates the scroll bar metrics
+  // -------------------------------------------------------------------------
+  // Effects: Activity monitoring and layout updates
+  // -------------------------------------------------------------------------
   useEffect(() => {
     const section = sectionRef.current;
 
-    // Get section coordinates if not already done
+    // Cache section coordinates if not already calculated
     if (!sectionCoordsRef.current)
       sectionCoordsRef.current = getSectionCoords(section);
 
     const [containerIndex, sectionIndex] = sectionCoordsRef.current;
 
+    // Determine if the current module is active
     const isActive =
       activeContainerIndex === containerIndex &&
       activeChildIndex === sectionIndex;
 
-    // Update the active state if necessary
     if (isActive !== isActiveSection) setIsActiveSection(isActive);
 
-    // If scrollMetrics are available, calculate and update the scrollBar metrics
-    if (scrollMetrics.length > 0) {
-      let tallestColumnIndex = 0;
+    // Update the ghost element's height based on the largest overflow
+    const ghost = ghostRef.current;
+    const ghostHeight = scrollableElemsRef.current.reduce(
+      (maxOverflow, elem) => {
+        const overflowY = elem.scrollHeight - elem.offsetHeight;
+        return Math.max(maxOverflow, overflowY);
+      },
+      0
+    );
 
-      // Find the index of the column with the tallest content
-      scrollMetrics.forEach((entry, i) => {
-        const currentTallestColumn = scrollMetrics[tallestColumnIndex].element;
-        if (entry.element.scrollHeight > currentTallestColumn.scrollHeight) {
-          tallestColumnIndex = i;
-        }
-      });
+    ghost.style.height = `${ghostHeight}px`;
 
-      // Get the DOM element of the tallest column
-      const tallestColumn = scrollMetrics[tallestColumnIndex].element;
+    // Calculate and update scrollbar metrics
+    const scroller = section.firstElementChild;
+    const yOverflowRatio = scroller.scrollHeight / scroller.offsetHeight;
+    const newThumbHeight = 100 / yOverflowRatio;
+    const maxYScrollPosition = scroller.scrollHeight - scroller.offsetHeight;
+    const newYScrollProgress = yScrollPosition / maxYScrollPosition;
 
-      // Calculate the thumb height based on the percentage of the visible area
-      const newThumbHeight =
-        100 / (tallestColumn.scrollHeight / tallestColumn.offsetHeight);
+    setScrollBarMetrics({
+      thumbHeight: newThumbHeight,
+      scrollProgress: newYScrollProgress,
+    });
 
-      // Calculate the maximum scroll position in the tallest column
-      const maxScrollPosition =
-        tallestColumn.scrollHeight - tallestColumn.offsetHeight;
+    // Cache the latest Y scroll position
+    cachedYScrollPosition.current = yScrollPosition;
 
-      // Calculate the scroll ratio based on the current scroll position
-      const newScrollRatio =
-        scrollMetrics[tallestColumnIndex].scrollPosition / maxScrollPosition;
-
-      // Update the scroll bar metrics
-      setScrollBarMetrics({
-        thumbHeight: newThumbHeight,
-        scrollRatio: newScrollRatio,
-      });
+    // Update X scroll ratio
+    const newXScrollRatio = xScrollPosition / scroller.clientWidth || 0;
+    if (newXScrollRatio !== xScrollRatio) {
+      setXScrollRatio(newXScrollRatio);
     }
   }, [
-    activeCoords,
+    isActiveSection,
     activeChildIndex,
     activeContainerIndex,
     getSectionCoords,
-    scrollMetrics,
+    yScrollPosition,
+    xScrollPosition,
+    xScrollRatio,
   ]);
+
+  const maxGalleryLength = module.mediaBlocks.reduce(
+    (maxCount, block) => Math.max(maxCount, block.mediaAssets.length),
+    0
+  );
 
   const contextValues = {
     isActiveSection,
     openCarousel,
     showModale,
-    galleryIndex,
-    setGalleryIndex,
-    updateScrollMetrics,
+    addScrollableElem,
+    sectionScrollDeltaY: yScrollPosition - cachedYScrollPosition.current,
+    sectionXScrollRatio: xScrollRatio,
+  };
+
+  const galleryIndicatorInlineStyle = {
+    backgroundColor: customColors.mainColor,
+    color: customColors.secondaryColor,
+  };
+
+  const ghostInlineStyle = {
+    width: `${maxGalleryLength * 100}%`,
   };
 
   return (
@@ -275,23 +207,33 @@ const ModuleWrapper = ({ inlineStyle, customColors, module, children }) => {
         className={styles.moduleWrapper}
         style={inlineStyle}
         ref={sectionRef}
-        onWheel={handleOnWheel}
-        onTouchStart={handleTouchEvents}
-        onTouchMove={handleTouchEvents}
       >
-        {children}
+        <div className={styles.scroller} onScroll={handleOnScroll}>
+          {children}
+
+          {/* --------------------------------------------------- */}
+          {/* ---------------------- GHOST ---------------------- */}
+          {/* --------------------------------------------------- */}
+
+          <div className={styles.ghost} style={ghostInlineStyle} ref={ghostRef}>
+            {Array.from({ length: maxGalleryLength }).map((_, index) => (
+              <div key={index}></div>
+            ))}
+          </div>
+        </div>
 
         {/* --------------------------------------------------- */}
         {/* ------------ GALLERY NAVIGATION BUTTONS ----------- */}
         {/* --------------------------------------------------- */}
-
-        {maxGalleryIndex > 0 && (
+        {maxGalleryLength > 1 && (
           <div className={styles.navContainer}>
             <nav style={galleryIndicatorInlineStyle}>
-              {/* Creates a button for each media in the galleries up to the largest gallery index */}
-              {Array.from({ length: maxGalleryIndex + 1 }).map((_, index) => {
+              {Array.from({ length: maxGalleryLength }).map((_, index) => {
                 const handleOnClick = () => {
-                  setGalleryIndex(index);
+                  const scroller = sectionRef.current.firstElementChild;
+                  const ghost = ghostRef.current;
+                  const scrollTarget = ghost.children[index].offsetLeft;
+                  scroller.scrollTo({ left: scrollTarget, behavior: "smooth" });
                 };
                 return (
                   <DotButton
@@ -321,3 +263,14 @@ const ModuleWrapper = ({ inlineStyle, customColors, module, children }) => {
 };
 
 export default ModuleWrapper;
+
+/* Utility to populate media assets for the carousel */
+const populateMediasToDisplay = (mediaBlocks) =>
+  mediaBlocks
+    .flatMap((block) =>
+      block.mediaAssets.filter((asset) => asset.addToCarousel)
+    )
+    .filter(
+      (asset, index, array) =>
+        index === array.findIndex((subItem) => subItem.id === asset.id)
+    );
