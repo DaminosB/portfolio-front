@@ -51,5 +51,6 @@
   width: 10px;
   height: 100%;
   margin: 0 auto;
+  border: 1px solid;
   border-radius: var(--small-radius);
 }
