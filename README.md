@@ -111,7 +111,7 @@ components/
 ├── Modale              # Modal component
 ├── NavSocials          # Social media links
 ├── ProjectsContainer   # Displays projects
-├── SidePanelNavigation # Side panel for quick navigation
+├── ContentMenu # Side panel for quick navigation
 ├── SpotlightMarker     # Highlights images
 ├── TagsContainer       # Displays project tags
 └── ZoomButton          # Zoom functionality for images

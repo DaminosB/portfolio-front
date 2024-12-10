@@ -2,7 +2,7 @@ import ErrorComponent from "@/components/ErrorComponent/ErrorComponent";
 import SnapScrollWrapper from "@/wrappers/SnapScrollWrapper/SnapScrollWrapper";
 import ModulesDisplayer from "@/constructors/ModulesDisplayer/ModulesDisplayer";
 import CoverContainer from "@/components/CoverContainer/CoverContainer";
-import SidePanelNavigation from "@/components/SidePanelNavigation/SidePanelNavigation";
+import ContentMenu from "@/components/ContentMenu/ContentMenu";
 import Modale from "@/components/Modale/Modale";
 import generateDynamicStyle from "@/utils/generateDynamicStyle";
 import handleFetch from "@/utils/handleFetch";
@@ -36,7 +36,7 @@ export default async function ProjectsIdPage({ params }) {
           />
         </SnapScrollWrapper>
         <Modale customColors={customColors} />
-        <SidePanelNavigation
+        <ContentMenu
           content={page}
           customColors={customColors}
           showRelatedProject={false}
