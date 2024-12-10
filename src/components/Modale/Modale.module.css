@@ -12,16 +12,3 @@
   backdrop-filter: var(--default-blur);
   transition: var(--normal-transition) var(--default-animation);
 }
-
-.modaleWrapper > button {
-  position: absolute;
-  top: 25px;
-  right: 25px;
-  font-size: 35px;
-  transition: inherit;
-  z-index: 10;
-}
-
-.modaleWrapper > button:hover {
-  scale: 1.25;
-}

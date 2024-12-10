@@ -59,7 +59,11 @@ const Modale = ({ customColors }) => {
         onClick={closeModale}
         onTransitionEnd={handleResetContent}
       >
-        <button style={closeButtonInlineStyle} onClick={closeModale}>
+        <button
+          className="close-button"
+          style={closeButtonInlineStyle}
+          onClick={closeModale}
+        >
           <FontAwesomeIcon icon={faXmark} />
         </button>
         {modaleContent}
