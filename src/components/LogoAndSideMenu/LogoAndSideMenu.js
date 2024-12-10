@@ -86,7 +86,7 @@ const LogoAndSideMenu = ({ profile, customStyle, pages }) => {
             {pages.map((page) => {
               return (
                 <Link key={page.id} href={`/user-pages/${page.id}`}>
-                  {page.name}
+                  {page.title}
                 </Link>
               );
             })}

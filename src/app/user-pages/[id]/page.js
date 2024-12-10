@@ -47,6 +47,23 @@ export default async function ProjectsIdPage({ params }) {
   }
 }
 
+export async function generateMetadata({ params }) {
+  const [pageResponse, siteParametersResponse] = await Promise.all([
+    handleFetch(`pages/${params.id}`),
+    handleFetch("site-parameter"),
+  ]);
+
+  if (!pageResponse.data) return;
+  const defaultTitle = siteParametersResponse.data.attributes.pageTitle;
+  const pageTitle = pageResponse.data.attributes.title;
+  const titleStr = `${defaultTitle} || ${pageTitle}`;
+
+  return {
+    title: titleStr,
+    description: pageResponse.data.attributes.description,
+  };
+}
+
 const fetchData = async (pageId) => {
   let pagePath = `pages/${pageId}?populate=`;
   pagePath += "cover";
