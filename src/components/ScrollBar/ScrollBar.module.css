@@ -1,7 +1,8 @@
 .scrollBarContainer {
   position: absolute;
   height: 100%;
-  left: 0px;
+  /* left: 0px; */
+  right: 0px;
   top: 0px;
   padding: var(--logo-height-offset) 0px;
   font-size: 20px;
