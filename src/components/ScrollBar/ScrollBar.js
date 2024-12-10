@@ -7,13 +7,7 @@ import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import runRecursiveAction from "@/utils/runRecursiveAction";
 
 // Displays a custom scroll bar when the module's content overflows vertically
-const ScrollBar = ({
-  customColors,
-  metrics,
-  arrowsFunction,
-  grabbingFunction,
-  scrollToClickPosition,
-}) => {
+const ScrollBar = ({ customColors, metrics }) => {
   // References to the scroll bar's DOM elements
   const scrollBarContainerRef = useRef(null); // The container of the scroll bar
   const thumbRef = useRef(null); // The draggable thumb
@@ -29,8 +23,25 @@ const ScrollBar = ({
     borderColor: customColors.mainColor,
   };
 
+  // Scrolls by a portion of the visible height when arrows are clicked
+  const scrollByArrows = (multiplyer) => {
+    const scrollBarParent = scrollBarContainerRef.current.parentNode;
+    const scroller = scrollBarParent.querySelector('[data-role="scroller"');
+
+    const scrollValue = multiplyer * (scroller.offsetHeight / 3);
+    scroller.scrollBy({ top: scrollValue, behavior: "smooth" });
+  };
+
   // Manages mouse events on the thumb for grabbing and dragging
   const handleThumbEvents = (e) => {
+    // Scrolls instantly by a given deltaY when the thumb is dragged
+    const scrollByDragging = (deltaY) => {
+      const scrollBarParent = scrollBarContainerRef.current.parentNode;
+      const scroller = scrollBarParent.querySelector('[data-role="scroller"');
+
+      scroller.scrollBy({ top: deltaY, behavior: "instant" });
+    };
+
     switch (e.type) {
       case "pointerdown":
         // Store the Y-coordinate of the initial click
@@ -50,7 +61,7 @@ const ScrollBar = ({
 
         // Scale the movement to match the scroll ratio
         const multiplier = track.offsetHeight / thumb.offsetHeight;
-        grabbingFunction(multiplier * deltaY);
+        scrollByDragging(multiplier * deltaY);
 
         // Update the cached mouse position
         previousClickYPositionRef.current = e.clientY;
@@ -65,7 +76,7 @@ const ScrollBar = ({
         ) {
           return;
         }
-        runRecursiveAction(grabbingFunction, previousDeltaYRef.current, 0.95);
+        runRecursiveAction(scrollByDragging, previousDeltaYRef.current, 0.95);
 
         // Reset the cached click position and deltaX values
         previousClickYPositionRef.current = null;
@@ -87,13 +98,18 @@ const ScrollBar = ({
     const thumb = thumbRef.current;
     const track = thumb.parentNode;
 
+    const scrollBarParent = scrollBarContainerRef.current.parentNode;
+    const scroller = scrollBarParent.querySelector('[data-role="scroller"');
+
     // Calculate the position of the click on the track, centering the thumb
     const trackTop = track.getBoundingClientRect().top;
     const clickPosition = e.clientY - trackTop - thumb.offsetHeight / 2;
 
     // Convert the click position into a ratio of the track's height
     const clickRatio = clickPosition / track.offsetHeight;
-    scrollToClickPosition(clickRatio);
+
+    const scrollTarget = scroller.scrollHeight * clickRatio;
+    scroller.scrollTo({ top: scrollTarget, behavior: "smooth" });
   };
 
   // Adjusts the thumb's size and position whenever metrics are updated
@@ -128,7 +144,7 @@ const ScrollBar = ({
     >
       <div>
         {/* Scroll up button */}
-        <button onClick={() => arrowsFunction(-1)}>
+        <button onClick={() => scrollByArrows(-1)}>
           <FontAwesomeIcon icon={faChevronUp} />
         </button>
 
@@ -150,7 +166,7 @@ const ScrollBar = ({
         </div>
 
         {/* Scroll down button */}
-        <button onClick={() => arrowsFunction(1)}>
+        <button onClick={() => scrollByArrows(1)}>
           <FontAwesomeIcon icon={faChevronDown} />
         </button>
       </div>

@@ -7,9 +7,11 @@ import { LayoutContext } from "@/wrappers/LayoutWrapper/LayoutWrapper";
 
 // Components
 import Carousel from "@/components/Carousel/Carousel";
-import DotButton from "@/components/DotButton/DotButton";
+import NavigationButton from "@/components/NavigationButton/NavigationButton";
 import ScrollBar from "@/components/ScrollBar/ScrollBar";
 import useScrollTracker from "@/hooks/useScrollTracker";
+import { faCircle } from "@fortawesome/free-solid-svg-icons";
+import populateScrollbarMetrics from "@/utils/populateScrollBarMetrics";
 
 // Create a context to share state and actions with child components
 export const ModuleContext = createContext();
@@ -96,27 +98,6 @@ const ModuleWrapper = ({ inlineStyle, customColors, module, children }) => {
     }
   };
 
-  // Scroll-related functions for the ScrollBar component:
-  // Scrolls by a portion of the visible height when arrows are clicked
-  const arrowsFunction = (multiplyer) => {
-    const scroller = sectionRef.current.firstElementChild;
-    const scrollValue = multiplyer * (scroller.offsetHeight / 3);
-    scroller.scrollBy({ top: scrollValue, behavior: "smooth" });
-  };
-
-  // Scrolls instantly by a given deltaY when the thumb is dragged
-  const grabbingFunction = (deltaY) => {
-    const scroller = sectionRef.current.firstElementChild;
-    scroller.scrollBy({ top: deltaY, behavior: "instant" });
-  };
-
-  // Scrolls smoothly to a position determined by the clicked ratio on the scrollbar track
-  const scrollToClickPosition = (yRatio) => {
-    const scroller = sectionRef.current.firstElementChild;
-    const scrollTarget = scroller.scrollHeight * yRatio;
-    scroller.scrollTo({ top: scrollTarget, behavior: "smooth" });
-  };
-
   // -------------------------------------------------------------------------
   // Effects: Activity monitoring and layout updates
   // -------------------------------------------------------------------------
@@ -150,15 +131,7 @@ const ModuleWrapper = ({ inlineStyle, customColors, module, children }) => {
 
     // Calculate and update scrollbar metrics
     const scroller = section.firstElementChild;
-    const yOverflowRatio = scroller.scrollHeight / scroller.offsetHeight;
-    const newThumbHeight = 100 / yOverflowRatio;
-    const maxYScrollPosition = scroller.scrollHeight - scroller.offsetHeight;
-    const newYScrollProgress = yScrollPosition / maxYScrollPosition;
-
-    setScrollBarMetrics({
-      thumbHeight: newThumbHeight,
-      scrollProgress: newYScrollProgress,
-    });
+    setScrollBarMetrics(() => populateScrollbarMetrics(scroller));
 
     // Cache the latest Y scroll position
     cachedYScrollPosition.current = yScrollPosition;
@@ -208,7 +181,11 @@ const ModuleWrapper = ({ inlineStyle, customColors, module, children }) => {
         style={inlineStyle}
         ref={sectionRef}
       >
-        <div className={styles.scroller} onScroll={handleOnScroll}>
+        <div
+          data-role="scroller"
+          className={styles.scroller}
+          onScroll={handleOnScroll}
+        >
           {children}
 
           {/* --------------------------------------------------- */}
@@ -236,8 +213,9 @@ const ModuleWrapper = ({ inlineStyle, customColors, module, children }) => {
                   scroller.scrollTo({ left: scrollTarget, behavior: "smooth" });
                 };
                 return (
-                  <DotButton
+                  <NavigationButton
                     key={index}
+                    icon={faCircle}
                     isActive={index === galleryIndex}
                     onClickFunction={handleOnClick}
                   />
@@ -250,13 +228,7 @@ const ModuleWrapper = ({ inlineStyle, customColors, module, children }) => {
         {/* --------------------------------------------------- */}
         {/* -------------------- SCROLLBAR -------------------- */}
         {/* --------------------------------------------------- */}
-        <ScrollBar
-          customColors={customColors}
-          metrics={scrollBarMetrics}
-          arrowsFunction={arrowsFunction}
-          grabbingFunction={grabbingFunction}
-          scrollToClickPosition={scrollToClickPosition}
-        />
+        <ScrollBar customColors={customColors} metrics={scrollBarMetrics} />
       </section>
     </ModuleContext.Provider>
   );
