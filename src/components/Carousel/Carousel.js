@@ -6,11 +6,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
   faChevronRight,
+  faCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
 import VideoPlayer from "@/constructors/VideoPlayer/VideoPlayer";
 import useScrollTracker from "@/hooks/useScrollTracker";
-import DotButton from "../DotButton/DotButton";
+import NavigationButton from "../NavigationButton/NavigationButton";
 
 import generateRGBAString from "@/utils/generateRGBAString";
 
@@ -133,9 +134,10 @@ const Carousel = ({ mediasToDisplay, indexStart, customColors }) => {
               };
 
               return (
-                <DotButton
+                <NavigationButton
                   key={media.id}
                   isActive={isActive}
+                  icon={faCircle}
                   onClickFunction={handleJumpButtons}
                 />
               );

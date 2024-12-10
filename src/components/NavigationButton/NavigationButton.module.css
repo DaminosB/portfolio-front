@@ -5,3 +5,7 @@
 .inactive {
   opacity: 0.67;
 }
+
+.inactive:hover {
+  opacity: 1;
+}
