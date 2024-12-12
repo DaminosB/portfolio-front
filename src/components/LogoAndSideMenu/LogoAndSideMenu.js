@@ -31,6 +31,8 @@ const LogoAndSideMenu = ({ profile, customStyle, pages }) => {
   const isOnHomepage = pathname === "/";
 
   const cachedPathname = useRef(null);
+  const crossButtonRef = useRef(null);
+  const logoButtonRef = useRef(null);
 
   const { showModale, setModaleContent } = useContext(LayoutContext);
 
@@ -45,6 +47,12 @@ const LogoAndSideMenu = ({ profile, customStyle, pages }) => {
     // If targetDom is not defined we must define it
     if (!targetDom) {
       setTargetDom(document.body);
+    } else {
+      const crossButton = crossButtonRef.current;
+      const logoButton = logoButtonRef.current;
+
+      crossButton.classList.remove("hidden");
+      logoButton.classList.remove("hidden");
     }
 
     if (pathname !== cachedPathname.current) {
@@ -75,7 +83,8 @@ const LogoAndSideMenu = ({ profile, customStyle, pages }) => {
         >
           <button
             style={inlineStyle}
-            className={styles.crossButton}
+            className={`hidden ${styles.crossButton}`}
+            ref={crossButtonRef}
             onClick={toggleMenu}
           >
             <FontAwesomeIcon icon={faXmark} />
@@ -96,9 +105,10 @@ const LogoAndSideMenu = ({ profile, customStyle, pages }) => {
         </div>
 
         <button
-          className={styles.logoButton}
+          className={`hidden ${styles.logoButton}`}
           onClick={toggleMenu}
-          id="logo-button"
+          ref={logoButtonRef}
+          // id="logo-button"
         >
           <img src={profile.logo.url} alt={profile.logo.alternativeText} />
         </button>
