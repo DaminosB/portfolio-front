@@ -7,10 +7,11 @@ const useScrollTracker = (scrollX = false) => {
 
   // Maps scroll-related properties based on the chosen axis (X or Y)
   const scrollProps = {
-    scrollAxis: scrollX ? "scrollLeft" : "scrollTop", // Scroll position of the scroller
-    offsetDimension: scrollX ? "offsetWidth" : "offsetHeight", // Dimensions of the scroller
+    offsetDimension: scrollX ? "offsetWidth" : "offsetHeight",
+    offsetPosition: scrollX ? "offsetLeft" : "offsetTop",
+    scrollAxis: scrollX ? "scrollLeft" : "scrollTop",
   };
-  const { offsetDimension, scrollAxis } = scrollProps;
+  const { offsetDimension, offsetPosition, scrollAxis } = scrollProps;
 
   // State to store the current scroll position (scrollTop or scrollLeft)
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -27,10 +28,9 @@ const useScrollTracker = (scrollX = false) => {
     if (!scrollerRef.current) scrollerRef.current = e.target;
     const scroller = scrollerRef.current;
 
-    // Update the scroll position state (scrollTop or scrollLeft depending on the axis)
-    setScrollPosition(scroller[scrollAxis]);
-
     let container = scroller;
+
+    const newScrollPosition = scroller[scrollAxis];
 
     // Traverse through the provided children coordinates to find the nested child element
     // The coordinates array defines a path to follow through nested child elements
@@ -46,18 +46,31 @@ const useScrollTracker = (scrollX = false) => {
     });
 
     // Get the offsetTop or offsetLeft of each child element within the current container
-    // Filter out STYLE elements and calculate the cumulative position of each child
-    const cumulativeDimensions = Array.from(container.children)
-      .filter((child) => child.tagName !== "STYLE") // Exclude STYLE tags from the calculation
-      .map((child, index) => scroller[offsetDimension] * index); // Calculate the position based on the index
-
-    // Find the index of the last child whose offset value matches the current scroll position
-    const newIndex = cumulativeDimensions.findIndex(
-      (position) => position === Math.round(scroller[scrollAxis])
+    const childrenPositions = Array.from(container.children).map(
+      (child) => child[offsetPosition]
     );
 
-    // If a valid index is found and differs from the current active index, update the active child index
+    const scrollDirection = newScrollPosition > scrollPosition ? "down" : "up";
+
+    const viewEnd = newScrollPosition + scroller[offsetDimension];
+
+    // Find the index of the child whose offset position matches the current scroll position
+    const newIndex = childrenPositions.findIndex((position, i, array) => {
+      if (scrollDirection === "down") {
+        return viewEnd >= position && newScrollPosition <= position;
+      } else {
+        const nextPosition = array[i + 1];
+        return (
+          newScrollPosition >= position && newScrollPosition < nextPosition
+        );
+      }
+    });
+
+    // Update the displayed index
     if (newIndex !== -1 && newIndex !== displayIndex) setDisplayIndex(newIndex);
+
+    // Update the scroll position state (scrollTop or scrollLeft depending on the axis)
+    setScrollPosition(newScrollPosition);
   };
 
   // Return the scroll tracking function, current active child index, and scroll position
