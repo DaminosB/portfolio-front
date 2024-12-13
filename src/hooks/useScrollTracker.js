@@ -28,9 +28,9 @@ const useScrollTracker = (scrollX = false) => {
     if (!scrollerRef.current) scrollerRef.current = e.target;
     const scroller = scrollerRef.current;
 
-    let container = scroller;
+    const newScrollPosition = Math.round(scroller[scrollAxis]);
 
-    const newScrollPosition = scroller[scrollAxis];
+    let container = scroller;
 
     // Traverse through the provided children coordinates to find the nested child element
     // The coordinates array defines a path to follow through nested child elements
