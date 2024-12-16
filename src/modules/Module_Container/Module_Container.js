@@ -12,7 +12,7 @@ import generateInlineStyle from "@/utils/generateInlineStyle";
 import populateCardsIdsArray from "@/utils/populateCardsIdsArray";
 import generateTitleInlineStyle from "@/utils/generateTitleInlineStyle";
 
-const Module_Container = ({ module, customColors }) => {
+const Module_Container = ({ module, customColors, sectionCoords }) => {
   const { titleBlock, mediaBlocks, text } = module;
 
   const contentDivClasses = generateCssClasses(module);
@@ -31,6 +31,7 @@ const Module_Container = ({ module, customColors }) => {
       inlineStyle={sectionStyle}
       customColors={customColors}
       module={module}
+      sectionCoords={sectionCoords}
     >
       <div className={styles.content}>
         {titleBlock && (

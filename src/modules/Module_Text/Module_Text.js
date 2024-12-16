@@ -7,7 +7,7 @@ import generateInlineStyle from "@/utils/generateInlineStyle";
 import ModuleColumn from "@/constructors/ModuleColumn/ModuleColumn";
 import generateTitleInlineStyle from "@/utils/generateTitleInlineStyle";
 
-const Module_Text = ({ module, customColors }) => {
+const Module_Text = ({ module, customColors, sectionCoords }) => {
   const { titleBlock, text } = module;
 
   const { sectionStyle } = generateInlineStyle(module);
@@ -21,6 +21,7 @@ const Module_Text = ({ module, customColors }) => {
       inlineStyle={sectionStyle}
       customColors={customColors}
       module={module}
+      sectionCoords={sectionCoords}
     >
       <div className={`container ${styles.content}`}>
         {titleBlock && <h2 style={titleInlineStyle}>{titleBlock.title}</h2>}

@@ -12,7 +12,7 @@ import populateCardsIdsArray from "@/utils/populateCardsIdsArray";
 import generateCssClasses from "@/utils/generateCssClasses";
 import generateTitleInlineStyle from "@/utils/generateTitleInlineStyle";
 
-const Module_Fullpage = ({ module, customColors }) => {
+const Module_Fullpage = ({ module, customColors, sectionCoords }) => {
   const { titleBlock, mediaBlocks, text } = module;
 
   const { sectionStyle, mediasContainerStyle } = generateInlineStyle(module);
@@ -30,6 +30,7 @@ const Module_Fullpage = ({ module, customColors }) => {
       inlineStyle={sectionStyle}
       customColors={customColors}
       module={module}
+      sectionCoords={sectionCoords}
     >
       {titleBlock && (
         <h2 className={styles.title} style={titleInlineStyle}>

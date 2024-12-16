@@ -3,16 +3,17 @@ import Module_MultiImagesColumn from "@/modules/Module_MultiImagesColumn/Module_
 import Module_Container from "@/modules/Module_Container/Module_Container";
 import Module_Text from "@/modules/Module_Text/Module_Text";
 
-const ModulesDisplayer = ({ modules, customColors }) => {
-  return modules.map((module) => {
-    if (module.__component === "module.texte") {
-    }
+const ModulesDisplayer = ({ modules, customColors, modulesContainerIndex }) => {
+  return modules.map((module, index) => {
+    const sectionCoords = [modulesContainerIndex, index];
+
     switch (module.__component) {
       case "module.pleine-page":
         return (
           <Module_Fullpage
             key={module.id}
             module={module}
+            sectionCoords={sectionCoords}
             customColors={customColors}
           />
         );
@@ -22,6 +23,7 @@ const ModulesDisplayer = ({ modules, customColors }) => {
           <Module_MultiImagesColumn
             key={module.id}
             module={module}
+            sectionCoords={sectionCoords}
             customColors={customColors}
           />
         );
@@ -31,6 +33,7 @@ const ModulesDisplayer = ({ modules, customColors }) => {
           <Module_Container
             key={module.id}
             module={module}
+            sectionCoords={sectionCoords}
             customColors={customColors}
           />
         );
@@ -40,6 +43,7 @@ const ModulesDisplayer = ({ modules, customColors }) => {
           <Module_Text
             key={module.id}
             module={module}
+            sectionCoords={sectionCoords}
             customColors={customColors}
           />
         );

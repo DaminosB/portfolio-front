@@ -6,7 +6,7 @@ import MediasGallery from "@/constructors/MediasGallery/MediasGallery";
 import populateCardsIdsArray from "@/utils/populateCardsIdsArray";
 import ModuleColumn from "@/constructors/ModuleColumn/ModuleColumn";
 
-const Module_MultiImagesColumn = ({ module, customColors }) => {
+const Module_MultiImagesColumn = ({ module, customColors, sectionCoords }) => {
   const { mediaBlocks } = module;
 
   // This module doesn't handle video files
@@ -27,6 +27,7 @@ const Module_MultiImagesColumn = ({ module, customColors }) => {
         key={mediaBlock.id}
         customColors={customColors}
         module={module}
+        sectionCoords={sectionCoords}
       >
         <div className={styles.mediaContainer}>
           <MediasGallery
