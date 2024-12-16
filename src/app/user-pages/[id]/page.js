@@ -19,7 +19,8 @@ export default async function ProjectsIdPage({ params }) {
       secondaryColor: page.secondaryColor,
     };
 
-    // return <ModulesDisplayer content={page} />;
+    const modulesContainerIndex = page.cover ? 1 : 0;
+
     return (
       <>
         {page.cover && (
@@ -27,6 +28,7 @@ export default async function ProjectsIdPage({ params }) {
             coverUrl={page.cover.url}
             coverAltTxt={page.cover.alternativeText}
             customColors={customColors}
+            modulesContainerIndex={modulesContainerIndex}
           />
         )}
         <SnapScrollWrapper>

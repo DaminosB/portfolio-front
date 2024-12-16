@@ -27,6 +27,7 @@ export default async function ProjectsIdPage() {
           <ModulesDisplayer
             modules={logos.modules}
             customColors={customColors}
+            modulesContainerIndex={0}
           />
         </SnapScrollWrapper>
         <Modale customColors={customColors} />

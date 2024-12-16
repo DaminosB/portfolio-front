@@ -28,6 +28,8 @@ export default async function ProjectsIdPage({ params }) {
       backgroundColor: generateRGBAString(customColors.mainColor, 0.5),
     };
 
+    const modulesContainerIndex = project.cover ? 1 : 0;
+
     return (
       <>
         {project.cover && (
@@ -41,6 +43,7 @@ export default async function ProjectsIdPage({ params }) {
           <ModulesDisplayer
             modules={project.modules}
             customColors={customColors}
+            modulesContainerIndex={modulesContainerIndex}
           />
         </SnapScrollWrapper>
         {relatedProjects.length > 0 && (
