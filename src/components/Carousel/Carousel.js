@@ -56,7 +56,7 @@ const Carousel = ({ mediasToDisplay, indexStart, customColors }) => {
 
     const scrollTarget = slider.children[indexStart || 0].offsetLeft;
     slider.scrollTo({ left: scrollTarget, behavior: "instant" });
-  }, []);
+  }, [indexStart]);
 
   // Inline styles for the side buttons and navigation dots
   const sideButtonsInlineStyle = {
