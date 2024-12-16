@@ -32,15 +32,6 @@ const MediaCardWrapper = ({
   // Reference to the media card wrapper element
   const mediaCardWrapperRef = useRef(null);
 
-  // Check if the media is an image file
-  const isImageFile = media.provider_metadata.resource_type === "image";
-
-  // Manages the current display mode of the media ("overflow", "underflow", etc.)
-  const [displayMode, setDisplayMode] = useState("overflow");
-
-  // Controls whether the video should play or not
-  const [shouldPlayVideo, setShouldPlayVideo] = useState(true);
-
   // Determines if the media should be displayed in a contained view
   const [isContainedView, setIsContainedView] = useState(false);
 
@@ -53,15 +44,28 @@ const MediaCardWrapper = ({
   const { isActiveSection, openCarousel, showModale } =
     useContext(ModuleContext);
 
+  // Controls whether the video should play or not
+  const shouldPlayVideo = useMemo(
+    () => isActiveSection && !showModale,
+    [isActiveSection, showModale]
+  );
+
   // Function to open the media carousel modal
   const handleOpenCarousel = () => {
-    setShouldPlayVideo(false); // Stop the video when opening the carousel
     openCarousel(media.id);
   };
 
   // Handle user interactions and propagate events if necessary
   const handleEvents = (e) => {
-    const handler = eventHandlers[e.type];
+    // Event handlers for various user interactions (mouse/touch)
+    const events = {
+      pointerdown: grabbable ? startGrab : null,
+      pointermove: grabbable ? grabbing : null,
+      pointerup: grabbable ? stopGrab : null,
+      click: onClick,
+    };
+
+    const handler = events[e.type];
     if (handler) handler(e);
 
     // Propagate the event to related sibling elements, if any
@@ -114,6 +118,14 @@ const MediaCardWrapper = ({
     },
   };
 
+  // Manages the current display mode of the media ("overflow", "underflow", etc.)
+  const displayMode = useMemo(() => {
+    if (childWidth < containerWidth) return "underflow";
+    else if (childWidth === containerWidth) return "fit";
+    else if (childWidth / containerWidth > 2) return "excess";
+    else return "overflow";
+  }, [containerWidth, childWidth]);
+
   // Destructure the settings for the current display mode
   const { defaultContained, onClick, grabbable, display } =
     displayModeSettings[displayMode];
@@ -122,38 +134,14 @@ const MediaCardWrapper = ({
   useEffect(() => {
     initGrabAndMove(mediaCardWrapperRef.current.firstElementChild);
 
-    // Determine the display mode based on element sizes
-    let displayModeString;
-    if (childWidth < containerWidth) displayModeString = "underflow";
-    else if (childWidth === containerWidth) displayModeString = "fit";
-    else if (childWidth / containerWidth > 2) displayModeString = "excess";
-    else displayModeString = "overflow";
-
-    setDisplayMode(displayModeString);
-
     // Set default view based on the display mode
-    if (isActiveSection) setIsContainedView(defaultContained);
-    else setIsContainedView(false);
-    // Control video playback based on the active section and modal visibility
-    setShouldPlayVideo(isActiveSection && !showModale);
-  }, [
-    childWidth,
-    containerWidth,
-    isActiveSection,
-    showModale,
-    defaultContained,
-    initGrabAndMove,
-  ]);
+    setIsContainedView(defaultContained);
+  }, [initGrabAndMove, defaultContained]);
 
-  // Event handlers for various user interactions (mouse/touch)
-  const eventHandlers = {
-    pointerdown: grabbable ? startGrab : null,
-    pointermove: grabbable ? grabbing : null,
-    pointerup: grabbable ? stopGrab : null,
-    click: onClick,
-  };
+  // Check if the media is an image file
+  const isImageFile = media.provider_metadata.resource_type === "image";
 
-  // Inline styles for custom colors
+  // Inline styles
   const containerInlineStyle = {
     color: customColors.secondaryColor,
   };
