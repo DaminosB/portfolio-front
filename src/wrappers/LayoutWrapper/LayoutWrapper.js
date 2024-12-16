@@ -99,7 +99,6 @@ const LayoutWrapper = ({ children }) => {
     layoutScroller: layoutScrollerRef.current,
     showModale: modaleContent ? true : false, // Boolean to determine if modal is active
     updateContainerPos,
-    getSectionCoords,
     modaleContent,
     setModaleContent,
   };
@@ -135,22 +134,6 @@ const LayoutWrapper = ({ children }) => {
       </div>
     </LayoutContext.Provider>
   );
-};
-
-// Helper function to get the container and section indices for a given node
-const getSectionCoords = (sectionNode) => {
-  const findIndexInParent = (parent, targetChild) =>
-    Array.from(parent.children).findIndex((child) => child === targetChild);
-
-  const container = sectionNode.parentNode;
-
-  // Finds the index of the container in its parent node
-  const containerIndex = findIndexInParent(container.parentNode, container);
-
-  // Finds the index of the section (child) in the container
-  const sectionIndex = findIndexInParent(container, sectionNode);
-
-  return [containerIndex, sectionIndex];
 };
 
 export default LayoutWrapper;
