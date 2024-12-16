@@ -13,7 +13,7 @@ const ModuleColumn = ({ children }) => {
     const column = columnRef.current;
     addScrollableElem(column);
     column.scrollBy({ top: sectionScrollDeltaY, behavior: "instant" });
-  }, [sectionScrollDeltaY]);
+  }, [sectionScrollDeltaY, addScrollableElem]);
 
   return (
     <div className={styles.column} ref={columnRef}>
