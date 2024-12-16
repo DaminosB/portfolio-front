@@ -2,7 +2,15 @@
 import styles from "./ModuleWrapper.module.css";
 
 // React hooks and context
-import { useState, useContext, useEffect, useRef, createContext } from "react";
+import {
+  useState,
+  useContext,
+  useEffect,
+  useRef,
+  createContext,
+  useMemo,
+  useCallback,
+} from "react";
 import { LayoutContext } from "@/wrappers/LayoutWrapper/LayoutWrapper";
 
 // Components
@@ -10,17 +18,28 @@ import Carousel from "@/components/Carousel/Carousel";
 import NavigationButton from "@/components/NavigationButton/NavigationButton";
 import ScrollBar from "@/components/ScrollBar/ScrollBar";
 import useScrollTracker from "@/hooks/useScrollTracker";
-import { faCircle } from "@fortawesome/free-solid-svg-icons";
+
+// Utils import
 import populateScrollbarMetrics from "@/utils/populateScrollBarMetrics";
+
+// Icons import
+import { faCircle } from "@fortawesome/free-solid-svg-icons";
 
 // Create a context to share state and actions with child components
 export const ModuleContext = createContext();
 
-const ModuleWrapper = ({ inlineStyle, customColors, module, children }) => {
+const ModuleWrapper = ({
+  inlineStyle,
+  customColors,
+  module,
+  sectionCoords: [containerIndex, sectionIndex],
+  children,
+}) => {
   // -------------------------------------------------------------------------
   // States and Refs
   // -------------------------------------------------------------------------
-  const [isActiveSection, setIsActiveSection] = useState(false); // Tracks if the module is active
+  // const [isActiveSection, setIsActiveSection] = useState(false); // Tracks if the module is active
+
   const [xScrollRatio, setXScrollRatio] = useState(0); // Tracks horizontal scroll ratio
   const [scrollBarMetrics, setScrollBarMetrics] = useState({
     thumbHeight: 0,
@@ -29,16 +48,21 @@ const ModuleWrapper = ({ inlineStyle, customColors, module, children }) => {
 
   const sectionRef = useRef(null); // Reference to the main section DOM element
   const ghostRef = useRef(null); // Reference to the "ghost" element
-  const sectionCoordsRef = useRef(null); // Cached section coordinates
   const scrollableElemsRef = useRef([]); // Stores scrollable child elements
   const cachedYScrollPosition = useRef(0); // Stores the last Y scroll position
 
   const {
     activeCoords: [activeContainerIndex, activeChildIndex],
     showModale,
-    getSectionCoords,
     setModaleContent,
   } = useContext(LayoutContext);
+
+  const isActiveSection = useMemo(
+    () =>
+      activeContainerIndex === containerIndex &&
+      activeChildIndex === sectionIndex,
+    [containerIndex, sectionIndex, activeContainerIndex, activeChildIndex]
+  );
 
   // -------------------------------------------------------------------------
   // Scroll Management (X and Y axes)
@@ -72,9 +96,11 @@ const ModuleWrapper = ({ inlineStyle, customColors, module, children }) => {
   // -------------------------------------------------------------------------
 
   // Filter and deduplicate media assets to display in the carousel
-  const mediasToDisplay = module.mediaBlocks
-    ? populateMediasToDisplay(module.mediaBlocks)
-    : null;
+  const mediasToDisplay = useMemo(
+    () =>
+      module.mediaBlocks ? populateMediasToDisplay(module.mediaBlocks) : null,
+    [module.mediaBlocks]
+  );
 
   // Opens a carousel modal at the selected media
   const openCarousel = (mediaId) => {
@@ -92,30 +118,17 @@ const ModuleWrapper = ({ inlineStyle, customColors, module, children }) => {
   };
 
   // Allows child components to register as scrollable elements
-  const addScrollableElem = (element) => {
+  const addScrollableElem = useCallback((element) => {
     if (!scrollableElemsRef.current.includes(element)) {
       scrollableElemsRef.current.push(element);
     }
-  };
+  }, []);
 
   // -------------------------------------------------------------------------
   // Effects: Activity monitoring and layout updates
   // -------------------------------------------------------------------------
   useEffect(() => {
     const section = sectionRef.current;
-
-    // Cache section coordinates if not already calculated
-    if (!sectionCoordsRef.current)
-      sectionCoordsRef.current = getSectionCoords(section);
-
-    const [containerIndex, sectionIndex] = sectionCoordsRef.current;
-
-    // Determine if the current module is active
-    const isActive =
-      activeContainerIndex === containerIndex &&
-      activeChildIndex === sectionIndex;
-
-    if (isActive !== isActiveSection) setIsActiveSection(isActive);
 
     // Update the ghost element's height based on the largest overflow
     const ghost = ghostRef.current;
@@ -141,15 +154,7 @@ const ModuleWrapper = ({ inlineStyle, customColors, module, children }) => {
     if (newXScrollRatio !== xScrollRatio) {
       setXScrollRatio(newXScrollRatio);
     }
-  }, [
-    isActiveSection,
-    activeChildIndex,
-    activeContainerIndex,
-    getSectionCoords,
-    yScrollPosition,
-    xScrollPosition,
-    xScrollRatio,
-  ]);
+  }, [yScrollPosition, xScrollPosition, xScrollRatio]);
 
   const maxGalleryLength = module.mediaBlocks.reduce(
     (maxCount, block) => Math.max(maxCount, block.mediaAssets.length),
