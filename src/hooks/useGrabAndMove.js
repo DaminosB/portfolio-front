@@ -189,7 +189,7 @@ const useGrabAndMove = () => {
         resizeObserver.disconnect();
       };
     }
-  }, [containerRef.current]);
+  }, []);
 
   return {
     startGrab,
