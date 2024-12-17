@@ -7,7 +7,6 @@ import { useContext, useRef, useEffect } from "react";
 
 // Context import
 import { ProjectsGalleryContext } from "../ProjectsGallery/ProjectsGallery";
-import { LayoutContext } from "@/wrappers/LayoutWrapper/LayoutWrapper";
 
 import Link from "next/link";
 
@@ -107,8 +106,8 @@ const ProjectCardWrapper = ({ cardData, children }) => {
       className={styles.projectCard}
       style={customStyles}
       ref={cardsRef}
-      onMouseEnter={() => setActiveCard(cardData)}
-      onMouseLeave={() => setActiveCard(null)}
+      onPointerEnter={() => setActiveCard(cardData)}
+      onPointerLeave={() => setActiveCard(null)}
     >
       <Link href={link}>{children}</Link>
     </div>
