@@ -3,20 +3,33 @@
 import styles from "./ProjectsGallery.module.css";
 
 // React hooks import
-import { useEffect, useRef, useState, createContext } from "react";
+import { useEffect, useRef, useState, createContext, useMemo } from "react";
 
 export const ProjectsGalleryContext = createContext();
 
 // Components import
 import TagsContainer from "@/components/TagsContainer/TagsContainer";
+import ScrollBar from "@/components/ScrollBar/ScrollBar";
+import populateScrollbarMetrics from "@/utils/populateScrollBarMetrics";
 
 // This component wraps the project cards and handles the filtering logic
 const ProjectsGallery = ({ customStyle, projectsCards, children }) => {
   // The active filter represents the tag selected by the user
   const [activeFilter, setActiveFilter] = useState(null);
 
-  // Stores the filtered project cards based on the active filter
-  const [filteredProjects, setFilteredProjects] = useState(projectsCards);
+  const [scrollBarMetrics, setScrollBarMetrics] = useState({
+    thumbheight: 0,
+    scrollProgress: 0,
+  });
+
+  // Apply the active filter to the project cards
+  const filteredProjects = useMemo(() => {
+    if (activeFilter) {
+      return projectsCards.filter((project) =>
+        project.tags.some((projectTag) => projectTag.id === activeFilter)
+      );
+    } else return projectsCards; // Reset to all projects if no filter is selected
+  }, [activeFilter, projectsCards]);
 
   // The activeCard is the card currently being hovered
   const [activeCard, setActiveCard] = useState(null);
@@ -24,23 +37,14 @@ const ProjectsGallery = ({ customStyle, projectsCards, children }) => {
   // Reference to the DOM element that contains all the project cards
   const cardsContainerRef = useRef(null);
 
+  const scrollerRef = useRef(null);
+
   // Generate the list of tags to be passed to the TagsContainer component
   const tagsList = populateTagsList(projectsCards);
 
   // Filters the projects and adjusts the height of the cards container
   useEffect(() => {
     const cardsContainer = cardsContainerRef.current;
-
-    // Apply the active filter to the project cards
-    if (activeFilter) {
-      setFilteredProjects(
-        projectsCards.filter((project) =>
-          project.tags.some((projectTag) => projectTag.id === activeFilter)
-        )
-      );
-    } else {
-      setFilteredProjects(projectsCards); // Reset to all projects if no filter is selected
-    }
 
     // Adjust the height of the cards container based on the number of rows
     const cardHeight = cardsContainer.firstElementChild.offsetHeight;
@@ -52,7 +56,9 @@ const ProjectsGallery = ({ customStyle, projectsCards, children }) => {
     const cardsContainerHeight = cardHeight * numberOfRows + totalGapWidth;
 
     cardsContainer.style.height = `${cardsContainerHeight}px`;
-  }, [activeCard, activeFilter, customStyle, projectsCards]);
+
+    setScrollBarMetrics(() => populateScrollbarMetrics(scrollerRef.current));
+  }, [customStyle]);
 
   const contextValues = {
     activeFilter,
@@ -61,25 +67,36 @@ const ProjectsGallery = ({ customStyle, projectsCards, children }) => {
     setActiveCard,
   };
 
+  const customColors = {
+    mainColor: customStyle.mainColor,
+    secondaryColor: customStyle.secondaryColor,
+  };
+
+  const handleOnScroll = (e) => {
+    const scroller = e.target;
+
+    setScrollBarMetrics(() => populateScrollbarMetrics(scroller));
+  };
+
   return (
     <ProjectsGalleryContext.Provider value={contextValues}>
-      <div className={styles.projectCardsWrapper} id="thumbnails-wrapper">
-        <TagsContainer
-          tags={tagsList}
-          activeFilter={activeFilter}
-          setActiveFilter={setActiveFilter}
-          customStyle={customStyle}
-          activeCard={activeCard}
-        />
-        <div className="container">
-          <div
-            className={styles.cardsContainer}
-            id="cards-container"
-            ref={cardsContainerRef}
-          >
-            {children}
+      <div className={styles.projectCardsWrapper}>
+        <div data-role="scroller" ref={scrollerRef} onScroll={handleOnScroll}>
+          <TagsContainer
+            tags={tagsList}
+            activeFilter={activeFilter}
+            setActiveFilter={setActiveFilter}
+            customStyle={customStyle}
+            customColors={customColors}
+            activeCard={activeCard}
+          />
+          <div className="container">
+            <div className={styles.cardsContainer} ref={cardsContainerRef}>
+              {children}
+            </div>
           </div>
         </div>
+        <ScrollBar customColors={customColors} metrics={scrollBarMetrics} />
       </div>
     </ProjectsGalleryContext.Provider>
   );
