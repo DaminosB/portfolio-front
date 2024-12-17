@@ -10,7 +10,7 @@ const TagsContainer = ({
   tags,
   activeFilter,
   setActiveFilter,
-  customStyle,
+  customColors,
   activeCard,
 }) => {
   const [isHovered, setIsHovered] = useState([]);
@@ -21,14 +21,8 @@ const TagsContainer = ({
     else setActiveFilter(id);
   };
 
-  const mainColorStringStrong = generateRGBAString(
-    customStyle.backgroundColor,
-    1
-  );
-  const mainColorStringLight = generateRGBAString(
-    customStyle.backgroundColor,
-    0.5
-  );
+  const mainColorStringStrong = generateRGBAString(customColors.mainColor, 1);
+  const mainColorStringLight = generateRGBAString(customColors.mainColor, 0.5);
 
   return (
     <div className={`${styles.tagsContainer} container`}>
@@ -46,13 +40,11 @@ const TagsContainer = ({
           backgroundColor: highlightButton
             ? mainColorStringStrong
             : mainColorStringLight,
-          color: customStyle.color,
+          color: customColors.secondaryColor,
         };
 
         const handleHoverEvent = (e) => {
           const newTab = [...isHovered];
-
-          // console.log(e);
 
           switch (e.type) {
             case "pointerenter":
