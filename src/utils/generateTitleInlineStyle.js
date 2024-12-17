@@ -4,10 +4,10 @@ const generateTitleInlineStyle = (titleBlock) => {
   response.color = titleBlock.fontColor;
   if (titleBlock.textBorderColor) {
     let textShadowString = "";
-    textShadowString += `1px 1px 25px ${titleBlock.textBorderColor}`;
-    textShadowString += `, -1px -1px 25px ${titleBlock.textBorderColor}`;
-    textShadowString += `, -1px 1px 25px ${titleBlock.textBorderColor}`;
-    textShadowString += `, 1px -1px 25px ${titleBlock.textBorderColor}`;
+    textShadowString += `1px 1px 15px ${titleBlock.textBorderColor}`;
+    textShadowString += `, -1px -1px 15px ${titleBlock.textBorderColor}`;
+    textShadowString += `, -1px 1px 15px ${titleBlock.textBorderColor}`;
+    textShadowString += `, 1px -1px 15px ${titleBlock.textBorderColor}`;
 
     response.textShadow = textShadowString;
   }
