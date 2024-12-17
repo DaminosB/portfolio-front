@@ -1,15 +1,18 @@
-import generateRGBAString from "./generateRGBAString";
-
 const generateTitleInlineStyle = (titleBlock) => {
-  return {
-    color: titleBlock.fontColor,
-    backgroundColor: titleBlock.backgroundColor
-      ? generateRGBAString(
-          titleBlock.backgroundColor,
-          titleBlock.backgroundOpacity / 100
-        )
-      : "",
-  };
+  const response = {};
+
+  response.color = titleBlock.fontColor;
+  if (titleBlock.textBorderColor) {
+    let textShadowString = "";
+    textShadowString += `1px 1px 25px ${titleBlock.textBorderColor}`;
+    textShadowString += `, -1px -1px 25px ${titleBlock.textBorderColor}`;
+    textShadowString += `, -1px 1px 25px ${titleBlock.textBorderColor}`;
+    textShadowString += `, 1px -1px 25px ${titleBlock.textBorderColor}`;
+
+    response.textShadow = textShadowString;
+  }
+
+  return response;
 };
 
 export default generateTitleInlineStyle;
