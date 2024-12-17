@@ -4,6 +4,7 @@
   justify-content: center;
   height: 100%;
   width: 100%;
+  font-size: 15px;
 }
 
 .title {
@@ -12,7 +13,7 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 1;
-  width: fit-content;
+  width: 100%;
   padding: 5px 10px;
   text-align: center;
 }
@@ -55,6 +56,10 @@
 }
 
 @media (max-width: 768px) {
+  .content {
+    font-size: 10px;
+  }
+
   .mediasContainer {
     flex-direction: column;
   }
