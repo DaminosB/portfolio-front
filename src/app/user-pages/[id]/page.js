@@ -28,13 +28,13 @@ export default async function ProjectsIdPage({ params }) {
             coverUrl={page.cover.url}
             coverAltTxt={page.cover.alternativeText}
             customColors={customColors}
-            modulesContainerIndex={modulesContainerIndex}
           />
         )}
         <SnapScrollWrapper>
           <ModulesDisplayer
             modules={page.modules}
             customColors={customColors}
+            modulesContainerIndex={modulesContainerIndex}
           />
         </SnapScrollWrapper>
         <Modale customColors={customColors} />
