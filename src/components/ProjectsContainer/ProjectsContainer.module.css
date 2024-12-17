@@ -1,6 +1,6 @@
 .projectsContainer {
   height: 100%;
-  overflow-y: auto;
+  overflow: hidden;
   transition: var(--normal-transition) var(--default-animation);
   padding-top: var(--logo-height-offset);
 }

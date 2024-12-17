@@ -7,16 +7,9 @@ import ProjectCardWrapper from "@/constructors/ProjectCardWrapper/ProjectCardWra
 const ProjectsContainer = ({ projects, customStyle, logos }) => {
   const projectsCards = populateProjectsCards(projects, customStyle, logos);
 
-  const wrapperStyle = {
-    backgroundColor: customStyle.mainColor,
-    color: customStyle.secondaryColor,
-    gap: customStyle.gap,
-    thumbnailsPerRow: customStyle.thumbnailsPerRow,
-  };
-
   return (
     <div className={styles.projectsContainer}>
-      <ProjectsGallery customStyle={wrapperStyle} projectsCards={projectsCards}>
+      <ProjectsGallery customStyle={customStyle} projectsCards={projectsCards}>
         {projectsCards.map((card) => {
           return (
             <ProjectCardWrapper key={card.id} cardData={card}>
