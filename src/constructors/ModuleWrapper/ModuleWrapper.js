@@ -87,7 +87,9 @@ const ModuleWrapper = ({
 
   // Unified scroll handler for both axes
   const handleOnScroll = (e) => {
-    xScrollTrack(e, [1]); // Track horizontal scroll
+    const lastChildIndex = e.target.children.length - 1;
+    xScrollTrack(e, [lastChildIndex]); // Track horizontal scroll
+
     yScrollTrack(e); // Track vertical scroll
   };
 
@@ -197,7 +199,12 @@ const ModuleWrapper = ({
           {/* ---------------------- GHOST ---------------------- */}
           {/* --------------------------------------------------- */}
 
-          <div className={styles.ghost} style={ghostInlineStyle} ref={ghostRef}>
+          <div
+            data-role="ghost"
+            className={styles.ghost}
+            style={ghostInlineStyle}
+            ref={ghostRef}
+          >
             {Array.from({ length: maxGalleryLength }).map((_, index) => (
               <div key={index}></div>
             ))}
