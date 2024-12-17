@@ -21,7 +21,7 @@
   display: none;
 }
 
-.scroller > div:first-child {
+.scroller > div:first-of-type {
   height: 100%;
   overflow: hidden;
   position: sticky;
