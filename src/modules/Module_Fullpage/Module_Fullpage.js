@@ -33,7 +33,7 @@ const Module_Fullpage = ({ module, customColors, sectionCoords }) => {
       sectionCoords={sectionCoords}
     >
       {titleBlock && (
-        <h2 className={styles.title} style={titleInlineStyle}>
+        <h2 data-role="title" className={styles.title} style={titleInlineStyle}>
           {titleBlock.title}
         </h2>
       )}

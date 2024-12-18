@@ -33,12 +33,12 @@ const Module_Container = ({ module, customColors, sectionCoords }) => {
       module={module}
       sectionCoords={sectionCoords}
     >
+      {titleBlock && (
+        <h2 data-role="title" className={styles.title} style={titleInlineStyle}>
+          {titleBlock.title}
+        </h2>
+      )}
       <div className={styles.content}>
-        {titleBlock && (
-          <h2 className={styles.title} style={titleInlineStyle}>
-            {titleBlock.title}
-          </h2>
-        )}
         <div className={contentDivClasses} style={contentDivStyle}>
           <ModuleColumn>
             <div

@@ -9,9 +9,14 @@
 }
 
 .title {
-  width: fit-content;
-  padding: 5px 10px;
+  /* width: fit-content;
+  padding: 5px 10px; */
   text-align: center;
+  width: 100%;
+  z-index: 1;
+  /* padding-top: var(--logo-height-offset); */
+  position: absolute;
+  top: var(--logo-height-offset);
 }
 
 .content > div {
@@ -67,6 +72,13 @@
 @media (max-width: 768px) {
   .mediasContainer {
     flex-direction: column;
+  }
+
+  .title {
+    position: sticky;
+    top: 0px;
+    z-index: 0;
+    padding: var(--logo-height-offset) 0 var(--logo-position) 0;
   }
 
   .mediasContainer > div {

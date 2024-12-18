@@ -9,7 +9,6 @@ import {
   useRef,
   createContext,
   useMemo,
-  useCallback,
 } from "react";
 import { LayoutContext } from "@/wrappers/LayoutWrapper/LayoutWrapper";
 
@@ -48,7 +47,6 @@ const ModuleWrapper = ({
 
   const sectionRef = useRef(null); // Reference to the main section DOM element
   const ghostRef = useRef(null); // Reference to the "ghost" element
-  const scrollableElemsRef = useRef([]); // Stores scrollable child elements
   const cachedYScrollPosition = useRef(0); // Stores the last Y scroll position
 
   const {
@@ -85,6 +83,11 @@ const ModuleWrapper = ({
     displayIndex: galleryIndex,
   } = useScrollTracker(true);
 
+  const sectionScrollDeltaY = useMemo(
+    () => yScrollPosition - cachedYScrollPosition.current,
+    [yScrollPosition]
+  );
+
   // Unified scroll handler for both axes
   const handleOnScroll = (e) => {
     const lastChildIndex = e.target.children.length - 1;
@@ -119,33 +122,14 @@ const ModuleWrapper = ({
     );
   };
 
-  // Allows child components to register as scrollable elements
-  const addScrollableElem = useCallback((element) => {
-    if (!scrollableElemsRef.current.includes(element)) {
-      scrollableElemsRef.current.push(element);
-    }
-  }, []);
-
   // -------------------------------------------------------------------------
   // Effects: Activity monitoring and layout updates
   // -------------------------------------------------------------------------
   useEffect(() => {
     const section = sectionRef.current;
 
-    // Update the ghost element's height based on the largest overflow
-    const ghost = ghostRef.current;
-    const ghostHeight = scrollableElemsRef.current.reduce(
-      (maxOverflow, elem) => {
-        const overflowY = elem.scrollHeight - elem.offsetHeight;
-        return Math.max(maxOverflow, overflowY);
-      },
-      0
-    );
-
-    ghost.style.height = `${ghostHeight}px`;
-
     // Calculate and update scrollbar metrics
-    const scroller = section.firstElementChild;
+    const scroller = section.querySelector('[data-role="scroller"]');
     setScrollBarMetrics(() => populateScrollbarMetrics(scroller));
 
     // Cache the latest Y scroll position
@@ -155,6 +139,36 @@ const ModuleWrapper = ({
     const newXScrollRatio = xScrollPosition / scroller.clientWidth || 0;
     if (newXScrollRatio !== xScrollRatio) {
       setXScrollRatio(newXScrollRatio);
+    }
+
+    // Handles the fade-out and blur effect of the title block during scrolling
+    const titleBlock = section.querySelector('[data-role="title"]');
+
+    if (titleBlock) {
+      // Calculates the overlap ratio between the scroller's scroll position and the title block's height
+      const overlapRatio = scroller.scrollTop / titleBlock.offsetHeight;
+
+      let titleBlockOpacity; // The opacity value for the title block
+      let titleBlockBlurRadius; // The blur radius value for the title block
+
+      // Determines the opacity and blur radius based on the overlap ratio
+      if (overlapRatio < 0) {
+        // If the scroller is above the title block, it remains fully visible with no blur
+        titleBlockOpacity = 1;
+        titleBlockBlurRadius = 0;
+      } else if (overlapRatio > 1) {
+        // If the scroller is completely past the title block, it becomes fully transparent with maximum blur
+        titleBlockOpacity = 0;
+        titleBlockBlurRadius = 10;
+      } else {
+        // For intermediate positions, the opacity and blur are proportionally adjusted
+        titleBlockOpacity = 1 - overlapRatio;
+        titleBlockBlurRadius = overlapRatio * 10;
+      }
+
+      // Applies the calculated opacity and blur effect to the title block
+      titleBlock.style.opacity = titleBlockOpacity;
+      titleBlock.style.filter = `blur(${titleBlockBlurRadius}px)`;
     }
   }, [yScrollPosition, xScrollPosition, xScrollRatio]);
 
@@ -167,8 +181,7 @@ const ModuleWrapper = ({
     isActiveSection,
     openCarousel,
     showModale,
-    addScrollableElem,
-    sectionScrollDeltaY: yScrollPosition - cachedYScrollPosition.current,
+    sectionScrollDeltaY,
     sectionXScrollRatio: xScrollRatio,
   };
 
