@@ -26,7 +26,7 @@ const ScrollBar = ({ customColors, metrics }) => {
   // Scrolls by a portion of the visible height when arrows are clicked
   const scrollByArrows = (multiplyer) => {
     const scrollBarParent = scrollBarContainerRef.current.parentNode;
-    const scroller = scrollBarParent.querySelector('[data-role="scroller"');
+    const scroller = scrollBarParent.querySelector('[data-role="scroller"]');
 
     const scrollValue = multiplyer * (scroller.offsetHeight / 3);
     scroller.scrollBy({ top: scrollValue, behavior: "smooth" });
@@ -37,7 +37,7 @@ const ScrollBar = ({ customColors, metrics }) => {
     // Scrolls instantly by a given deltaY when the thumb is dragged
     const scrollByDragging = (deltaY) => {
       const scrollBarParent = scrollBarContainerRef.current.parentNode;
-      const scroller = scrollBarParent.querySelector('[data-role="scroller"');
+      const scroller = scrollBarParent.querySelector('[data-role="scroller"]');
 
       scroller.scrollBy({ top: deltaY, behavior: "instant" });
     };
@@ -99,7 +99,7 @@ const ScrollBar = ({ customColors, metrics }) => {
     const track = thumb.parentNode;
 
     const scrollBarParent = scrollBarContainerRef.current.parentNode;
-    const scroller = scrollBarParent.querySelector('[data-role="scroller"');
+    const scroller = scrollBarParent.querySelector('[data-role="scroller"]');
 
     // Calculate the position of the click on the track, centering the thumb
     const trackTop = track.getBoundingClientRect().top;
