@@ -19,11 +19,7 @@ export default async function Home() {
 
     return (
       <>
-        <CoverContainer
-          coverUrl={profile.cover.url}
-          coverAltTxt={profile.cover.alternativeText}
-          customColors={customColors}
-        />
+        <CoverContainer coverData={project.cover} customColors={customColors} />
         <ProjectsContainer
           projects={projects}
           customStyle={customStyle}

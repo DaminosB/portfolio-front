@@ -25,8 +25,7 @@ export default async function ProjectsIdPage({ params }) {
       <>
         {page.cover && (
           <CoverContainer
-            coverUrl={page.cover.url}
-            coverAltTxt={page.cover.alternativeText}
+            coverData={project.cover}
             customColors={customColors}
           />
         )}
