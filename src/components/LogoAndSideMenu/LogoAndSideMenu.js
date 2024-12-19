@@ -15,6 +15,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import NavSocials from "../NavSocials/NavSocials";
 import ContactForm from "../ContactForm/ContactForm";
 import Link from "next/link";
+import Image from "next/image";
 
 // This component displays a logo that sends the visitor back to the homepage's cover
 const LogoAndSideMenu = ({ profile, customStyle, pages }) => {
@@ -108,9 +109,15 @@ const LogoAndSideMenu = ({ profile, customStyle, pages }) => {
           className={`hidden ${styles.logoButton}`}
           onClick={toggleMenu}
           ref={logoButtonRef}
-          // id="logo-button"
         >
-          <img src={profile.logo.url} alt={profile.logo.alternativeText} />
+          <Image
+            width={profile.logo.width}
+            height={profile.logo.height}
+            src={profile.logo.url}
+            alt={profile.logo.alternativeText}
+            draggable={false}
+            priority={true}
+          />
         </button>
       </>,
       targetDom

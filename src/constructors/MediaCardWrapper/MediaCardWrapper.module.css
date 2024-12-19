@@ -17,7 +17,7 @@
   touch-action: pan-y;
 }
 
-.mediaWindow > div {
+/* .mediaWindow > div {
   position: absolute;
   bottom: 0px;
   left: 0px;
@@ -26,7 +26,7 @@
   border-radius: var(--small-radius);
   z-index: 1;
   user-select: none;
-}
+} */
 
 .mediaWindow img {
   will-change: transform;

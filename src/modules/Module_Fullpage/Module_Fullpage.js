@@ -11,6 +11,7 @@ import generateInlineStyle from "@/utils/generateInlineStyle";
 import populateCardsIdsArray from "@/utils/populateCardsIdsArray";
 import generateCssClasses from "@/utils/generateCssClasses";
 import generateTitleInlineStyle from "@/utils/generateTitleInlineStyle";
+import Image from "next/image";
 
 const Module_Fullpage = ({ module, customColors, sectionCoords }) => {
   const { titleBlock, mediaBlocks, text } = module;
@@ -63,10 +64,12 @@ const Module_Fullpage = ({ module, customColors, sectionCoords }) => {
                           cardId={mediaCardId}
                         >
                           {isImageFile ? (
-                            <img
-                              draggable={false}
+                            <Image
+                              width={mediaAsset.width}
+                              height={mediaAsset.height}
                               src={mediaAsset.url}
                               alt={mediaAsset.alternativeText}
+                              draggable={false}
                             />
                           ) : (
                             <source src={mediaAsset.url} />

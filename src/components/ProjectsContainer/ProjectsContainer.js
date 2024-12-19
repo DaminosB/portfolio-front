@@ -3,6 +3,7 @@ import styles from "./ProjectsContainer.module.css";
 // Components imports
 import ProjectsGallery from "@/constructors/ProjectsGallery/ProjectsGallery";
 import ProjectCardWrapper from "@/constructors/ProjectCardWrapper/ProjectCardWrapper";
+import Image from "next/image";
 
 const ProjectsContainer = ({ projects, customStyle, logos }) => {
   const projectsCards = populateProjectsCards(projects, customStyle, logos);
@@ -13,9 +14,12 @@ const ProjectsContainer = ({ projects, customStyle, logos }) => {
         {projectsCards.map((card) => {
           return (
             <ProjectCardWrapper key={card.id} cardData={card}>
-              <img
+              <Image
+                width={card.thumbnail.width}
+                height={card.thumbnail.height}
                 src={card.thumbnail.url}
                 alt={card.thumbnail.alternativeText}
+                draggable={false}
               />
             </ProjectCardWrapper>
           );

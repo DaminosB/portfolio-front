@@ -6,6 +6,8 @@ import { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 
+import Image from "next/image";
+
 const VideoPlayer = ({ children, video, shouldPlayVideo, customColors }) => {
   const [isActive, setIsActive] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -46,7 +48,7 @@ const VideoPlayer = ({ children, video, shouldPlayVideo, customColors }) => {
         <button style={buttonInlineStyle} onClick={enableVideoPlayer}>
           <FontAwesomeIcon icon={faPlay} />
         </button>
-        <img src={video.caption} alt="" />
+        <Image src={video.caption} fill alt="Image de fond de la vidéo" />
       </div>
       <video
         ref={videoPlayerRef}

@@ -78,6 +78,7 @@
 
 .logoButton > img {
   height: var(--logo-height);
+  width: auto;
 }
 
 @media (max-width: 1023px) {

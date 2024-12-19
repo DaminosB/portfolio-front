@@ -5,8 +5,9 @@ import styles from "./CoverContainer.module.css";
 import { useContext, useRef, useEffect } from "react";
 
 import { LayoutContext } from "@/wrappers/LayoutWrapper/LayoutWrapper";
+import Image from "next/image";
 
-const CoverContainer = ({ coverUrl, coverAltTxt, customColors }) => {
+const CoverContainer = ({ coverData, customColors }) => {
   const { layoutScrollPos } = useContext(LayoutContext);
 
   const coverRef = useRef(null);
@@ -25,7 +26,7 @@ const CoverContainer = ({ coverUrl, coverAltTxt, customColors }) => {
   };
 
   const backgroundInlineStyle = {
-    backgroundImage: `url(${coverUrl})`,
+    backgroundImage: `url(${coverData.url})`,
   };
 
   return (
@@ -35,7 +36,14 @@ const CoverContainer = ({ coverUrl, coverAltTxt, customColors }) => {
       style={containerInlineStyle}
     >
       <div style={backgroundInlineStyle}></div>
-      <img src={coverUrl} alt={coverAltTxt} />
+      <Image
+        width={coverData.width}
+        height={coverData.height}
+        src={coverData.url}
+        alt={coverData.alternativeText}
+        draggable={false}
+        priority={true}
+      />
     </div>
   );
 };

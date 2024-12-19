@@ -5,6 +5,7 @@ import MediaCardWrapper from "@/constructors/MediaCardWrapper/MediaCardWrapper";
 import MediasGallery from "@/constructors/MediasGallery/MediasGallery";
 import populateCardsIdsArray from "@/utils/populateCardsIdsArray";
 import ModuleColumn from "@/constructors/ModuleColumn/ModuleColumn";
+import Image from "next/image";
 
 const Module_MultiImagesColumn = ({ module, customColors, sectionCoords }) => {
   const { mediaBlocks } = module;
@@ -50,10 +51,12 @@ const Module_MultiImagesColumn = ({ module, customColors, sectionCoords }) => {
                   cardId={mediaCardId}
                   relatedSiblings={relatedMedias}
                 >
-                  <img
-                    draggable={false}
+                  <Image
+                    width={mediaAsset.width}
+                    height={mediaAsset.height}
                     src={mediaAsset.url}
                     alt={mediaAsset.alternativeText}
+                    draggable={false}
                   />
                 </MediaCardWrapper>
               );

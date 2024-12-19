@@ -5,6 +5,8 @@ import ModuleColumn from "@/constructors/ModuleColumn/ModuleColumn";
 import TextWrapper from "@/constructors/TextWrapper/TextWrapper";
 import MediasGallery from "@/constructors/MediasGallery/MediasGallery";
 import MediaCardWrapper from "@/constructors/MediaCardWrapper/MediaCardWrapper";
+import Image from "next/image";
+
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 
 import generateCssClasses from "@/utils/generateCssClasses";
@@ -85,16 +87,17 @@ const Module_Container = ({ module, customColors, sectionCoords }) => {
                                   className={styles.mediaCardFrame}
                                 >
                                   <MediaCardWrapper
-                                    // key={mediaAsset.id}
                                     customColors={customColors}
                                     media={mediaAsset}
                                     cardId={mediaCardId}
                                   >
                                     {isImageFile ? (
-                                      <img
-                                        draggable={false}
+                                      <Image
+                                        width={mediaAsset.width}
+                                        height={mediaAsset.height}
                                         src={mediaAsset.url}
                                         alt={mediaAsset.alternativeText}
+                                        draggable={false}
                                       />
                                     ) : (
                                       <source src={mediaAsset.url} />

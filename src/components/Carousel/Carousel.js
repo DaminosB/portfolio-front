@@ -14,6 +14,7 @@ import useScrollTracker from "@/hooks/useScrollTracker";
 import NavigationButton from "../NavigationButton/NavigationButton";
 
 import generateRGBAString from "@/utils/generateRGBAString";
+import Image from "next/image";
 
 // Carousel component that displays a series of media (images or videos) with horizontal sliding navigation
 const Carousel = ({ mediasToDisplay, indexStart, customColors }) => {
@@ -87,7 +88,13 @@ const Carousel = ({ mediasToDisplay, indexStart, customColors }) => {
           return (
             <div key={media.id}>
               {isImageFile ? (
-                <img src={media.url} alt={media.alternativeText} />
+                <Image
+                  width={media.width}
+                  height={media.height}
+                  src={media.url}
+                  alt={media.alternativeText}
+                  draggable={false}
+                />
               ) : (
                 <VideoPlayer
                   video={media}
