@@ -62,6 +62,7 @@
   .title {
     position: sticky;
     top: 0px;
+    left: 0px;
     z-index: 0;
     padding: var(--logo-height-offset) 0 var(--logo-position) 0;
   }
