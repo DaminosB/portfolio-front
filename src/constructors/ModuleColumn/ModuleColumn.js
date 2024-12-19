@@ -7,7 +7,9 @@ import { useRef, useContext, useEffect } from "react";
 const ModuleColumn = ({ children }) => {
   const columnRef = useRef(null);
 
-  const { sectionScrollDeltaY } = useContext(ModuleContext);
+  const { sectionYScrollPosition } = useContext(ModuleContext);
+
+  const cachedYScrollPosition = useRef(0);
 
   // Synchronizes the column's scrolling behavior with the section's scroll state
   useEffect(() => {
@@ -42,12 +44,18 @@ const ModuleColumn = ({ children }) => {
 
     if (Math.round(contentBlock.offsetTop) === Math.round(scroller.scrollTop)) {
       // If the content block is aligned with the top of the scroller, scroll the column by the deltaY value
-      column.scrollBy({ top: sectionScrollDeltaY, behavior: "instant" });
+      const sectionYScrollDelta =
+        sectionYScrollPosition - cachedYScrollPosition.current;
+      column.scrollBy({ top: sectionYScrollDelta, behavior: "instant" });
+      cachedYScrollPosition.current = sectionYScrollPosition;
     } else if (contentBlock.offsetTop > scroller.scrollTop) {
-      // If the content block is above the scroller's current scroll position, reset the column's scroll position to the top
+      // If the content block is below the scroller's current scroll position, reset the column's scroll position to the top
       column.scrollTo({ top: 0, behavior: "smooth" });
+    } else if (contentBlock.offsetTop < scroller.scrollTop) {
+      // If the content block is above the scroller's current scroll position, reset the column's scroll position to the bottom
+      column.scrollTo({ top: currentOverflow, behavior: "smooth" });
     }
-  }, [sectionScrollDeltaY]);
+  }, [sectionYScrollPosition]);
 
   return (
     <div className={styles.column} ref={columnRef}>

@@ -83,11 +83,6 @@ const ModuleWrapper = ({
     displayIndex: galleryIndex,
   } = useScrollTracker(true);
 
-  const sectionScrollDeltaY = useMemo(
-    () => yScrollPosition - cachedYScrollPosition.current,
-    [yScrollPosition]
-  );
-
   // Unified scroll handler for both axes
   const handleOnScroll = (e) => {
     const lastChildIndex = e.target.children.length - 1;
@@ -181,8 +176,8 @@ const ModuleWrapper = ({
     isActiveSection,
     openCarousel,
     showModale,
-    sectionScrollDeltaY,
     sectionXScrollRatio: xScrollRatio,
+    sectionYScrollPosition: yScrollPosition,
   };
 
   const galleryIndicatorInlineStyle = {
