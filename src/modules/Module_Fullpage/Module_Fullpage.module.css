@@ -9,13 +9,10 @@
 
 .title {
   position: absolute;
-  top: var(--logo-height-offset);
-  /* left: 50%; */
-  /* transform: translateX(-50%); */
+  top: 0px;
   z-index: 1;
   width: 100%;
-  padding-bottom: 50px;
-  /* padding: 5px 10px; */
+  padding: var(--logo-height-offset) 30px 30px 30px;
   text-align: center;
   will-change: filter;
 }

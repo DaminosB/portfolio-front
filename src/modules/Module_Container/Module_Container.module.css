@@ -9,14 +9,12 @@
 }
 
 .title {
-  /* width: fit-content;
-  padding: 5px 10px; */
+  position: absolute;
+  top: 0px;
   text-align: center;
   width: 100%;
   z-index: 1;
-  /* padding-top: var(--logo-height-offset); */
-  position: absolute;
-  top: var(--logo-height-offset);
+  padding: var(--logo-height-offset) 30px 30px 30px;
 }
 
 .content > div {
