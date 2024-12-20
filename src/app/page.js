@@ -17,8 +17,6 @@ export default async function Home() {
       secondaryColor: customStyle.secondaryColor,
     };
 
-    console.log(profile.cover);
-
     return (
       <>
         <CoverContainer coverData={profile.cover} customColors={customColors} />
