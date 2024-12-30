@@ -5,7 +5,6 @@
   align-items: center;
   height: 100%;
   padding: var(--logo-height-offset);
-  /* padding: var(--logo-height-offset) 0px; */
 }
 
 .title {
@@ -69,6 +68,11 @@
 }
 
 @media (max-width: 768px) {
+  .content {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
   .mediasContainer {
     flex-direction: column;
   }
