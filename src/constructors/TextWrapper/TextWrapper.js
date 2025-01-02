@@ -53,10 +53,8 @@ const TextWrapper = ({ textModule, children }) => {
       ref={textWrapperRef}
       style={inlineStyle}
     >
-      {/* <div> */}
       <div className={styles.spacer} ref={spacerElementRef}></div>
       {children}
-      {/* </div> */}
     </div>
   );
 };
@@ -72,7 +70,7 @@ const generateTextStyle = (textModule) => {
     textAlign: "",
   };
 
-  response.fontFamily = font.substring(0, font.indexOf("(")).trim();
+  if (font) response.fontFamily = font.fontName;
 
   response.color = textColor;
 

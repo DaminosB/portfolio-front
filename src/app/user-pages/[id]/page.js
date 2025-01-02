@@ -69,6 +69,7 @@ const fetchData = async (pageId) => {
   pagePath += ",modules.mediaBlocks.mediaAssets";
   pagePath += ",modules.backgroundImage";
   pagePath += ",modules.text";
+  pagePath += ",modules.text.font";
 
   const pageResponse = await handleFetch(pagePath);
 
@@ -85,10 +86,23 @@ const fetchData = async (pageId) => {
         : null,
       modules: pageResponse.data.attributes.modules.map((module) => ({
         ...module,
-        backgroundImage: module.backgroundImage.data && {
-          ...module.backgroundImage.data.attributes,
-          id: module.backgroundImage.data.id,
-        },
+        text: module.text
+          ? {
+              ...module.text,
+              font: module.text.font.data
+                ? {
+                    ...module.text.font.data.attributes,
+                    id: module.text.font.data.id,
+                  }
+                : null,
+            }
+          : null,
+        backgroundImage: module.backgroundImage?.data
+          ? {
+              ...module.backgroundImage.data.attributes,
+              id: module.backgroundImage.data.id,
+            }
+          : null,
         mediaBlocks: module.mediaBlocks
           ? module.mediaBlocks.map((mediaBlock) => ({
               ...mediaBlock,

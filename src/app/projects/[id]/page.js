@@ -95,6 +95,7 @@ const fetchData = async (projectId) => {
   projectPath += ",modules.mediaBlocks.mediaAssets";
   projectPath += ",modules.backgroundImage";
   projectPath += ",modules.text";
+  projectPath += ",modules.text.font";
   projectPath += ",tags.projects.thumbnail";
 
   // Construction of the style's path string
@@ -124,6 +125,17 @@ const fetchData = async (projectId) => {
       })),
       modules: projectResponse.data.attributes.modules.map((module) => ({
         ...module,
+        text: module.text
+          ? {
+              ...module.text,
+              font: module.text.font.data
+                ? {
+                    ...module.text.font.data.attributes,
+                    id: module.text.font.data.id,
+                  }
+                : null,
+            }
+          : null,
         backgroundImage: module.backgroundImage?.data
           ? {
               ...module.backgroundImage.data.attributes,

@@ -48,6 +48,7 @@ const fetchData = async () => {
   logoPath += ",modules.backgroundImage";
   logoPath += ",modules.titleBlock";
   logoPath += ",modules.text";
+  logoPath += ",modules.text.font";
   logoPath += ",modules.mediaBlocks.mediaAssets";
 
   const [logosResponse, customStyleResponse] = await Promise.all([
@@ -62,6 +63,17 @@ const fetchData = async () => {
       ...logosResponse.data.attributes,
       modules: logosResponse.data.attributes.modules.map((module) => ({
         ...module,
+        text: module.text
+          ? {
+              ...module.text,
+              font: module.text.font.data
+                ? {
+                    ...module.text.font.data.attributes,
+                    id: module.text.font.data.id,
+                  }
+                : null,
+            }
+          : null,
         backgroundImage: module.backgroundImage?.data
           ? {
               ...module.backgroundImage.data.attributes,
