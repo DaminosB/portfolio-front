@@ -11,6 +11,10 @@ import generateDynamicStyle from "@/utils/generateDynamicStyle";
 import generateRGBAString from "@/utils/generateRGBAString";
 
 import handleFetch from "@/utils/handleFetch";
+import {
+  populateCoversBlock,
+  populateModulesKey,
+} from "@/utils/fetchDataHelpers";
 
 export default async function ProjectsIdPage({ params }) {
   const data = await fetchData(params.id);
@@ -36,6 +40,8 @@ export default async function ProjectsIdPage({ params }) {
           <CoverContainer
             coverData={project.cover}
             customColors={customColors}
+            coversBlockData={project.coversBlock}
+            actionText="Voir le contenu"
           />
         )}
         <SnapScrollWrapper>
@@ -97,6 +103,9 @@ const fetchData = async (projectId) => {
   projectPath += ",modules.text";
   projectPath += ",modules.text.font";
   projectPath += ",tags.projects.thumbnail";
+  projectPath += ",coversBlock";
+  projectPath += ",coversBlock.backgroundImage";
+  projectPath += ",coversBlock.overlayImage";
 
   // Construction of the style's path string
   let stylePath = "style?populate=";
@@ -119,40 +128,14 @@ const fetchData = async (projectId) => {
             id: projectResponse.data.attributes.cover.data.id,
           }
         : null,
+      coversBlock: projectResponse.data.attributes.coversBlock
+        ? populateCoversBlock(projectResponse.data.attributes.coversBlock)
+        : null,
       tags: projectResponse.data.attributes.tags.data.map((tag) => ({
         ...tag.attributes,
         id: tag.id,
       })),
-      modules: projectResponse.data.attributes.modules.map((module) => ({
-        ...module,
-        text: module.text
-          ? {
-              ...module.text,
-              font: module.text.font.data
-                ? {
-                    ...module.text.font.data.attributes,
-                    id: module.text.font.data.id,
-                  }
-                : null,
-            }
-          : null,
-        backgroundImage: module.backgroundImage?.data
-          ? {
-              ...module.backgroundImage.data.attributes,
-              id: module.backgroundImage.data.id,
-            }
-          : null,
-        mediaBlocks: module.mediaBlocks
-          ? module.mediaBlocks.map((mediaBlock) => ({
-              ...mediaBlock,
-              mediaAssets: mediaBlock.mediaAssets.data.map((mediaAsset) => ({
-                ...mediaAsset.attributes,
-                addToCarousel: mediaBlock.addToCarousel,
-                id: mediaAsset.id,
-              })),
-            }))
-          : [],
-      })),
+      modules: populateModulesKey(projectResponse.data.attributes.modules),
     },
     customStyle: { ...customStyleResponse.data.attributes },
   };

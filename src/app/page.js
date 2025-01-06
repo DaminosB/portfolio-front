@@ -4,6 +4,7 @@ import CoverContainer from "@/components/CoverContainer/CoverContainer";
 import Modale from "@/components/Modale/Modale";
 
 import handleFetch from "@/utils/handleFetch";
+import { populateCoversBlock } from "@/utils/fetchDataHelpers";
 
 export default async function Home() {
   const data = await fetchData();
@@ -19,7 +20,12 @@ export default async function Home() {
 
     return (
       <>
-        <CoverContainer coverData={profile.cover} customColors={customColors} />
+        <CoverContainer
+          actionText="Voir les créations"
+          coverData={profile.cover}
+          customColors={customColors}
+          coversBlockData={profile.coversBlock}
+        />
         <ProjectsContainer
           projects={projects}
           customStyle={customStyle}
@@ -36,6 +42,9 @@ const fetchData = async () => {
   let profilePath = "profile?populate=";
   profilePath += "logo";
   profilePath += ",cover";
+  profilePath += ",coversBlock";
+  profilePath += ",coversBlock.backgroundImage";
+  profilePath += ",coversBlock.overlayImage";
 
   let stylePath = "style?populate=";
   stylePath += "*";
@@ -67,6 +76,9 @@ const fetchData = async () => {
       ...profileResponse.data.attributes,
       logo: profileResponse.data.attributes.logo.data.attributes,
       cover: profileResponse.data.attributes.cover.data.attributes,
+      coversBlock: populateCoversBlock(
+        profileResponse.data.attributes.coversBlock
+      ),
     },
     // Process customStyle data
     customStyle: { ...customStyleResponse.data.attributes },

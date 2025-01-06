@@ -9,7 +9,7 @@ const ProjectsContainer = ({ projects, customStyle, logos }) => {
   const projectsCards = populateProjectsCards(projects, customStyle, logos);
 
   return (
-    <div className={styles.projectsContainer}>
+    <div className={styles.projectsContainer} id="projects">
       <ProjectsGallery customStyle={customStyle} projectsCards={projectsCards}>
         {projectsCards.map((card) => {
           return (

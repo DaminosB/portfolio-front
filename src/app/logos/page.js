@@ -5,6 +5,7 @@ import ContentMenu from "@/components/ContentMenu/ContentMenu";
 import Modale from "@/components/Modale/Modale";
 import generateDynamicStyle from "@/utils/generateDynamicStyle";
 import handleFetch from "@/utils/handleFetch";
+import { populateModulesKey } from "@/utils/fetchDataHelpers";
 
 export default async function ProjectsIdPage() {
   const data = await fetchData();
@@ -61,36 +62,7 @@ const fetchData = async () => {
   const response = {
     logos: {
       ...logosResponse.data.attributes,
-      modules: logosResponse.data.attributes.modules.map((module) => ({
-        ...module,
-        text: module.text
-          ? {
-              ...module.text,
-              font: module.text.font.data
-                ? {
-                    ...module.text.font.data.attributes,
-                    id: module.text.font.data.id,
-                  }
-                : null,
-            }
-          : null,
-        backgroundImage: module.backgroundImage?.data
-          ? {
-              ...module.backgroundImage.data.attributes,
-              id: module.backgroundImage.data.id,
-            }
-          : null,
-        mediaBlocks: module.mediaBlocks
-          ? module.mediaBlocks.map((mediaBlock) => ({
-              ...mediaBlock,
-              mediaAssets: mediaBlock.mediaAssets.data.map((mediaAsset) => ({
-                ...mediaAsset.attributes,
-                addToCarousel: mediaBlock.addToCarousel,
-                id: mediaAsset.id,
-              })),
-            }))
-          : [],
-      })),
+      modules: populateModulesKey(logosResponse.data.attributes.modules),
     },
     customStyle: { ...customStyleResponse.data.attributes },
   };
