@@ -38,6 +38,7 @@ export default async function ProjectsIdPage({ params }) {
       <>
         {project.cover && (
           <CoverContainer
+            coverCoords={[0, 0]}
             coverData={project.cover}
             customColors={customColors}
             coversBlockData={project.coversBlock}

@@ -28,7 +28,11 @@ export default async function ProjectsIdPage({ params }) {
     return (
       <>
         {page.cover && (
-          <CoverContainer coverData={page.cover} customColors={customColors} />
+          <CoverContainer
+            coverCoords={[0, 0]}
+            coverData={page.cover}
+            customColors={customColors}
+          />
         )}
         <SnapScrollWrapper>
           <ModulesDisplayer

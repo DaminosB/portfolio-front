@@ -25,6 +25,7 @@ export default async function Home() {
           coverData={profile.cover}
           customColors={customColors}
           coversBlockData={profile.coversBlock}
+          coverCoords={[0, 0]}
         />
         <ProjectsContainer
           projects={projects}
