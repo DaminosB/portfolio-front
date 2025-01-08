@@ -5,6 +5,8 @@
   --fastest-transition: 100ms;
   --default-animation: ease-in-out;
   --pulsate: pulseDown 3s infinite ease-in-out;
+  --slide-left: slideLeft 3s infinite ease-in-out;
+  --glow: glow 3s infinite ease-in-out;
 
   --logo-position: 10px;
   --logo-height: 60px;
@@ -337,17 +339,41 @@ button:not(.grabbable, .grabbed) {
   }
 }
 
-@keyframes pulseDown {
+@keyframes glow {
   0% {
-    transform: translateY(0);
     text-shadow: var(--standard-shadow);
   }
   50% {
-    transform: translateY(10px);
     text-shadow: 0px 0px 0px;
   }
   100% {
-    transform: translateY(0);
     text-shadow: var(--standard-shadow);
+  }
+}
+
+@keyframes pulseDown {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideLeft {
+  0% {
+    transform: translateX(0%);
+  }
+  25% {
+    transform: translateX(50%);
+  }
+  50% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
   }
 }
