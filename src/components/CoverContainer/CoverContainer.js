@@ -2,7 +2,7 @@
 
 import styles from "./CoverContainer.module.css";
 
-import { useContext, useRef, useEffect, useMemo } from "react";
+import { useContext, useRef, useState, useEffect, useMemo } from "react";
 import { LayoutContext } from "@/wrappers/LayoutWrapper/LayoutWrapper";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,18 +11,31 @@ import { faSortDown } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
 
 import useScrollTracker from "@/hooks/useScrollTracker";
+import InteractiveHint from "../InteractiveHint/InteractiveHint";
 
 const CoverContainer = ({
+  coverCoords,
   actionText,
   coversBlockData,
   coverData,
   customColors,
 }) => {
-  const { layoutScrollPos, layoutScroller } = useContext(LayoutContext);
+  const { layoutScrollPos, activeCoords, layoutScroller } =
+    useContext(LayoutContext);
 
   const { scrollTrack, displayIndex } = useScrollTracker(true);
 
   const coverRef = useRef(null);
+
+  const isActive = useMemo(
+    () => JSON.stringify(coverCoords) === JSON.stringify(activeCoords),
+    [coverCoords, activeCoords]
+  );
+
+  const coversBlockLength = useMemo(
+    () => coversBlockData.length,
+    [coversBlockData]
+  );
 
   // This effect handles the opacity of the component
   useEffect(() => {
@@ -48,7 +61,7 @@ const CoverContainer = ({
   // Inline style for the ghost element
   const ghostInlineStyle = useMemo(
     () => ({
-      width: `${coversBlockData.length * 100}%`,
+      width: `${coversBlockLength * 100}%`,
     }),
     [coversBlockData]
   );
@@ -197,13 +210,20 @@ const CoverContainer = ({
         )}
 
         {/* --------------------------------------------------- */}
+        {/* ----------------- INTERACTIVE HINT ---------------- */}
+        {/* --------------------------------------------------- */}
+        {coversBlockLength > 1 && (
+          <InteractiveHint isActive={isActive} customColors={customColors} />
+        )}
+
+        {/* --------------------------------------------------- */}
         {/* ---------------------- GHOST ---------------------- */}
         {/* --------------------------------------------------- */}
         {/* Simulates the scrolling to display the various cover items */}
         <div className={styles.ghost} style={ghostInlineStyle}>
-          {Array.from({ length: coversBlockData.length }).map((_, index) => {
+          {Array.from({ length: coversBlockLength }).map((_, index) => {
             const ghostChildStyle = {
-              width: `${100 / coversBlockData.length}%`,
+              width: `${100 / coversBlockLength}%`,
             };
             return <div key={index} style={ghostChildStyle}></div>;
           })}

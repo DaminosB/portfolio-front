@@ -56,6 +56,10 @@
   left: 0px;
 }
 
+.coverItem:not(:first-of-type) {
+  opacity: 0;
+}
+
 /* The background div */
 .background {
   will-change: transform;
@@ -112,7 +116,7 @@
   align-items: center;
   justify-content: center;
   font-size: 25px;
-  animation: var(--pulsate);
+  animation: var(--pulsate), var(--glow);
 }
 
 .ghost {

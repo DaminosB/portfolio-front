@@ -17,6 +17,7 @@ import Carousel from "@/components/Carousel/Carousel";
 import NavigationButton from "@/components/NavigationButton/NavigationButton";
 import ScrollBar from "@/components/ScrollBar/ScrollBar";
 import useScrollTracker from "@/hooks/useScrollTracker";
+import InteractiveHint from "@/components/InteractiveHint/InteractiveHint";
 
 // Utils import
 import populateScrollbarMetrics from "@/utils/populateScrollBarMetrics";
@@ -202,6 +203,16 @@ const ModuleWrapper = ({
           onScroll={handleOnScroll}
         >
           {children}
+
+          {/* --------------------------------------------------- */}
+          {/* ----------------- INTERACTIVE HINT ---------------- */}
+          {/* --------------------------------------------------- */}
+          {maxGalleryLength > 1 && (
+            <InteractiveHint
+              isActive={isActiveSection}
+              customColors={customColors}
+            />
+          )}
 
           {/* --------------------------------------------------- */}
           {/* ---------------------- GHOST ---------------------- */}
