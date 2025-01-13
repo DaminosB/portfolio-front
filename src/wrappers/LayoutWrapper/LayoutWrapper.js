@@ -79,18 +79,7 @@ const LayoutWrapper = ({ children }) => {
       setContainersPositions(() => childrenArray.map(() => 0));
       setModaleContent(null);
     }
-
-    layoutScroller.firstElementChild.scrollTo({
-      top: scrollPosition,
-      behavior: "instant",
-    });
-  }, [
-    activeCoords,
-    activeContainerIndex,
-    containersPositions,
-    pathname,
-    scrollPosition,
-  ]);
+  }, [activeCoords, activeContainerIndex, containersPositions, pathname]);
 
   // Provides context values to children components for managing layout, scroll, and popup states
   const contextValues = {
@@ -105,6 +94,13 @@ const LayoutWrapper = ({ children }) => {
 
   const handleOnScroll = (e) => {
     scrollTrack(e, [1]);
+
+    const scroller = e.target;
+
+    scroller.firstElementChild.scrollTo({
+      top: scrollPosition,
+      behavior: "instant",
+    });
   };
 
   const ghostRef = useRef(null);
