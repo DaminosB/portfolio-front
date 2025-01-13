@@ -23,6 +23,7 @@
 
 .scroller > div:first-of-type {
   height: 100%;
+  will-change: scroll-position;
   overflow: hidden;
   position: sticky;
   top: 0px;
@@ -62,4 +63,12 @@
 
 .navContainer > nav > button {
   transition: var(--normal-transition) var(--default-animation);
+}
+
+/* Only applies to Safari browsers */
+@supports (hanging-punctuation: first) and (font: -apple-system-body) and
+  (-webkit-appearance: none) {
+  .ghost {
+    display: inline-flex;
+  }
 }

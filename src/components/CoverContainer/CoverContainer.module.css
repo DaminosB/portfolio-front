@@ -125,6 +125,7 @@
 
 .ghost > div {
   flex-shrink: 0;
+  display: inline-block;
   scroll-snap-align: start;
   scroll-snap-stop: always;
 }
@@ -136,5 +137,13 @@
 
   .overlay > div {
     padding: var(--logo-height-offset) 0px;
+  }
+}
+
+/* Only applies to Safari browsers */
+@supports (hanging-punctuation: first) and (font: -apple-system-body) and
+  (-webkit-appearance: none) {
+  .ghost {
+    display: inline-flex;
   }
 }
