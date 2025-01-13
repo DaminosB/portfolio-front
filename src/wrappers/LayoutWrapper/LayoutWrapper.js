@@ -98,7 +98,7 @@ const LayoutWrapper = ({ children }) => {
     const scroller = e.target;
 
     scroller.firstElementChild.scrollTo({
-      top: scrollPosition,
+      top: scroller.scrollTop,
       behavior: "instant",
     });
   };
